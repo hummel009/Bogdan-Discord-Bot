@@ -10,7 +10,7 @@ plugins {
 
 android {
 	namespace = "com.github.hummel.union"
-	compileSdk = 34
+	compileSdk = 35
 
 	defaultConfig {
 		applicationId = "com.github.hummel.union"
