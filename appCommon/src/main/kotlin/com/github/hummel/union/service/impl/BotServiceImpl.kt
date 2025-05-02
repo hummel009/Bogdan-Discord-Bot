@@ -3,9 +3,7 @@ package com.github.hummel.union.service.impl
 import com.github.hummel.union.bean.BotData
 import com.github.hummel.union.bean.ServerData
 import com.github.hummel.union.factory.ServiceFactory
-import com.github.hummel.union.integration.DuckRequest
-import com.github.hummel.union.integration.DuckRequest.DuckMessage
-import com.github.hummel.union.integration.getDuckAnswer
+import com.github.hummel.union.integration.getDuckGptLiveResponse
 import com.github.hummel.union.lang.I18n
 import com.github.hummel.union.service.BotService
 import com.github.hummel.union.service.DataService
@@ -78,13 +76,7 @@ class BotServiceImpl : BotService {
 					prefix = prepromptTemplate.build(serverData.name, serverData.preprompt), separator = "\n"
 				)
 
-				getDuckAnswer(
-					DuckRequest(
-						"gpt-4o-mini", listOf(
-							DuckMessage("user", prompt)
-						)
-					)
-				)?.let {
+				getDuckGptLiveResponse(prompt)?.let {
 					if (it.length > 2000) {
 						val embed = EmbedBuilder().error(
 							event.messageAuthor.asUser().get(), serverData, I18n.of("duck_long", serverData)

@@ -1,5 +1,6 @@
 package com.github.hummel.union.integration
 
+import com.github.hummel.union.integration.DuckGptRequest.DuckMessage
 import com.github.hummel.union.utils.getRandomUserAgent
 import com.github.hummel.union.utils.gson
 import org.apache.hc.client5.http.classic.methods.HttpGet
@@ -10,7 +11,14 @@ import org.apache.hc.core5.http.io.entity.EntityUtils
 import org.apache.hc.core5.http.io.entity.StringEntity
 import java.net.URI
 
-fun getDuckAnswer(request: DuckRequest): String? {
+@Deprecated(message = "Replaced with DuckGgptLive")
+fun getDuckGptResponse(prompt: String): String? {
+	val request = DuckGptRequest(
+		"gpt-4o-mini", listOf(
+			DuckMessage("user", prompt)
+		)
+	)
+
 	val payload = gson.toJson(request)
 
 	val userAgent = getRandomUserAgent()
@@ -55,7 +63,7 @@ private fun getResponse(
 				}.takeWhile {
 					!it.contains("[DONE]")
 				}.mapNotNull {
-					gson.fromJson(it, DuckResponse::class.java)
+					gson.fromJson(it, DuckGptResponse::class.java)
 				}
 
 				apiResponse.joinToString("") { it.message }
@@ -138,7 +146,7 @@ private fun getXFeVersion(): String? {
 	}
 }
 
-data class DuckRequest(
+private data class DuckGptRequest(
 	val model: String, val messages: List<DuckMessage>
 ) {
 	data class DuckMessage(
@@ -146,7 +154,7 @@ data class DuckRequest(
 	)
 }
 
-data class DuckResponse(
+private data class DuckGptResponse(
 	val role: String,
 	val message: String,
 	val created: Long,

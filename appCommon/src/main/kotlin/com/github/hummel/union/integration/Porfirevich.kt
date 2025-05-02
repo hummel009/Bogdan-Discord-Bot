@@ -7,7 +7,11 @@ import org.apache.hc.core5.http.ContentType
 import org.apache.hc.core5.http.io.entity.EntityUtils
 import org.apache.hc.core5.http.io.entity.StringEntity
 
-fun getPorfirevichAnswer(request: PorfirevichRequest): String? {
+fun getPorfirevichResponse(prompt: String): String? {
+	val request = PorfirevichRequest(
+		prompt, "xlarge", 100
+	)
+
 	val payload = gson.toJson(request)
 
 	return request.prompt + getResponse(payload)
@@ -38,12 +42,12 @@ private fun getResponse(payload: String): String? = HttpClients.createDefault().
 	}
 }
 
-data class PorfirevichRequest(
+private data class PorfirevichRequest(
 	val prompt: String,
 	val model: String,
 	val length: Int
 )
 
-data class PorfirevichResponse(
+private data class PorfirevichResponse(
 	val replies: List<String>
 )

@@ -2,8 +2,7 @@ package com.github.hummel.union.service.impl
 
 import com.github.hummel.union.bean.BotData
 import com.github.hummel.union.factory.ServiceFactory
-import com.github.hummel.union.integration.PorfirevichRequest
-import com.github.hummel.union.integration.getPorfirevichAnswer
+import com.github.hummel.union.integration.getPorfirevichResponse
 import com.github.hummel.union.lang.I18n
 import com.github.hummel.union.service.DataService
 import com.github.hummel.union.service.UserService
@@ -101,11 +100,7 @@ class UserServiceImpl : UserService {
 
 				val prompt = sc.arguments[0].stringValue.get()
 				val embed = if (prompt.isNotEmpty()) {
-					getPorfirevichAnswer(
-						PorfirevichRequest(
-							prompt, "xlarge", 100
-						)
-					)?.let {
+					getPorfirevichResponse(prompt)?.let {
 						EmbedBuilder().success(sc.user, serverData, it)
 					} ?: EmbedBuilder().error(sc.user, serverData, I18n.of("no_connection", serverData))
 				} else {
