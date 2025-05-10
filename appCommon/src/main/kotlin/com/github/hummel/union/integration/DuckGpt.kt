@@ -12,26 +12,30 @@ import org.apache.hc.core5.http.io.entity.EntityUtils
 import org.apache.hc.core5.http.io.entity.StringEntity
 import java.net.URI
 
+private val lock: Any = Any()
+
 @Suppress("unused")
 @Deprecated(message = "Replaced with DuckGptLive")
 fun getDuckGptResponse(
 	prompt: String
 ): Pair<Pair<Int, String>, String?> {
-	val request = DuckGptRequest(
-		"gpt-4o-mini", listOf(
-			DuckMessage("user", prompt)
+	synchronized(lock) {
+		val request = DuckGptRequest(
+			"gpt-4o-mini", listOf(
+				DuckMessage("user", prompt)
+			)
 		)
-	)
 
-	val payload = gson.toJson(request)
+		val payload = gson.toJson(request)
 
-	val (statusFeVersion, feVersion) = getXFeVersion()
-	feVersion ?: return statusFeVersion to null
+		val (statusFeVersion, feVersion) = getXFeVersion()
+		feVersion ?: return statusFeVersion to null
 
-	val (statusVqd, vqd) = getXVqd()
-	vqd ?: return statusVqd to null
+		val (statusVqd, vqd) = getXVqd()
+		vqd ?: return statusVqd to null
 
-	return getResponse(payload, feVersion, vqd)
+		return getResponse(payload, feVersion, vqd)
+	}
 }
 
 private fun getResponse(

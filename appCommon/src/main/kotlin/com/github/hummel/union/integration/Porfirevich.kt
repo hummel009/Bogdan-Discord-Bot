@@ -7,17 +7,21 @@ import org.apache.hc.core5.http.ContentType
 import org.apache.hc.core5.http.io.entity.EntityUtils
 import org.apache.hc.core5.http.io.entity.StringEntity
 
+private val lock: Any = Any()
+
 @Suppress("unused")
 fun getPorfirevichResponse(
 	prompt: String
 ): Pair<Pair<Int, String>, String?> {
-	val request = PorfirevichRequest(
-		prompt = prompt
-	)
+	synchronized(lock) {
+		val request = PorfirevichRequest(
+			prompt = prompt
+		)
 
-	val payload = gson.toJson(request)
+		val payload = gson.toJson(request)
 
-	return getResponse(payload, request.prompt)
+		return getResponse(payload, request.prompt)
+	}
 }
 
 private fun getResponse(
@@ -48,9 +52,7 @@ private fun getResponse(
 }
 
 private data class PorfirevichRequest(
-	val prompt: String,
-	val model: String = "xlarge",
-	val length: Int = 100
+	val prompt: String, val model: String = "xlarge", val length: Int = 100
 )
 
 private data class PorfirevichResponse(

@@ -3,7 +3,7 @@ package com.github.hummel.union.service.impl
 import com.github.hummel.union.bean.BotData
 import com.github.hummel.union.bean.ServerData
 import com.github.hummel.union.factory.ServiceFactory
-import com.github.hummel.union.integration.getVeniceResponse
+import com.github.hummel.union.integration.getDuckGptLiveResponse
 import com.github.hummel.union.lang.I18n
 import com.github.hummel.union.service.BotService
 import com.github.hummel.union.service.DataService
@@ -76,7 +76,7 @@ class BotServiceImpl : BotService {
 					prefix = prepromptTemplate.build(serverData.name, serverData.preprompt), separator = "\n"
 				)
 
-				val (status, response) = getVeniceResponse(prompt)
+				val (status, response) = getDuckGptLiveResponse(prompt)
 				response?.let {
 					if (it.length > 2000) {
 						val embed = EmbedBuilder().error(

@@ -6,13 +6,17 @@ import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.apache.hc.core5.http.io.entity.EntityUtils
 import org.apache.hc.core5.net.URIBuilder
 
+private val lock: Any = Any()
+
 @Suppress("unused")
 fun getDuckGptLiveResponse(
 	prompt: String
 ): Pair<Pair<Int, String>, String?> {
-	val parameter = prompt
+	synchronized(lock) {
+		val parameter = prompt
 
-	return getResponse(parameter)
+		return getResponse(parameter)
+	}
 }
 
 private fun getResponse(

@@ -9,17 +9,21 @@ import org.apache.hc.core5.http.io.entity.EntityUtils
 import org.apache.hc.core5.http.io.entity.StringEntity
 import java.util.*
 
+private val lock: Any = Any()
+
 @Suppress("unused")
 fun getVeniceResponse(
 	prompt: String
 ): Pair<Pair<Int, String>, String?> {
-	val request = VeniceRequest(
-		prompt = listOf(VeniceRequest.Prompt(content = prompt))
-	)
+	synchronized(lock) {
+		val request = VeniceRequest(
+			prompt = listOf(VeniceRequest.Prompt(content = prompt))
+		)
 
-	val payload = gson.toJson(request)
+		val payload = gson.toJson(request)
 
-	return getResponse(payload)
+		return getResponse(payload)
+	}
 }
 
 private fun getResponse(
