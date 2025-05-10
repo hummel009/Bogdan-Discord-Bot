@@ -585,6 +585,8 @@ class ManagerServiceImpl : ManagerService {
 					val name = sc.arguments[0].stringValue.get()
 					try {
 						serverData.name = name
+						event.api.yourself.updateNickname(server, name)
+
 						EmbedBuilder().success(sc.user, serverData, I18n.of("set_name", serverData).format(name))
 					} catch (_: Exception) {
 						EmbedBuilder().error(sc.user, serverData, I18n.of("invalid_arg", serverData))
@@ -611,6 +613,8 @@ class ManagerServiceImpl : ManagerService {
 				} else {
 					try {
 						serverData.name = defaultName
+						event.api.yourself.updateNickname(server, defaultName)
+
 						EmbedBuilder().success(
 							sc.user, serverData, I18n.of("reset_name", serverData).format(defaultName)
 						)

@@ -58,7 +58,6 @@ object LangEnUs : Lang {
 			"msg_success": "Success",
 			
 			"no_access": "You cannot use this command.",
-			"no_connection": "Error accessing the site.",
 			
 			"invalid_arg": "Invalid arguments.",
 			"invalid_format": "Invalid arguments format.",
@@ -82,9 +81,10 @@ object LangEnUs : Lang {
 			"november": "November %d",
 			"december": "December %d",
 			
-			"duck_long": "The answer is too long and exceeds the Discord limit. Try editing the prompt to say «Write 3 paragraphs».",
-			"duck_off": "The site with the neural network is temporarily not working, or is overloaded, or the request rules have changed, and now the bot program needs to be reworked.",
+			"long_message": "The answer is too long and exceeds the Discord limit. Try editing the prompt to say «Write 3 paragraphs».",
 			
+			"site_error": "Error code: %d [%s]",
+
 			"be": "belarusian",
 			"en": "english",
 			"ru": "russian",

@@ -6,7 +6,10 @@ import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.apache.hc.core5.http.io.entity.EntityUtils
 import org.apache.hc.core5.net.URIBuilder
 
-fun getDuckGptLiveResponse(prompt: String): String? {
+@Suppress("unused")
+fun getDuckGptLiveResponse(
+	prompt: String
+): Pair<Pair<Int, String>, String?> {
 	val parameter = prompt
 
 	return getResponse(parameter)
@@ -14,28 +17,29 @@ fun getDuckGptLiveResponse(prompt: String): String? {
 
 private fun getResponse(
 	parameter: String
-): String? = HttpClients.createDefault().use { client ->
-	try {
-		val url = URIBuilder("https://duck.gpt-api.workers.dev/chat/").apply {
-			addParameter("prompt", parameter)
-		}.build().toString()
+): Pair<Pair<Int, String>, String?> = HttpClients.createDefault().use { client ->
+	val url = URIBuilder("https://duck.gpt-api.workers.dev/chat/").apply {
+		addParameter("prompt", parameter)
+	}.build().toString()
 
-		val request = HttpGet(url)
+	val request = HttpGet(url)
 
-		client.execute(request) { response ->
-			if (response.code in 200..299) {
+	client.execute(request) { response ->
+		if (response.code in 200..299) {
+			try {
 				val content = EntityUtils.toString(response.entity)
 
 				val apiResponse = gson.fromJson(content, DuckGptLiveResponse::class.java)
 
-				apiResponse.response
-			} else {
-				null
+				response.code to response.reasonPhrase to apiResponse.response
+			} catch (e: Exception) {
+				e.printStackTrace()
+
+				422 to e.message to null
 			}
+		} else {
+			response.code to response.reasonPhrase to null
 		}
-	} catch (e: Exception) {
-		e.printStackTrace()
-		null
 	}
 }
 

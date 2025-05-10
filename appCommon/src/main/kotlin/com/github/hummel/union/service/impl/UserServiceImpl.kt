@@ -100,11 +100,18 @@ class UserServiceImpl : UserService {
 
 				val prompt = sc.arguments[0].stringValue.get()
 				val embed = if (prompt.isNotEmpty()) {
-					getPorfirevichResponse(prompt)?.let {
+					val (status, response) = getPorfirevichResponse(prompt)
+					response?.let {
 						EmbedBuilder().success(sc.user, serverData, it)
-					} ?: EmbedBuilder().error(sc.user, serverData, I18n.of("no_connection", serverData))
+					} ?: run {
+						EmbedBuilder().error(
+							sc.user, serverData, I18n.of("site_error", serverData).format(status.first, status.second)
+						)
+					}
 				} else {
-					EmbedBuilder().error(sc.user, serverData, I18n.of("invalid_arg", serverData))
+					EmbedBuilder().error(
+						sc.user, serverData, I18n.of("invalid_arg", serverData)
+					)
 				}
 				sc.createFollowupMessageBuilder().addEmbed(embed).send().get()
 			}.get()
