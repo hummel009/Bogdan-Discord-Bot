@@ -1,5 +1,6 @@
-package com.github.hummel.union.integration
+package com.github.hummel.union.integration.api
 
+import com.github.hummel.union.bean.InteractionResult
 import com.github.hummel.union.utils.gson
 import org.apache.hc.client5.http.classic.methods.HttpPost
 import org.apache.hc.client5.http.impl.classic.HttpClients
@@ -10,23 +11,26 @@ import org.apache.hc.core5.http.io.entity.StringEntity
 private val lock: Any = Any()
 
 @Suppress("unused")
-fun getPorfirevichResponse(
-	prompt: String
-): Pair<Pair<Int, String>, String?> {
+fun getPorfirevichInteractionResult(
+	data: String
+): InteractionResult {
 	synchronized(lock) {
 		val request = PorfirevichRequest(
-			prompt = prompt
+			prompt = data
 		)
 
 		val payload = gson.toJson(request)
 
-		return getResponse(payload, request.prompt)
+		val (data, error) = getResponse(payload)
+		data ?: return InteractionResult(null, error)
+
+		return InteractionResult(request.prompt + data, null)
 	}
 }
 
 private fun getResponse(
-	payload: String, append: String
-): Pair<Pair<Int, String>, String?> = HttpClients.createDefault().use { client ->
+	payload: String
+): InteractionResult = HttpClients.createDefault().use { client ->
 	val request = HttpPost("https://api.porfirevich.com/generate/")
 
 	request.entity = StringEntity(payload, ContentType.APPLICATION_JSON)
@@ -39,14 +43,14 @@ private fun getResponse(
 
 				val apiResponse = gson.fromJson(jsonResponse, PorfirevichResponse::class.java)
 
-				response.code to response.reasonPhrase to (append + apiResponse.replies.random())
+				InteractionResult(apiResponse.replies.random(), null)
 			} catch (e: Exception) {
 				e.printStackTrace()
 
-				422 to e.message to null
+				InteractionResult(null, "${e.javaClass.getSimpleName()}")
 			}
 		} else {
-			response.code to response.reasonPhrase to null
+			InteractionResult(null, "${response.reasonPhrase} [${response.code}]")
 		}
 	}
 }

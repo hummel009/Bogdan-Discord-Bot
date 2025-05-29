@@ -1,5 +1,6 @@
-package com.github.hummel.union.integration
+package com.github.hummel.union.integration.api
 
+import com.github.hummel.union.bean.InteractionResult
 import com.github.hummel.union.utils.gson
 import org.apache.hc.client5.http.classic.methods.HttpGet
 import org.apache.hc.client5.http.impl.classic.HttpClients
@@ -9,11 +10,11 @@ import org.apache.hc.core5.net.URIBuilder
 private val lock: Any = Any()
 
 @Suppress("unused")
-fun getDuckGptLiveResponse(
-	prompt: String
-): Pair<Pair<Int, String>, String?> {
+fun getDuckGptLiveInteractionResult(
+	data: String
+): InteractionResult {
 	synchronized(lock) {
-		val parameter = prompt
+		val parameter = data
 
 		return getResponse(parameter)
 	}
@@ -21,7 +22,7 @@ fun getDuckGptLiveResponse(
 
 private fun getResponse(
 	parameter: String
-): Pair<Pair<Int, String>, String?> = HttpClients.createDefault().use { client ->
+): InteractionResult = HttpClients.createDefault().use { client ->
 	val url = URIBuilder("https://duck.gpt-api.workers.dev/chat/").apply {
 		addParameter("prompt", parameter)
 	}.build().toString()
@@ -35,14 +36,14 @@ private fun getResponse(
 
 				val apiResponse = gson.fromJson(content, DuckGptLiveResponse::class.java)
 
-				response.code to response.reasonPhrase to apiResponse.response
+				InteractionResult(apiResponse.response, null)
 			} catch (e: Exception) {
 				e.printStackTrace()
 
-				422 to e.message to null
+				InteractionResult(null, "${e.javaClass.getSimpleName()}")
 			}
 		} else {
-			response.code to response.reasonPhrase to null
+			InteractionResult(null, "${response.reasonPhrase} [${response.code}]")
 		}
 	}
 }

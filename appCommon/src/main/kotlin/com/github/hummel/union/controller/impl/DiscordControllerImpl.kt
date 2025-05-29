@@ -3,6 +3,8 @@ package com.github.hummel.union.controller.impl
 import com.github.hummel.union.controller.DiscordController
 import com.github.hummel.union.factory.ServiceFactory
 import org.javacord.api.DiscordApi
+import org.openqa.selenium.WebDriver
+import org.openqa.selenium.remote.RemoteWebDriver
 
 class DiscordControllerImpl : DiscordController {
 	lateinit var api: DiscordApi
@@ -52,8 +54,8 @@ class DiscordControllerImpl : DiscordController {
 		api.addMessageCreateListener {
 			botService.addRandomEmoji(it)
 			botService.saveMessage(it)
-			botService.sendRandomMessage(it)
 			botService.sendBirthdayMessage(it)
+			botService.sendRandomMessage(it)
 		}
 	}
 }

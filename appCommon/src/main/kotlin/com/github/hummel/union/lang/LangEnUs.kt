@@ -83,7 +83,7 @@ object LangEnUs : Lang {
 			
 			"long_message": "The answer is too long and exceeds the Discord limit. Try editing the prompt to say «Write 3 paragraphs».",
 			
-			"site_error": "Error code: %d [%s]",
+			"site_error": "Error: %s",
 
 			"be": "belarusian",
 			"en": "english",

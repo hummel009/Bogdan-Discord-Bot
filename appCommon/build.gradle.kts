@@ -9,10 +9,11 @@ dependencies {
 	implementation("org.javacord:javacord:latest.release") {
 		exclude(group = "org.bouncycastle")
 	}
+	implementation("org.seleniumhq.selenium:selenium-java:latest.release")
 }
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(8)
+		languageVersion = JavaLanguageVersion.of(17)
 	}
 }

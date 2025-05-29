@@ -3,7 +3,7 @@ package com.github.hummel.union.service.impl
 import com.github.hummel.union.bean.BotData
 import com.github.hummel.union.bean.ServerData
 import com.github.hummel.union.factory.ServiceFactory
-import com.github.hummel.union.integration.getDuckGptLiveResponse
+import com.github.hummel.union.integration.api.getDuckGptLiveInteractionResult
 import com.github.hummel.union.lang.I18n
 import com.github.hummel.union.service.BotService
 import com.github.hummel.union.service.DataService
@@ -76,8 +76,8 @@ class BotServiceImpl : BotService {
 					prefix = prepromptTemplate.build(serverData.name, serverData.preprompt), separator = "\n"
 				)
 
-				val (status, response) = getDuckGptLiveResponse(prompt)
-				response?.let {
+				val (data, error) = getDuckGptLiveInteractionResult(prompt)
+				data?.let {
 					if (it.length > 2000) {
 						val embed = EmbedBuilder().error(
 							event.messageAuthor.asUser().get(), serverData, I18n.of("long_message", serverData)
@@ -90,7 +90,7 @@ class BotServiceImpl : BotService {
 					val embed = EmbedBuilder().error(
 						event.messageAuthor.asUser().get(),
 						serverData,
-						I18n.of("site_error", serverData).format(status.first, status.second)
+						I18n.of("site_error", serverData).format(error)
 					)
 					event.channel.sendMessage(embed)
 				}
