@@ -1,7 +1,7 @@
 package com.github.hummel.union.service.impl
 
 import com.github.hummel.union.factory.ServiceFactory
-import com.github.hummel.union.lang.I18n
+import com.github.hummel.union.utils.I18n
 import com.github.hummel.union.service.AccessService
 import com.github.hummel.union.service.DataService
 import com.github.hummel.union.service.OwnerService

@@ -3,8 +3,8 @@ package com.github.hummel.union.service.impl
 import com.github.hummel.union.bean.BotData
 import com.github.hummel.union.bean.ServerData
 import com.github.hummel.union.factory.ServiceFactory
-import com.github.hummel.union.integration.api.getDuckGptLiveInteractionResult
-import com.github.hummel.union.lang.I18n
+import com.github.hummel.union.integration.getDuckGptLiveInteractionResult
+import com.github.hummel.union.utils.I18n
 import com.github.hummel.union.service.BotService
 import com.github.hummel.union.service.DataService
 import com.github.hummel.union.utils.build

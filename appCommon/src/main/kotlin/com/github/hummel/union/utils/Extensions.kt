@@ -1,7 +1,7 @@
 package com.github.hummel.union.utils
 
 import com.github.hummel.union.bean.ServerData
-import com.github.hummel.union.lang.I18n
+import com.github.hummel.union.utils.I18n
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.entity.user.User
 

@@ -9,7 +9,6 @@ dependencies {
 	implementation("org.javacord:javacord:latest.release") {
 		exclude(group = "org.bouncycastle")
 	}
-	implementation("org.seleniumhq.selenium:selenium-java:latest.release")
 }
 
 java {

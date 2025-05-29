@@ -2,8 +2,8 @@ package com.github.hummel.union.service.impl
 
 import com.github.hummel.union.bean.BotData
 import com.github.hummel.union.factory.ServiceFactory
-import com.github.hummel.union.integration.api.getPorfirevichInteractionResult
-import com.github.hummel.union.lang.I18n
+import com.github.hummel.union.integration.getPorfirevichInteractionResult
+import com.github.hummel.union.utils.I18n
 import com.github.hummel.union.service.DataService
 import com.github.hummel.union.service.UserService
 import com.github.hummel.union.utils.error

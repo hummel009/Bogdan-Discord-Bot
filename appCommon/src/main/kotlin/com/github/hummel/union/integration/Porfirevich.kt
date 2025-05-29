@@ -1,4 +1,4 @@
-package com.github.hummel.union.integration.api
+package com.github.hummel.union.integration
 
 import com.github.hummel.union.bean.InteractionResult
 import com.github.hummel.union.utils.gson
