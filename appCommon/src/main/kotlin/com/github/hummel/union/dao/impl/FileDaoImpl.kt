@@ -8,7 +8,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import kotlin.random.Random
 
-private const val NOT_EXIST = "File doesn't exist!"
+private const val notExist: String = "File doesn't exist!"
 
 class FileDaoImpl : FileDao {
 	override fun createFile(filePath: String) {
@@ -56,7 +56,7 @@ class FileDaoImpl : FileDao {
 				it.read(byteArray)
 			}
 		} else {
-			throw Exception(NOT_EXIST)
+			throw Exception(notExist)
 		}
 		return byteArray
 	}
@@ -68,7 +68,7 @@ class FileDaoImpl : FileDao {
 				it.write(byteArray)
 			}
 		} else {
-			throw Exception(NOT_EXIST)
+			throw Exception(notExist)
 		}
 	}
 
@@ -79,7 +79,7 @@ class FileDaoImpl : FileDao {
 				it.write(byteArray)
 			}
 		} else {
-			throw Exception(NOT_EXIST)
+			throw Exception(notExist)
 		}
 	}
 
@@ -95,6 +95,6 @@ class FileDaoImpl : FileDao {
 			}
 			return null
 		}
-		throw Exception(NOT_EXIST)
+		throw Exception(notExist)
 	}
 }

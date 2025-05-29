@@ -16,10 +16,8 @@ object I18n {
 
 		val translation = gson.fromJson(instance.getJson(), Map::class.java) as Map<String, String>
 
-		translation[key]?.let {
-			return@of it
-		} ?: run {
-			return@of "Invalid translation key!"
-		}
+		translation[key]?.let { return it }
+
+		return "Invalid translation key!"
 	}
 }

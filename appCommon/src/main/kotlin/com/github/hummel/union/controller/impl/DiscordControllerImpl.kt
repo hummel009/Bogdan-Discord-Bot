@@ -3,8 +3,6 @@ package com.github.hummel.union.controller.impl
 import com.github.hummel.union.controller.DiscordController
 import com.github.hummel.union.factory.ServiceFactory
 import org.javacord.api.DiscordApi
-import org.openqa.selenium.WebDriver
-import org.openqa.selenium.remote.RemoteWebDriver
 
 class DiscordControllerImpl : DiscordController {
 	lateinit var api: DiscordApi
