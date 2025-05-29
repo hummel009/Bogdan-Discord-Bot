@@ -15,8 +15,7 @@ android {
 	defaultConfig {
 		applicationId = "com.github.hummel.union"
 		minSdk = 34
-		//noinspection OldTargetApi
-		targetSdk = 34
+		targetSdk = 35
 		versionName = LocalDate.now().format(DateTimeFormatter.ofPattern("yy.MM.dd"))
 	}
 
@@ -32,7 +31,7 @@ dependencies {
 
 	implementation("com.google.android.material:material:latest.release")
 
-	val composeBom = platform("androidx.compose:compose-bom:2025.03.01")
+	val composeBom = platform("androidx.compose:compose-bom:latest.release")
 	implementation(composeBom)
 	implementation("androidx.compose.material3:material3")
 	implementation("androidx.activity:activity-compose")
