@@ -1,5 +1,7 @@
 <div align = "center">
 
+![Logo]
+
 [![Code Smells][code_smells_badge]][code_smells_link]
 [![Maintainability Rating][maintainability_rating_badge]][maintainability_rating_link]
 [![Security Rating][security_rating_badge]][security_rating_link]
@@ -13,13 +15,11 @@
 
 The first discord bot that works not only on Windows/Linux, but also on Android.
 
-![Logo]
-
 </div>
 
 <!----------------------------------------------------------------------------->
 
-[Logo]: appAndroid/src/main/play_store_512.png
+[Logo]: appAndroid/src/main/res/mipmap-xxxhdpi/mdb.png
 
 [code_smells_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_Mobile-Discord-Bot&metric=code_smells
 
