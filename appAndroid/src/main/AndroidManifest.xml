@@ -17,19 +17,19 @@
 			android:fullBackupContent="@xml/backup_rules"
 			android:dataExtractionRules="@xml/data_extraction_rules"
 			android:label="@string/app_name"
-			android:icon="@mipmap/union"
-			android:roundIcon="@mipmap/union_foreground"
+			android:icon="@mipmap/mdb"
+			android:roundIcon="@mipmap/mdb_adaptive_fore"
 			android:supportsRtl="true"
-			android:theme="@style/Theme.Hundroid">
+			android:theme="@style/Theme.MDB">
 		<service
-				android:name="com.github.hummel.union.android.DiscordAdapter"
+				android:name="com.github.hummel.mdb.android.DiscordAdapter"
 				android:foregroundServiceType="dataSync"
 				android:exported="false">
 		</service>
 		<activity
-				android:name="com.github.hummel.union.android.Main"
+				android:name="com.github.hummel.mdb.android.Main"
 				android:exported="true"
-				android:theme="@style/Theme.Hundroid">
+				android:theme="@style/Theme.MDB">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 

@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-	namespace = "com.github.hummel.union"
+	namespace = "com.github.hummel.mdb"
 	compileSdk = 35
 
 	defaultConfig {
-		applicationId = "com.github.hummel.union"
+		applicationId = "com.github.hummel.mdb"
 		minSdk = 34
 		targetSdk = 35
 		versionName = LocalDate.now().format(DateTimeFormatter.ofPattern("yy.MM.dd"))

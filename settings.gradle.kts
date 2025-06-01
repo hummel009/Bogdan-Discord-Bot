@@ -22,5 +22,5 @@ plugins {
 }
 
 include(":appAndroid")
-include(":appWindows")
+include(":appDesktop")
 include(":appCommon")

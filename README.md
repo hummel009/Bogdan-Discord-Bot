@@ -9,46 +9,46 @@
 [![Technical Debt][technical_debt_badge]][technical_debt_link]
 [![Lines of Code][lines_of_code_badge]][lines_of_code_link]
 
-Мультиплатформенный (Android/Windows/Linux) бот для Discord.
+Первый discord-бот, работающий не только на Windows/Linux, но и на Android.
 
 <!----------------------------------------------------------------------------->
 
-[code_smells_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_UN-ION-Discord-Bot&metric=code_smells
+[code_smells_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_Mobile-Discord-Bot&metric=code_smells
 
-[code_smells_link]: https://sonarcloud.io/summary/overall?id=hummel009_UN-ION-Discord-Bot
+[code_smells_link]: https://sonarcloud.io/summary/overall?id=hummel009_Mobile-Discord-Bot
 
-[maintainability_rating_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_UN-ION-Discord-Bot&metric=sqale_rating
+[maintainability_rating_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_Mobile-Discord-Bot&metric=sqale_rating
 
-[maintainability_rating_link]: https://sonarcloud.io/summary/overall?id=hummel009_UN-ION-Discord-Bot
+[maintainability_rating_link]: https://sonarcloud.io/summary/overall?id=hummel009_Mobile-Discord-Bot
 
-[security_rating_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_UN-ION-Discord-Bot&metric=security_rating
+[security_rating_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_Mobile-Discord-Bot&metric=security_rating
 
-[security_rating_link]: https://sonarcloud.io/summary/overall?id=hummel009_UN-ION-Discord-Bot
+[security_rating_link]: https://sonarcloud.io/summary/overall?id=hummel009_Mobile-Discord-Bot
 
-[bugs_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_UN-ION-Discord-Bot&metric=bugs
+[bugs_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_Mobile-Discord-Bot&metric=bugs
 
-[bugs_link]: https://sonarcloud.io/summary/overall?id=hummel009_UN-ION-Discord-Bot
+[bugs_link]: https://sonarcloud.io/summary/overall?id=hummel009_Mobile-Discord-Bot
 
-[vulnerabilities_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_UN-ION-Discord-Bot&metric=vulnerabilities
+[vulnerabilities_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_Mobile-Discord-Bot&metric=vulnerabilities
 
-[vulnerabilities_link]: https://sonarcloud.io/summary/overall?id=hummel009_UN-ION-Discord-Bot
+[vulnerabilities_link]: https://sonarcloud.io/summary/overall?id=hummel009_Mobile-Discord-Bot
 
-[duplicated_lines_density_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_UN-ION-Discord-Bot&metric=duplicated_lines_density
+[duplicated_lines_density_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_Mobile-Discord-Bot&metric=duplicated_lines_density
 
-[duplicated_lines_density_link]: https://sonarcloud.io/summary/overall?id=hummel009_UN-ION-Discord-Bot
+[duplicated_lines_density_link]: https://sonarcloud.io/summary/overall?id=hummel009_Mobile-Discord-Bot
 
-[reliability_rating_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_UN-ION-Discord-Bot&metric=reliability_rating
+[reliability_rating_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_Mobile-Discord-Bot&metric=reliability_rating
 
-[reliability_rating_link]: https://sonarcloud.io/summary/overall?id=hummel009_UN-ION-Discord-Bot
+[reliability_rating_link]: https://sonarcloud.io/summary/overall?id=hummel009_Mobile-Discord-Bot
 
-[quality_gate_status_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_UN-ION-Discord-Bot&metric=alert_status
+[quality_gate_status_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_Mobile-Discord-Bot&metric=alert_status
 
-[quality_gate_status_link]: https://sonarcloud.io/summary/overall?id=hummel009_UN-ION-Discord-Bot
+[quality_gate_status_link]: https://sonarcloud.io/summary/overall?id=hummel009_Mobile-Discord-Bot
 
-[technical_debt_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_UN-ION-Discord-Bot&metric=sqale_index
+[technical_debt_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_Mobile-Discord-Bot&metric=sqale_index
 
-[technical_debt_link]: https://sonarcloud.io/summary/overall?id=hummel009_UN-ION-Discord-Bot
+[technical_debt_link]: https://sonarcloud.io/summary/overall?id=hummel009_Mobile-Discord-Bot
 
-[lines_of_code_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_UN-ION-Discord-Bot&metric=ncloc
+[lines_of_code_badge]: https://sonarcloud.io/api/project_badges/measure?project=hummel009_Mobile-Discord-Bot&metric=ncloc
 
-[lines_of_code_link]: https://sonarcloud.io/summary/overall?id=hummel009_UN-ION-Discord-Bot
+[lines_of_code_link]: https://sonarcloud.io/summary/overall?id=hummel009_Mobile-Discord-Bot
