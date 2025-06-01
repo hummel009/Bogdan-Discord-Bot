@@ -20,21 +20,26 @@ class DiscordAdapter : Service() {
 		wakeLock = (getSystemService(POWER_SERVICE) as PowerManager).run {
 			newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "mdb::wake_lock")
 		}
+
+		val channelId = "mdb::channel_id"
+		val channelName = "mdb::channel_name"
+		val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+		val notificationChannel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
+		notificationManager.createNotificationChannel(notificationChannel)
+
 		controller.onCreate()
 	}
 
 	@SuppressLint("WakelockTimeout")
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-		wakeLock.acquire()
+		if (!wakeLock.isHeld) {
+			wakeLock.acquire()
+		}
 
 		val channelId = "mdb::channel_id"
-		val channelName = "mdb::channel_name"
 		val notification = NotificationCompat.Builder(this, channelId).run {
 			setPriority(NotificationCompat.PRIORITY_MAX)
 		}.build()
-		val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
-		val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-		notificationManager.createNotificationChannel(channel)
 
 		startForeground(1, notification)
 
@@ -44,9 +49,10 @@ class DiscordAdapter : Service() {
 	}
 
 	override fun onDestroy() {
+		if (wakeLock.isHeld) {
+			wakeLock.release()
+		}
 		stopForeground(STOP_FOREGROUND_REMOVE)
-
-		wakeLock.release()
 	}
 
 	override fun onBind(intent: Intent?): IBinder? = null

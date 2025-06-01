@@ -5,6 +5,11 @@ import com.google.gson.Gson
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
+import kotlin.system.exitProcess
+
+data class Config(
+	val token: String?, val ownerId: String?
+)
 
 private val gson: Gson = Gson()
 
@@ -17,7 +22,7 @@ fun main() {
 			FileReader(file).use { reader ->
 				val config = gson.fromJson(reader, Config::class.java)
 				if (config.token != null && config.ownerId != null) {
-					launchService(config.token, config.ownerId, "files", null)
+					launchWithData(config.token, config.ownerId, "files")
 				} else {
 					requestUserInput()
 				}
@@ -47,19 +52,24 @@ fun requestUserInput() {
 		e.printStackTrace()
 	}
 
-	launchService(token, ownerId, "files", null)
+	launchWithData(token, ownerId, "files")
 }
 
-@Suppress("UNUSED_PARAMETER", "RedundantSuppression", "unused")
-fun launchService(token: String, ownerId: String, root: String, context: Any?) {
+@Suppress("UNUSED_PARAMETER")
+fun launchWithData(token: String, ownerId: String, root: String) {
 	BotData.token = token
 	BotData.ownerId = ownerId
 	BotData.root = root
+	BotData.exitFunction = { exitFunction() }
+
+	startFunction()
+}
+
+fun startFunction() {
 	val adapter = DiscordAdapter()
 	adapter.launch()
 }
 
-data class Config(
-	val token: String?,
-	val ownerId: String?
-)
+fun exitFunction() {
+	exitProcess(0)
+}

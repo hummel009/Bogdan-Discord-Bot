@@ -1,5 +1,6 @@
 package com.github.hummel.mdb.core.service.impl
 
+import com.github.hummel.mdb.core.bean.BotData
 import com.github.hummel.mdb.core.factory.ServiceFactory
 import com.github.hummel.mdb.core.service.AccessService
 import com.github.hummel.mdb.core.service.DataService
@@ -9,7 +10,6 @@ import com.github.hummel.mdb.core.utils.access
 import com.github.hummel.mdb.core.utils.success
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.interaction.InteractionCreateEvent
-import kotlin.system.exitProcess
 
 class OwnerServiceImpl : OwnerService {
 	private val dataService: DataService = ServiceFactory.dataService
@@ -72,7 +72,7 @@ class OwnerServiceImpl : OwnerService {
 			}.get()
 
 			if (exit) {
-				exitProcess(0)
+				BotData.exitFunction.invoke()
 			}
 		}
 	}
