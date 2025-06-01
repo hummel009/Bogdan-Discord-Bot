@@ -26,11 +26,14 @@ class Main : ComponentActivity() {
 	private var token: String = ""
 	private var ownerId: String = ""
 
+	// DO NOT REMOVE
+	private var context: ComponentActivity = this
+
 	private val requestPermissionLauncher: ActivityResultLauncher<String?> = registerForActivityResult(
 		ActivityResultContracts.RequestPermission()
 	) { isGranted: Boolean ->
 		if (isGranted) {
-			launchWithData(token, ownerId, filesDir.path, this)
+			launchWithData(token, ownerId, filesDir.path, context)
 		}
 	}
 
@@ -84,7 +87,7 @@ class Main : ComponentActivity() {
 			) {
 				Button(
 					onClick = {
-						exitFunction(this as ComponentActivity)
+						exitFunction(context)
 					}, colors = ButtonDefaults.buttonColors(
 						containerColor = Color(0xFFC94F4F), contentColor = Color(0xFFDFE1E5)
 					)
@@ -108,9 +111,9 @@ class Main : ComponentActivity() {
 	private fun checkAndRequestNotificationPermission() {
 		when {
 			ContextCompat.checkSelfPermission(
-				this, Manifest.permission.POST_NOTIFICATIONS
+				context, Manifest.permission.POST_NOTIFICATIONS
 			) == PackageManager.PERMISSION_GRANTED -> {
-				launchWithData(token, ownerId, filesDir.path, this)
+				launchWithData(token, ownerId, filesDir.path, context)
 			}
 
 			shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
@@ -166,4 +169,5 @@ fun startFunction(context: ComponentActivity) {
 fun exitFunction(context: ComponentActivity) {
 	val serviceIntent = Intent(context, DiscordAdapter::class.java)
 	context.stopService(serviceIntent)
+	context.finish()
 }

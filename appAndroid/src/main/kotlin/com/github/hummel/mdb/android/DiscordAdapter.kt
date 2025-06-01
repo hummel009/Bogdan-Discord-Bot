@@ -39,6 +39,7 @@ class DiscordAdapter : Service() {
 		val channelId = "mdb::channel_id"
 		val notification = NotificationCompat.Builder(this, channelId).run {
 			setPriority(NotificationCompat.PRIORITY_MAX)
+			setOngoing(true)
 		}.build()
 
 		startForeground(1, notification)
@@ -49,10 +50,11 @@ class DiscordAdapter : Service() {
 	}
 
 	override fun onDestroy() {
+		stopForeground(STOP_FOREGROUND_REMOVE)
+
 		if (wakeLock.isHeld) {
 			wakeLock.release()
 		}
-		stopForeground(STOP_FOREGROUND_REMOVE)
 	}
 
 	override fun onBind(intent: Intent?): IBinder? = null
