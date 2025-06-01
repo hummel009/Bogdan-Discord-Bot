@@ -18,9 +18,10 @@ class LoginServiceImpl : LoginService {
 
 	override fun deleteCommands(impl: DiscordControllerImpl) {
 		val commands = impl.api.globalApplicationCommands.get()
+		val clientId = impl.api.clientId
 
 		commands.forEachIndexed { index, command ->
-			val url = "https://discord.com/api/v10/applications/1147449520565801001/commands/${command.id}"
+			val url = "https://discord.com/api/v10/applications/$clientId/commands/${command.id}"
 			HttpClients.createDefault().use { client ->
 				val request = HttpDelete(url)
 
