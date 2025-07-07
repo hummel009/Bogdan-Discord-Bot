@@ -1,7 +1,7 @@
 package com.github.hummel.mdb.windows
 
 import com.github.hummel.mdb.core.bean.BotData
-import com.google.gson.Gson
+import com.github.hummel.mdb.core.utils.gson
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
@@ -11,13 +11,9 @@ data class Config(
 	val token: String?, val ownerId: String?
 )
 
-private val gson: Gson = Gson()
-
 fun main() {
-	val configFile = "start.json"
-
 	try {
-		val file = File(configFile)
+		val file = File("config.json")
 		if (file.exists()) {
 			FileReader(file).use { reader ->
 				val config = gson.fromJson(reader, Config::class.java)
@@ -36,17 +32,19 @@ fun main() {
 }
 
 fun requestUserInput() {
-	print("Введите token: ")
+	print("Enter token: ")
 	val token = readln()
 
-	print("Введите owner ID: ")
+	print("Enter owner ID: ")
 	val ownerId = readln()
 
 	val config = Config(token, ownerId)
-	val file = File("start.json")
 	try {
-		FileWriter(file).use { writer ->
-			gson.toJson(config, writer)
+		val file = File("config.json")
+		if (file.exists()) {
+			FileWriter(file).use { writer ->
+				gson.toJson(config, writer)
+			}
 		}
 	} catch (e: Exception) {
 		e.printStackTrace()
