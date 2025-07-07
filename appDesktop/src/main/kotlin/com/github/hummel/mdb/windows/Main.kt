@@ -41,7 +41,7 @@ fun requestUserInput() {
 	val config = Config(token, ownerId)
 	try {
 		val file = File("config.json")
-		if (file.exists()) {
+		if (!file.exists()) {
 			FileWriter(file).use { writer ->
 				gson.toJson(config, writer)
 			}
