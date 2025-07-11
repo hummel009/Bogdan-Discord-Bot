@@ -5,21 +5,31 @@ import com.github.hummel.mdb.core.dao.JsonDao
 import com.github.hummel.mdb.core.factory.DaoFactory
 import com.github.hummel.mdb.core.utils.gson
 
+private const val notExist: String = "File doesn't exist!"
+
 class JsonDaoImpl : JsonDao {
 	private val fileDao: FileDao = DaoFactory.fileDao
 
-	override fun <D> readFromJson(filePath: String, clazz: Class<D>): D? {
-		return try {
-			val json = fileDao.readFromFile(filePath)
-			gson.fromJson(String(json), clazz)
-		} catch (_: Exception) {
-			null
+	override fun <T> readFromJson(filePath: String, clazz: Class<T>): T? {
+		val file = fileDao.getFile(filePath)
+		if (file.exists()) {
+			try {
+				val json = String(fileDao.readFromFile(filePath))
+				return gson.fromJson(json, clazz)
+			} catch (_: Exception) {
+				return null
+			}
 		}
+		return null
 	}
 
-	override fun <D> writeToJson(filePath: String, serverData: D) {
-		val json = gson.toJson(serverData)
-		fileDao.createFile(filePath)
-		fileDao.writeToFile(filePath, json.toByteArray())
+	override fun <T> writeToJson(filePath: String, obj: T) {
+		val file = fileDao.getFile(filePath)
+		if (file.exists()) {
+			val json = gson.toJson(obj)
+			fileDao.writeToFile(filePath, json.toByteArray())
+		} else {
+			throw Exception(notExist)
+		}
 	}
 }

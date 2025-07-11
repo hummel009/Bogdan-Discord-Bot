@@ -10,13 +10,27 @@ import org.apache.hc.core5.net.URIBuilder
 private val lock: Any = Any()
 
 @Suppress("unused")
+private fun main() {
+	val input = "Привет, как дела?"
+	val result = getDuckGptLiveInteractionResult(input)
+
+	if (result.error != null) {
+		println("Ошибка: ${result.error}")
+	} else {
+		println("Ответ: ${result.data}")
+	}
+}
+
 fun getDuckGptLiveInteractionResult(
-	data: String
+	input: String
 ): InteractionResult {
 	synchronized(lock) {
-		val parameter = data
+		val parameter = input
 
-		return getResponse(parameter)
+		val (data, error) = getResponse(parameter)
+		data ?: return InteractionResult(null, error)
+
+		return InteractionResult(data, null)
 	}
 }
 
@@ -32,14 +46,13 @@ private fun getResponse(
 	client.execute(request) { response ->
 		if (response.code in 200..299) {
 			try {
-				val content = EntityUtils.toString(response.entity)
+				val entity = response.entity
+				val jsonResponse = EntityUtils.toString(entity)
 
-				val apiResponse = gson.fromJson(content, DuckGptLiveResponse::class.java)
+				val apiResponse = gson.fromJson(jsonResponse, DuckGptLiveResponse::class.java)
 
 				InteractionResult(apiResponse.response, null)
 			} catch (e: Exception) {
-				e.printStackTrace()
-
 				InteractionResult(null, "${e.javaClass.getSimpleName()}")
 			}
 		} else {

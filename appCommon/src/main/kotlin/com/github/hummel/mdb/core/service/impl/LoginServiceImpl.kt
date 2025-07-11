@@ -1,92 +1,83 @@
 package com.github.hummel.mdb.core.service.impl
 
 import com.github.hummel.mdb.core.bean.BotData
-import com.github.hummel.mdb.core.bean.Settings
 import com.github.hummel.mdb.core.controller.impl.DiscordControllerImpl
 import com.github.hummel.mdb.core.service.LoginService
-import org.apache.hc.client5.http.classic.methods.HttpDelete
-import org.apache.hc.client5.http.impl.classic.HttpClients
-import org.javacord.api.DiscordApiBuilder
-import org.javacord.api.interaction.SlashCommand
-import org.javacord.api.interaction.SlashCommandOption
-import org.javacord.api.interaction.SlashCommandOptionType
+import net.dv8tion.jda.api.JDABuilder
+import net.dv8tion.jda.api.interactions.commands.OptionType
+import net.dv8tion.jda.api.interactions.commands.build.Commands
+import net.dv8tion.jda.api.interactions.commands.build.OptionData
+import net.dv8tion.jda.api.requests.GatewayIntent
+import net.dv8tion.jda.api.utils.MemberCachePolicy
+import net.dv8tion.jda.api.utils.cache.CacheFlag
 
 class LoginServiceImpl : LoginService {
 	override fun loginBot(impl: DiscordControllerImpl) {
-		impl.api = DiscordApiBuilder().setToken(BotData.token).setAllIntents().login().join()
+		impl.api = JDABuilder.createDefault(BotData.token).apply {
+			enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
+			enableCache(CacheFlag.entries)
+			setMemberCachePolicy(MemberCachePolicy.ALL)
+		}.build().awaitReady()
 	}
 
 	override fun deleteCommands(impl: DiscordControllerImpl) {
-		val commands = impl.api.globalApplicationCommands.get()
-		val clientId = impl.api.clientId
+		val commands = impl.api.retrieveCommands().complete()
 
-		commands.forEachIndexed { index, command ->
-			val url = "https://discord.com/api/v10/applications/$clientId/commands/${command.id}"
-			HttpClients.createDefault().use { client ->
-				val request = HttpDelete(url)
+		commands.forEach {
+			impl.api.deleteCommandById(it.id).complete()
 
-				request.setHeader("Authorization", "Bot ${BotData.token}")
-
-				client.execute(request) { response ->
-					println("${index + 1}/${commands.size}; ${response.code}: ${response.reasonPhrase}")
-				}
-			}
+			println("${it.id}/${commands.size} was deleted.")
 		}
 	}
 
 	override fun registerCommands(impl: DiscordControllerImpl) {
-		val api = impl.api
-		"clear_context" with Settings("/clear_context", emptyList(), api)
-		"complete" with Settings("/complete [text]", argsList(), api)
-		"info" with Settings("/info", emptyList(), api)
+		fun String.cmd(description: String, options: List<OptionData>) =
+			Commands.slash(this, description).addOptions(options)
 
-		"add_birthday" with Settings("/add_birthday [user_id] [month_number] [day_number]", argsList(), api)
-		"add_manager" with Settings("/add_manager [role_id]", argsList(), api)
-		"add_secret_channel" with Settings("/add_secret_channel [channel_id]", argsList(), api)
-		"add_muted_channel" with Settings("/add_muted_channel [channel_id]", argsList(), api)
+		val commands = listOf(
+			"clear_context".cmd("/clear_context", empty()),
+			"complete".cmd("/complete [text]", string()),
+			"info".cmd("/info", empty()),
 
-		"clear_birthdays" with Settings("/clear_birthdays {user_id}", argsList(false), api)
-		"clear_managers" with Settings("/clear_managers {role_id}", argsList(false), api)
-		"clear_secret_channels" with Settings("/clear_secret_channels {channel_id}", argsList(false), api)
-		"clear_muted_channels" with Settings("/clear_muted_channels {channel_id}", argsList(false), api)
+			"add_birthday".cmd("/add_birthday [member_id] [month_number] [day_number]", string()),
+			"add_manager".cmd("/add_manager [role_id]", string()),
+			"add_secret_channel".cmd("/add_secret_channel [channel_id]", string()),
+			"add_muted_channel".cmd("/add_muted_channel [channel_id]", string()),
 
-		"clear_bank" with Settings("/clear_messages", emptyList(), api)
-		"clear_data" with Settings("/clear_data", emptyList(), api)
+			"clear_birthdays".cmd("/clear_birthdays {member_id}", string(false)),
+			"clear_managers".cmd("/clear_managers {role_id}", string(false)),
+			"clear_secret_channels".cmd("/clear_secret_channels {channel_id}", string(false)),
+			"clear_muted_channels".cmd("/clear_muted_channels {channel_id}", string(false)),
 
-		"set_chance_message" with Settings("/set_chance_message [number]", argsList(), api)
-		"set_chance_emoji" with Settings("/set_chance_emoji [number]", argsList(), api)
-		"set_chance_ai" with Settings("/set_chance_ai [number]", argsList(), api)
+			"clear_bank".cmd("/clear_messages", empty()),
+			"clear_data".cmd("/clear_data", empty()),
 
-		"set_language" with Settings("/set_language [ru/be/uk/en]", argsList(), api)
+			"set_chance_message".cmd("/set_chance_message [number]", string()),
+			"set_chance_emoji".cmd("/set_chance_emoji [number]", string()),
+			"set_chance_ai".cmd("/set_chance_ai [number]", string()),
 
-		"set_preprompt" with Settings("/set_preprompt [text]", argsList(), api)
-		"reset_preprompt" with Settings("/reset_preprompt", emptyList(), api)
+			"set_language".cmd("/set_language [ru/be/uk/en]", string()),
 
-		"set_name" with Settings("/set_name [text]", argsList(), api)
-		"reset_name" with Settings("/reset_name", emptyList(), api)
+			"set_preprompt".cmd("/set_preprompt [text]", string()),
+			"reset_preprompt".cmd("/reset_preprompt", empty()),
 
-		"import" with Settings("/import", file(), api)
-		"export" with Settings("/export", emptyList(), api)
-		"exit" with Settings("/exit", emptyList(), api)
-	}
+			"set_name".cmd("/set_name [text]", string()),
+			"reset_name".cmd("/reset_name", empty()),
 
-	private infix fun String.with(settings: Settings) {
-		SlashCommand.with(this, settings.usage, settings.args).createGlobal(settings.api)
-	}
-
-	private fun argsList(required: Boolean = true): List<SlashCommandOption> {
-		return listOf(
-			SlashCommandOption.create(
-				SlashCommandOptionType.STRING, "Arguments", "The list of arguments", required
-			)
+			"import".cmd("/import", attachment()),
+			"export".cmd("/export", empty()),
+			"exit".cmd("/exit", empty())
 		)
+		impl.api.updateCommands().addCommands(commands).complete()
 	}
 
-	private fun file(required: Boolean = true): List<SlashCommandOption> {
-		return listOf(
-			SlashCommandOption.create(
-				SlashCommandOptionType.ATTACHMENT, "Arguments", "The list of arguments", required
-			)
-		)
-	}
+	private fun empty(): List<OptionData> = emptyList()
+
+	private fun string(obligatory: Boolean = true): List<OptionData> = listOf(
+		OptionData(OptionType.STRING, "Arguments", "The list of arguments", obligatory)
+	)
+
+	private fun attachment(): List<OptionData> = listOf(
+		OptionData(OptionType.ATTACHMENT, "Arguments", "The list of arguments", true)
+	)
 }

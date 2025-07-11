@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder
 
 val gson: Gson = GsonBuilder().setPrettyPrinting().create()
 
-const val version: Int = 3
+const val version: Int = 4
 
 const val prepromptTemplate: String = """
 	Ты — участник этого чата, тебя зовут %s.
@@ -19,7 +19,7 @@ const val prepromptTemplate: String = """
 	Вот сообщения из чата:
 """
 
-const val defaultPrompt: String =
+const val defaultPreprompt: String =
 	"У тебя хороший характер, но ты можешь фамильярничать, спорить и осуждать, даже ругаться, если не согласен. Не пиши слишком заумно и многословно."
 
 const val defaultName: String = "Богдан"

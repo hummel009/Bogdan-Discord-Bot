@@ -1,24 +1,24 @@
 package com.github.hummel.mdb.core.service
 
-import org.javacord.api.event.interaction.InteractionCreateEvent
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 
 interface ManagerService {
-	fun addBirthday(event: InteractionCreateEvent)
-	fun addManager(event: InteractionCreateEvent)
-	fun addSecretChannel(event: InteractionCreateEvent)
-	fun addMutedChannel(event: InteractionCreateEvent)
-	fun clearBirthdays(event: InteractionCreateEvent)
-	fun clearManagers(event: InteractionCreateEvent)
-	fun clearSecretChannels(event: InteractionCreateEvent)
-	fun clearMutedChannels(event: InteractionCreateEvent)
-	fun clearBank(event: InteractionCreateEvent)
-	fun clearData(event: InteractionCreateEvent)
-	fun setLanguage(event: InteractionCreateEvent)
-	fun setChanceMessage(event: InteractionCreateEvent)
-	fun setChanceEmoji(event: InteractionCreateEvent)
-	fun setChanceAI(event: InteractionCreateEvent)
-	fun setPreprompt(event: InteractionCreateEvent)
-	fun resetPreprompt(event: InteractionCreateEvent)
-	fun setName(event: InteractionCreateEvent)
-	fun resetName(event: InteractionCreateEvent)
+	fun addBirthday(event: SlashCommandInteractionEvent)
+	fun addManager(event: SlashCommandInteractionEvent)
+	fun addSecretChannel(event: SlashCommandInteractionEvent)
+	fun addMutedChannel(event: SlashCommandInteractionEvent)
+	fun clearBirthdays(event: SlashCommandInteractionEvent)
+	fun clearManagers(event: SlashCommandInteractionEvent)
+	fun clearSecretChannels(event: SlashCommandInteractionEvent)
+	fun clearMutedChannels(event: SlashCommandInteractionEvent)
+	fun setLanguage(event: SlashCommandInteractionEvent)
+	fun setChanceMessage(event: SlashCommandInteractionEvent)
+	fun setChanceEmoji(event: SlashCommandInteractionEvent)
+	fun setChanceAI(event: SlashCommandInteractionEvent)
+	fun setName(event: SlashCommandInteractionEvent)
+	fun resetName(event: SlashCommandInteractionEvent)
+	fun setPreprompt(event: SlashCommandInteractionEvent)
+	fun resetPreprompt(event: SlashCommandInteractionEvent)
+	fun wipeData(event: SlashCommandInteractionEvent)
+	fun wipeBank(event: SlashCommandInteractionEvent)
 }

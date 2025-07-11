@@ -32,10 +32,10 @@ fun main() {
 }
 
 fun requestUserInput() {
-	print("Enter token: ")
+	print("Enter the Token: ")
 	val token = readln()
 
-	print("Enter owner ID: ")
+	print("Enter the OwnerID: ")
 	val ownerId = readln()
 
 	val config = Config(token, ownerId)

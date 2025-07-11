@@ -1,16 +1,15 @@
 package com.github.hummel.mdb.core.service
 
-import com.github.hummel.mdb.core.bean.ServerData
-import org.javacord.api.entity.server.Server
-import org.javacord.api.interaction.SlashCommandInteraction
+import com.github.hummel.mdb.core.bean.GuildData
+import net.dv8tion.jda.api.entities.Guild
 
 interface DataService {
-	fun loadServerData(server: Server): ServerData
-	fun saveServerData(server: Server, serverData: ServerData)
-	fun exportBotData(sc: SlashCommandInteraction)
+	fun loadGuildData(guild: Guild): GuildData
+	fun saveGuildData(guild: Guild, guildData: GuildData)
+	fun saveMessage(guild: Guild, message: String)
+	fun getMessage(guild: Guild): String?
+	fun wipeGuildBank(guild: Guild)
+	fun wipeGuildData(guild: Guild)
+	fun exportBotData(): ByteArray
 	fun importBotData(byteArray: ByteArray)
-	fun saveServerMessage(server: Server, msg: String)
-	fun getServerRandomMessage(server: Server): String?
-	fun wipeServerMessages(server: Server)
-	fun wipeServerData(server: Server)
 }

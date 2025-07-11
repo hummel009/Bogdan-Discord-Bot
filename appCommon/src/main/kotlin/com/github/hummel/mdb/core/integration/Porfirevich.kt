@@ -11,20 +11,31 @@ import org.apache.hc.core5.http.io.entity.StringEntity
 private val lock: Any = Any()
 
 @Suppress("unused")
+private fun main() {
+	val input = "Привет, как дела?"
+	val result = getPorfirevichInteractionResult(input)
+
+	if (result.error != null) {
+		println("Ошибка: ${result.error}")
+	} else {
+		println("Ответ: ${result.data}")
+	}
+}
+
 fun getPorfirevichInteractionResult(
-	data: String
+	input: String
 ): InteractionResult {
 	synchronized(lock) {
-		val request = PorfirevichRequest(
-			prompt = data
+		val payload = gson.toJson(
+			PorfirevichRequest(
+				prompt = input
+			)
 		)
-
-		val payload = gson.toJson(request)
 
 		val (data, error) = getResponse(payload)
 		data ?: return InteractionResult(null, error)
 
-		return InteractionResult(request.prompt + data, null)
+		return InteractionResult(input + data, null)
 	}
 }
 
@@ -45,8 +56,6 @@ private fun getResponse(
 
 				InteractionResult(apiResponse.replies.random(), null)
 			} catch (e: Exception) {
-				e.printStackTrace()
-
 				InteractionResult(null, "${e.javaClass.getSimpleName()}")
 			}
 		} else {

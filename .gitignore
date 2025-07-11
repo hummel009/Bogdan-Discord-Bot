@@ -42,3 +42,5 @@ bin/
 token.txt
 **/*.bin
 appWindows/start.properties
+appDesktop/config.json
+/appDesktop/files

@@ -1,9 +1,9 @@
 package com.github.hummel.mdb.core.service
 
-import org.javacord.api.event.interaction.InteractionCreateEvent
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 
 interface OwnerService {
-	fun import(event: InteractionCreateEvent)
-	fun export(event: InteractionCreateEvent)
-	fun exit(event: InteractionCreateEvent)
+	fun import(event: SlashCommandInteractionEvent)
+	fun export(event: SlashCommandInteractionEvent)
+	fun exit(event: SlashCommandInteractionEvent)
 }

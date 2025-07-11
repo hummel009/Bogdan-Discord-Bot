@@ -1,21 +1,31 @@
 package com.github.hummel.mdb.core.service.impl
 
 import com.github.hummel.mdb.core.bean.BotData
-import com.github.hummel.mdb.core.bean.ServerData
+import com.github.hummel.mdb.core.bean.GuildData
 import com.github.hummel.mdb.core.service.AccessService
-import org.javacord.api.interaction.SlashCommandInteraction
+import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 
 class AccessServiceImpl : AccessService {
-	override fun fromManagerAtLeast(sc: SlashCommandInteraction, serverData: ServerData): Boolean {
-		val server = sc.server.get()
-		val user = sc.user
-		return user.getRoles(server).any { role ->
-			serverData.managers.any { it.id == role.id }
-		} || user.id == BotData.ownerId.toLong() || user.isBotOwnerOrTeamMember || server.isAdmin(user)
+	override fun fromManagerAtLeast(event: SlashCommandInteractionEvent, guildData: GuildData): Boolean {
+		val member = event.member ?: return false
+
+		val isManager = member.roles.any { role ->
+			guildData.managers.any {
+				it.id == role.idLong
+			}
+		}
+		val isOwner = member.idLong == BotData.ownerId.toLong()
+		val isAdmin = member.hasPermission(Permission.ADMINISTRATOR)
+
+		return isManager || isAdmin || isOwner
 	}
 
-	override fun fromOwnerAtLeast(sc: SlashCommandInteraction): Boolean {
-		val user = sc.user
-		return user.id == BotData.ownerId.toLong() || user.isBotOwnerOrTeamMember
+	override fun fromOwnerAtLeast(event: SlashCommandInteractionEvent): Boolean {
+		val member = event.member ?: return false
+
+		val isOwner = member.idLong == BotData.ownerId.toLong()
+
+		return isOwner
 	}
 }

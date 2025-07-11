@@ -1,174 +1,163 @@
 package com.github.hummel.mdb.core.service.impl
 
 import com.github.hummel.mdb.core.bean.BotData
-import com.github.hummel.mdb.core.bean.ServerData
 import com.github.hummel.mdb.core.factory.ServiceFactory
-import com.github.hummel.mdb.core.integration.getDuckGptLiveInteractionResult
+import com.github.hummel.mdb.core.integration.getVeniceInteractionResult
 import com.github.hummel.mdb.core.service.BotService
 import com.github.hummel.mdb.core.service.DataService
 import com.github.hummel.mdb.core.utils.I18n
 import com.github.hummel.mdb.core.utils.build
 import com.github.hummel.mdb.core.utils.error
 import com.github.hummel.mdb.core.utils.prepromptTemplate
-import org.javacord.api.entity.message.embed.EmbedBuilder
-import org.javacord.api.event.message.MessageCreateEvent
+import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.entities.User
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import java.time.LocalDate
 import kotlin.random.Random
 
 class BotServiceImpl : BotService {
 	private val dataService: DataService = ServiceFactory.dataService
 
-	override fun addRandomEmoji(event: MessageCreateEvent) {
-		if (event.messageAuthor.isYourself) {
-			return
-		}
-
-		val server = event.server.get()
-		val serverData = dataService.loadServerData(server)
-
-		if (Random.nextInt(100) < serverData.chanceEmoji) {
-			val emoji = event.server.get().customEmojis.random()
-			event.addReactionToMessage(emoji)
-		}
-	}
-
-	override fun saveMessage(event: MessageCreateEvent) {
-		val channelId = event.channel.id
-		val msg = event.messageContent.replace("\r", " ").replace("\n", " ").replace("  ", " ")
+	override fun saveMessage(event: MessageReceivedEvent) {
+		val guild = event.guild
+		val guildData = dataService.loadGuildData(guild)
+		val channelId = event.channel.idLong
 
 		BotData.channelHistories.putIfAbsent(channelId, mutableListOf())
-		val channelHistory = BotData.channelHistories[channelId] ?: return
+		val channelHistory = BotData.channelHistories[channelId]!!
 
-		channelHistory.add(msg)
+		val message = event.message.contentRaw.replace("\r", " ").replace("\n", " ").replace("  ", " ")
+		val author = event.message.author
+
+		channelHistory.add(message)
 		if (channelHistory.size >= 10) {
 			channelHistory.removeAt(0)
 		}
 
-		val server = event.server.get()
-		val serverData = dataService.loadServerData(server)
+		if (guildData.secretChannels.any { it.id == channelId }) {
+			return
+		}
 
-		if (event.messageCanBeSaved(serverData.name)) {
-			if (!serverData.secretChannels.any { it.id == channelId }) {
-				val crypt = encodeMessage(msg)
-				dataService.saveServerMessage(server, crypt)
-			}
+		if (suitableForBank(author, message, guildData.name)) {
+			dataService.saveMessage(guild, message)
 		}
 	}
 
-	override fun sendRandomMessage(event: MessageCreateEvent) {
-		if (event.messageAuthor.isYourself) {
+
+	override fun sendRandomMessage(event: MessageReceivedEvent) {
+		if (event.jda.selfUser.idLong == event.message.author.idLong) {
 			return
 		}
 
-		val server = event.server.get()
-		val serverData = dataService.loadServerData(server)
-		val channelId = event.channel.id
+		val guild = event.guild
+		val guildData = dataService.loadGuildData(guild)
+		val channelId = event.channel.idLong
 
-		if (serverData.mutedChannels.any { it.id == channelId }) {
+		if (guildData.mutedChannels.any { it.id == channelId }) {
 			return
 		}
 
-		if (event.messageHasBotMention(serverData.name) || Random.nextInt(100) < serverData.chanceMessage) {
-			val channelHistory = BotData.channelHistories.getOrDefault(channelId, null)
+		val aiRule1 = hasBotMention(event.message.contentRaw, guildData.name) && guildData.chanceAI != 0
+		val aiRule2 = Random.nextInt(100) < guildData.chanceMessage && Random.nextInt(100) < guildData.chanceAI
 
-			if ((event.messageHasBotMention(serverData.name) || Random.nextInt(100) < serverData.chanceAI) && channelHistory != null) {
-				val prompt = channelHistory.joinToString(
-					prefix = prepromptTemplate.build(serverData.name, serverData.preprompt), separator = "\n"
+		// DEFAULT
+		if (!aiRule1 && !aiRule2) {
+			if (Random.nextInt(100) < guildData.chanceMessage) {
+				val message = dataService.getMessage(guild)
+				message?.let {
+					event.channel.sendMessage(it).queue()
+				}
+			}
+			return
+		}
+
+		// AI
+		val channelHistory = BotData.channelHistories.getOrDefault(channelId, null) ?: return
+		val prompt = channelHistory.joinToString(
+			prefix = prepromptTemplate.build(guildData.name, guildData.preprompt), separator = "\n"
+		)
+		val (data, error) = getVeniceInteractionResult(prompt)
+		data?.let {
+			if (it.length > 2000) {
+				val embed = EmbedBuilder().error(
+					event.member, guildData, I18n.of("long_message", guildData)
 				)
-
-				val (data, error) = getDuckGptLiveInteractionResult(prompt)
-				data?.let {
-					if (it.length > 2000) {
-						val embed = EmbedBuilder().error(
-							event.messageAuthor.asUser().get(), serverData, I18n.of("long_message", serverData)
-						)
-						event.channel.sendMessage(embed)
-					} else {
-						event.channel.sendMessage(it)
-					}
-				} ?: run {
-					val embed = EmbedBuilder().error(
-						event.messageAuthor.asUser().get(),
-						serverData,
-						I18n.of("site_error", serverData).format(error)
-					)
-					event.channel.sendMessage(embed)
-				}
+				event.channel.sendMessageEmbeds(embed).queue()
 			} else {
-				val crypt = dataService.getServerRandomMessage(server)
-				crypt?.let {
-					val msg = decodeMessage(it)
-					event.channel.sendMessage(msg)
-				}
+				event.channel.sendMessage(it).queue()
 			}
+		} ?: run {
+			val embed = EmbedBuilder().error(
+				event.member, guildData, I18n.of("site_error", guildData).format(error)
+			)
+			event.channel.sendMessageEmbeds(embed).queue()
 		}
+
+		return
 	}
 
-	override fun sendBirthdayMessage(event: MessageCreateEvent) {
-		val server = event.server.get()
-		val serverData = dataService.loadServerData(server)
+	override fun sendBirthdayMessage(event: MessageReceivedEvent) {
+		val guild = event.guild
+		val guildData = dataService.loadGuildData(guild)
 
-		val currentDate = LocalDate.now()
-		val currentDay = currentDate.dayOfMonth
-		val currentMonth = currentDate.monthValue
+		val today = LocalDate.now()
+		val todayDay = today.dayOfMonth
+		val todayMonth = today.monthValue
 
-		val (isBirthday, userIds) = isBirthdayToday(serverData)
-
-		if (isBirthday && (currentDay != serverData.lastWish.day || currentMonth != serverData.lastWish.month)) {
-			userIds.forEach { event.channel.sendMessage(I18n.of("happy_birthday", serverData).format(it)) }
-			serverData.lastWish.day = currentDay
-			serverData.lastWish.month = currentMonth
-			dataService.saveServerData(server, serverData)
+		val birthdayMemberIds = guildData.birthdays.filter {
+			it.date.day == todayDay && it.date.month == todayMonth
+		}.map {
+			it.id
 		}
-	}
 
-	private fun encodeMessage(msg: String): String = msg.codePoints().toArray().joinToString(" ")
-
-	private fun decodeMessage(msg: String): String {
-		val unicodeCodes = msg.split(" ").map { it.toInt() }
-		val unicodeChars = unicodeCodes.map { it.toChar() }.toCharArray()
-		return String(unicodeChars)
-	}
-
-	private fun isBirthdayToday(serverData: ServerData): Pair<Boolean, Set<Long>> {
-		val currentDate = LocalDate.now()
-		val currentDay = currentDate.dayOfMonth
-		val currentMonth = currentDate.monthValue
-		val userIds = HashSet<Long>()
-		var isBirthday = false
-
-		for ((userId, date) in serverData.birthdays) {
-			if (date.day == currentDay && date.month == currentMonth) {
-				isBirthday = true
-				userIds.add(userId)
+		if (birthdayMemberIds.isNotEmpty() && (guildData.lastWish.day != todayDay || guildData.lastWish.month != todayMonth)) {
+			birthdayMemberIds.forEach { memberId ->
+				event.channel.sendMessage(I18n.of("happy_birthday", guildData).format(memberId)).queue()
 			}
+
+			guildData.lastWish.day = todayDay
+			guildData.lastWish.month = todayMonth
+
+			dataService.saveGuildData(guild, guildData)
 		}
-		return isBirthday to userIds
 	}
 
-	private fun MessageCreateEvent.messageCanBeSaved(name: String): Boolean {
+	override fun addRandomEmoji(event: MessageReceivedEvent) {
+		if (event.author.isBot) {
+			return
+		}
+
+		val guild = event.guild
+		val guildData = dataService.loadGuildData(guild)
+
+		if (Random.nextInt(100) < guildData.chanceEmoji) {
+			event.message.addReaction(guild.emojis.random()).queue()
+		}
+	}
+
+	private fun suitableForBank(author: User, message: String, botName: String): Boolean {
 		val contain = setOf("@", "https://", "http://", "gopher://")
-		val start = setOf("!", "?", "/", name, name.lowercase(), name.lowercase())
+		val start = setOf("!", "?", "/", botName, botName.lowercase(), botName.uppercase())
 
-		if (messageContent.length !in 2..445) {
+		if (message.length !in 2..400) {
 			return false
 		}
-		if (messageAuthor.isYourself) {
+		if (author.isBot) {
 			return false
 		}
 
 		return start.none {
-			messageContent.startsWith(it)
+			message.startsWith(it)
 		} && contain.none {
-			messageContent.contains(it)
+			message.contains(it)
 		}
 	}
 
-	private fun MessageCreateEvent.messageHasBotMention(name: String): Boolean {
-		val start = setOf("$name,", "${name.lowercase()},", "${name.uppercase()},")
+	private fun hasBotMention(message: String, botName: String): Boolean {
+		val start = setOf("$botName,", "${botName.lowercase()},", "${botName.uppercase()},")
 
 		return start.any {
-			messageContent.startsWith(it)
+			message.startsWith(it)
 		}
 	}
 }

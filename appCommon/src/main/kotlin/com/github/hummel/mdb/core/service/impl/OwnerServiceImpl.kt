@@ -7,73 +7,95 @@ import com.github.hummel.mdb.core.service.DataService
 import com.github.hummel.mdb.core.service.OwnerService
 import com.github.hummel.mdb.core.utils.I18n
 import com.github.hummel.mdb.core.utils.access
+import com.github.hummel.mdb.core.utils.error
 import com.github.hummel.mdb.core.utils.success
-import org.javacord.api.entity.message.embed.EmbedBuilder
-import org.javacord.api.event.interaction.InteractionCreateEvent
+import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
+import net.dv8tion.jda.api.utils.FileProxy
+import net.dv8tion.jda.api.utils.FileUpload
 
 class OwnerServiceImpl : OwnerService {
 	private val dataService: DataService = ServiceFactory.dataService
 	private val accessService: AccessService = ServiceFactory.accessService
 
-	override fun import(event: InteractionCreateEvent) {
-		val sc = event.slashCommandInteraction.get()
+	override fun import(event: SlashCommandInteractionEvent) {
+		if (event.fullCommandName != "import") {
+			return
+		}
 
-		if (sc.fullCommandName == "import") {
-			sc.respondLater().thenAccept {
-				val server = sc.server.get()
-				val serverData = dataService.loadServerData(server)
+		event.deferReply().queue {
+			val guild = event.guild ?: return@queue
+			val guildData = dataService.loadGuildData(guild)
 
-				val embed = if (!accessService.fromOwnerAtLeast(sc)) {
-					EmbedBuilder().access(sc.user, serverData, I18n.of("no_access", serverData))
-				} else {
-					val byteArray = sc.arguments[0].attachmentValue.get().asByteArray().join()
+			if (!accessService.fromOwnerAtLeast(event)) {
+				val embed = EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+
+				event.hook.sendMessageEmbeds(embed).queue()
+			} else {
+				val embed = try {
+					val attachment = event.getOption("arguments")?.asAttachment ?: throw Exception()
+					val byteArray = FileProxy(attachment.url).download().join().readBytes()
+
 					dataService.importBotData(byteArray)
-					EmbedBuilder().success(sc.user, serverData, I18n.of("import", serverData))
+
+					EmbedBuilder().success(event.member, guildData, I18n.of("import", guildData))
+				} catch (_: Exception) {
+					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
 				}
-				sc.createFollowupMessageBuilder().addEmbed(embed).send().get()
-			}.get()
-		}
-	}
-
-	override fun export(event: InteractionCreateEvent) {
-		val sc = event.slashCommandInteraction.get()
-
-		if (sc.fullCommandName == "export") {
-			sc.respondLater().thenAccept {
-				val server = sc.server.get()
-				val serverData = dataService.loadServerData(server)
-
-				if (!accessService.fromOwnerAtLeast(sc)) {
-					val embed = EmbedBuilder().access(sc.user, serverData, I18n.of("no_access", serverData))
-					sc.createFollowupMessageBuilder().addEmbed(embed).send().get()
-				} else {
-					dataService.exportBotData(sc)
-				}
-			}.get()
-		}
-	}
-
-	override fun exit(event: InteractionCreateEvent) {
-		val sc = event.slashCommandInteraction.get()
-		if (sc.fullCommandName == "exit") {
-			var exit = false
-
-			sc.respondLater().thenAccept {
-				val server = sc.server.get()
-				val serverData = dataService.loadServerData(server)
-
-				val embed = if (!accessService.fromOwnerAtLeast(sc)) {
-					EmbedBuilder().access(sc.user, serverData, I18n.of("no_access", serverData))
-				} else {
-					exit = true
-					EmbedBuilder().success(sc.user, serverData, I18n.of("exit", serverData))
-				}
-				sc.createFollowupMessageBuilder().addEmbed(embed).send().get()
-			}.get()
-
-			if (exit) {
-				BotData.exitFunction.invoke()
+				event.hook.sendMessageEmbeds(embed).queue()
 			}
+		}
+	}
+
+	override fun export(event: SlashCommandInteractionEvent) {
+		if (event.fullCommandName != "export") {
+			return
+		}
+
+		event.deferReply().queue {
+			val guild = event.guild ?: return@queue
+			val guildData = dataService.loadGuildData(guild)
+
+			if (!accessService.fromOwnerAtLeast(event)) {
+				val embed = EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+
+				event.hook.sendMessageEmbeds(embed).queue()
+			} else {
+				try {
+					val byteArray = dataService.exportBotData()
+
+					event.hook.sendFiles(FileUpload.fromData(byteArray, "bot.zip")).queue()
+				} catch (_: Exception) {
+					val embed = EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+
+					event.hook.sendMessageEmbeds(embed).queue()
+				}
+			}
+		}
+	}
+
+	override fun exit(event: SlashCommandInteractionEvent) {
+		if (event.fullCommandName != "exit") {
+			return
+		}
+
+		var exit = false
+
+		event.deferReply().queue {
+			val guild = event.guild ?: return@queue
+			val guildData = dataService.loadGuildData(guild)
+
+			val embed = if (!accessService.fromOwnerAtLeast(event)) {
+				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+			} else {
+				exit = true
+				EmbedBuilder().success(event.member, guildData, I18n.of("exit", guildData))
+			}
+			event.hook.sendMessageEmbeds(embed).queue()
+		}
+
+		if (exit) {
+			BotData.exitFunction.invoke()
 		}
 	}
 }

@@ -1,9 +1,9 @@
 package com.github.hummel.mdb.core.bean
 
-data class ServerData(
+data class GuildData(
 	val dataVer: Int,
-	val serverId: String,
-	val serverName: String,
+	val guildId: String,
+	val guildName: String,
 	var chanceMessage: Int,
 	var chanceEmoji: Int,
 	var chanceAI: Int,

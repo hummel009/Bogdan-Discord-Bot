@@ -1,6 +1,6 @@
 package com.github.hummel.mdb.core.dao
 
 interface JsonDao {
-	fun <D> readFromJson(filePath: String, clazz: Class<D>): D?
-	fun <D> writeToJson(filePath: String, serverData: D)
+	fun <T> readFromJson(filePath: String, clazz: Class<T>): T?
+	fun <T> writeToJson(filePath: String, obj: T)
 }

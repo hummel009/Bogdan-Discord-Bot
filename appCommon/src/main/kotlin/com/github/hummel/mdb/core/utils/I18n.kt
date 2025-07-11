@@ -1,14 +1,14 @@
 package com.github.hummel.mdb.core.utils
 
-import com.github.hummel.mdb.core.bean.ServerData
+import com.github.hummel.mdb.core.bean.GuildData
 import java.io.InputStreamReader
 
 object I18n {
 	private val cache: MutableMap<String, Map<String, String>> = mutableMapOf()
 
 	@Suppress("UNCHECKED_CAST")
-	fun of(key: String, serverData: ServerData): String {
-		val lang = serverData.lang
+	fun of(key: String, guildData: GuildData): String {
+		val lang = guildData.lang
 		val translations = cache.getOrPut(lang) {
 			val langFileName = when (lang) {
 				"ru" -> "ru_ru.json"

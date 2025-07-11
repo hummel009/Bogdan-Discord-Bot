@@ -1,16 +1,15 @@
 package com.github.hummel.mdb.core.service.impl
 
-import com.github.hummel.mdb.core.bean.ServerData
+import com.github.hummel.mdb.core.bean.GuildData
 import com.github.hummel.mdb.core.dao.FileDao
 import com.github.hummel.mdb.core.dao.JsonDao
 import com.github.hummel.mdb.core.dao.ZipDao
 import com.github.hummel.mdb.core.factory.DaoFactory
 import com.github.hummel.mdb.core.service.DataService
 import com.github.hummel.mdb.core.utils.defaultName
-import com.github.hummel.mdb.core.utils.defaultPrompt
+import com.github.hummel.mdb.core.utils.defaultPreprompt
 import com.github.hummel.mdb.core.utils.version
-import org.javacord.api.entity.server.Server
-import org.javacord.api.interaction.SlashCommandInteraction
+import net.dv8tion.jda.api.entities.Guild
 import java.time.LocalDate
 
 class DataServiceImpl : DataService {
@@ -18,98 +17,118 @@ class DataServiceImpl : DataService {
 	private val jsonDao: JsonDao = DaoFactory.jsonDao
 	private val zipDao: ZipDao = DaoFactory.zipDao
 
-	override fun loadServerData(server: Server): ServerData {
-		val folderName = server.id.toString()
-		val filePath = "servers/$folderName/data.json"
-		return jsonDao.readFromJson(filePath, ServerData::class.java) ?: getServerDataFromDiscord(server)
+	override fun loadGuildData(guild: Guild): GuildData {
+		val folderName = guild.id
+		val filePath = "guilds/$folderName/data.json"
+
+		return jsonDao.readFromJson(filePath, GuildData::class.java) ?: initAndGet(guild)
 	}
 
-	override fun saveServerData(server: Server, serverData: ServerData) {
-		val folderName = server.id.toString()
-		val filePath = "servers/$folderName/data.json"
-		jsonDao.writeToJson(filePath, serverData)
+	override fun saveGuildData(guild: Guild, guildData: GuildData) {
+		val folderName = guild.id
+		val filePath = "guilds/$folderName/data.json"
+
+		jsonDao.writeToJson(filePath, guildData)
 	}
 
-	override fun exportBotData(sc: SlashCommandInteraction) {
-		val targetFolderPath = "servers"
-		val archiveFolderPath = "archive"
-		val archiveFilePath = "archive/bot.zip"
+	override fun saveMessage(guild: Guild, message: String) {
+		fun encodeMessage(message: String) = message.map { it.code }.joinToString(" ")
 
-		fileDao.createFolder(archiveFolderPath)
+		val folderName = guild.id
+		val filePath = "guilds/$folderName/bank.bin"
 
-		zipDao.zipFolder(targetFolderPath, archiveFilePath)
-		val file = fileDao.getFile(archiveFilePath)
-		sc.createFollowupMessageBuilder().addAttachment(file).send().get()
-		fileDao.removeFile(archiveFilePath)
-
-		fileDao.removeFolder(archiveFolderPath)
-	}
-
-	override fun importBotData(byteArray: ByteArray) {
-		val targetFolderPath = "servers"
-		val archiveFolderPath = "archive"
-		val archiveFilePath = "archive/bot.zip"
-
-		fileDao.createFolder(archiveFolderPath)
-
-		fileDao.createFile(archiveFilePath)
-		fileDao.writeToFile(archiveFilePath, byteArray)
-		fileDao.removeFolder(targetFolderPath)
-		fileDao.createFolder(targetFolderPath)
-		zipDao.unzipFile(archiveFilePath, targetFolderPath)
-		fileDao.removeFile(archiveFilePath)
-
-		fileDao.removeFolder(archiveFolderPath)
-	}
-
-	override fun saveServerMessage(server: Server, msg: String) {
-		val folderName = server.id.toString()
-		val filePath = "servers/$folderName/messages.bin"
-		fileDao.appendToFile(filePath, msg.toByteArray())
+		fileDao.appendToFile(filePath, encodeMessage(message).toByteArray())
 		fileDao.appendToFile(filePath, "\r\n".toByteArray())
 	}
 
-	override fun getServerRandomMessage(server: Server): String? {
-		val folderName = server.id.toString()
-		val filePath = "servers/$folderName/messages.bin"
-		return fileDao.getRandomLine(filePath)
+	override fun getMessage(guild: Guild): String? {
+		fun decodeMessage(encoded: String) = encoded.split(" ").map { it.toInt() }.map { it.toChar() }.joinToString("")
+
+		val folderName = guild.id
+		val filePath = "guilds/$folderName/bank.bin"
+
+		val messages = String(fileDao.readFromFile(filePath)).lines()
+
+		if (messages.isEmpty()) {
+			return null
+		}
+
+		return decodeMessage(messages.random())
 	}
 
-	override fun wipeServerMessages(server: Server) {
-		val folderName = server.id.toString()
-		val filePath = "servers/$folderName/messages.bin"
+	override fun wipeGuildBank(guild: Guild) {
+		val folderName = guild.id
+		val filePath = "guilds/$folderName/bank.bin"
+
 		fileDao.removeFile(filePath)
-		fileDao.createFile(filePath)
+		fileDao.createEmptyFile(filePath)
 	}
 
-	override fun wipeServerData(server: Server) {
-		val folderName = server.id.toString()
-		val filePath = "servers/$folderName/data.json"
+	override fun wipeGuildData(guild: Guild) {
+		val folderName = guild.id
+		val filePath = "guilds/$folderName/data.json"
+
 		fileDao.removeFile(filePath)
-		fileDao.createFile(filePath)
+		fileDao.createEmptyFile(filePath)
 	}
 
-	private fun getServerDataFromDiscord(server: Server): ServerData {
-		val folderName = server.id.toString()
-		val folderPath = "servers/$folderName"
-		val filePath = "servers/$folderName/messages.bin"
+	override fun importBotData(byteArray: ByteArray) {
+		val targetFolderPath = "guilds"
+		val importFolderPath = "import"
+		val importFilePath = "import/bot.zip"
 
-		fileDao.createFolder(folderPath)
-		fileDao.createFile(filePath)
+		fileDao.createEmptyFolder(importFolderPath)
+		fileDao.createEmptyFile(importFilePath)
+		fileDao.writeToFile(importFilePath, byteArray)
 
-		val serverId = server.id.toString()
-		val serverName = server.name
+		fileDao.removeFolder(targetFolderPath)
+		fileDao.createEmptyFolder(targetFolderPath)
+
+		zipDao.unzipFileToFolder(importFilePath, targetFolderPath)
+
+		fileDao.removeFile(importFilePath)
+		fileDao.removeFolder(importFolderPath)
+	}
+
+	override fun exportBotData(): ByteArray {
+		val targetFolderPath = "guilds"
+		val exportFolderPath = "export"
+		val exportFilePath = "export/bot.zip"
+
+		fileDao.createEmptyFolder(exportFolderPath)
+		zipDao.zipFolderToFile(targetFolderPath, exportFilePath)
+
+		val file = fileDao.readFromFile(exportFilePath)
+
+		fileDao.removeFile(exportFilePath)
+		fileDao.removeFolder(exportFolderPath)
+
+		return file
+	}
+
+	private fun initAndGet(guild: Guild): GuildData {
+		val folderName = guild.id
+		val serverPath = "guilds/$folderName"
+		val bankPath = "guilds/$folderName/bank.bin"
+		val dataPath = "guilds/$folderName/data.json"
+
+		fileDao.createEmptyFolder(serverPath)
+		fileDao.createEmptyFile(dataPath)
+		fileDao.createEmptyFile(bankPath)
+
+		val guildId = guild.id
+		val guildName = guild.name
 		val chanceMessage = 10
 		val chanceEmoji = 1
 		val chanceAI = 20
 		val lang = "ru"
 		val yesterday = LocalDate.now().minusDays(1)
-		val lastWish = ServerData.Date(yesterday.dayOfMonth, yesterday.monthValue)
+		val lastWish = GuildData.Date(yesterday.dayOfMonth, yesterday.monthValue)
 
-		return ServerData(
+		val guildData = GuildData(
 			dataVer = version,
-			serverId = serverId,
-			serverName = serverName,
+			guildId = guildId,
+			guildName = guildName,
 			chanceMessage = chanceMessage,
 			chanceEmoji = chanceEmoji,
 			chanceAI = chanceAI,
@@ -119,8 +138,12 @@ class DataServiceImpl : DataService {
 			mutedChannels = mutableSetOf(),
 			managers = mutableSetOf(),
 			birthdays = mutableSetOf(),
-			preprompt = defaultPrompt,
+			preprompt = defaultPreprompt,
 			name = defaultName
 		)
+
+		jsonDao.writeToJson(dataPath, guildData)
+
+		return guildData
 	}
 }

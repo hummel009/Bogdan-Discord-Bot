@@ -2,10 +2,13 @@ package com.github.hummel.mdb.core.controller.impl
 
 import com.github.hummel.mdb.core.controller.DiscordController
 import com.github.hummel.mdb.core.factory.ServiceFactory
-import org.javacord.api.DiscordApi
+import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
+import net.dv8tion.jda.api.hooks.ListenerAdapter
 
 class DiscordControllerImpl : DiscordController {
-	lateinit var api: DiscordApi
+	lateinit var api: JDA
 
 	override fun onCreate() {
 		val loginService = ServiceFactory.loginService
@@ -15,45 +18,47 @@ class DiscordControllerImpl : DiscordController {
 	}
 
 	override fun onStartCommand() {
-		val userService = ServiceFactory.userService
+		val memberService = ServiceFactory.memberService
 		val managerService = ServiceFactory.managerService
 		val ownerService = ServiceFactory.ownerService
 		val botService = ServiceFactory.botService
 
-		api.addInteractionCreateListener {
-			userService.clearContext(it)
-			userService.complete(it)
-			userService.info(it)
+		api.addEventListener(object : ListenerAdapter() {
+			override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
+				memberService.info(event)
+				memberService.complete(event)
+				memberService.clearContext(event)
 
-			managerService.addBirthday(it)
-			managerService.addManager(it)
-			managerService.addSecretChannel(it)
-			managerService.addMutedChannel(it)
-			managerService.clearBirthdays(it)
-			managerService.clearManagers(it)
-			managerService.clearSecretChannels(it)
-			managerService.clearMutedChannels(it)
-			managerService.clearBank(it)
-			managerService.clearData(it)
-			managerService.setLanguage(it)
-			managerService.setChanceMessage(it)
-			managerService.setChanceEmoji(it)
-			managerService.setChanceAI(it)
-			managerService.setPreprompt(it)
-			managerService.resetPreprompt(it)
-			managerService.setName(it)
-			managerService.resetName(it)
+				managerService.addBirthday(event)
+				managerService.addManager(event)
+				managerService.addSecretChannel(event)
+				managerService.addMutedChannel(event)
+				managerService.clearBirthdays(event)
+				managerService.clearManagers(event)
+				managerService.clearSecretChannels(event)
+				managerService.clearMutedChannels(event)
+				managerService.setChanceMessage(event)
+				managerService.setChanceEmoji(event)
+				managerService.setChanceAI(event)
+				managerService.setLanguage(event)
+				managerService.setName(event)
+				managerService.resetName(event)
+				managerService.setPreprompt(event)
+				managerService.resetPreprompt(event)
+				managerService.wipeBank(event)
+				managerService.wipeData(event)
 
-			ownerService.import(it)
-			ownerService.export(it)
-			ownerService.exit(it)
-		}
+				ownerService.import(event)
+				ownerService.export(event)
+				ownerService.exit(event)
+			}
 
-		api.addMessageCreateListener {
-			botService.addRandomEmoji(it)
-			botService.saveMessage(it)
-			botService.sendBirthdayMessage(it)
-			botService.sendRandomMessage(it)
-		}
+			override fun onMessageReceived(event: MessageReceivedEvent) {
+				botService.saveMessage(event)
+				botService.sendRandomMessage(event)
+				botService.sendBirthdayMessage(event)
+				botService.addRandomEmoji(event)
+			}
+		})
 	}
 }

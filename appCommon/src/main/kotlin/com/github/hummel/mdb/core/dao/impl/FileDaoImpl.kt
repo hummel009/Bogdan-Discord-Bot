@@ -5,20 +5,18 @@ import com.github.hummel.mdb.core.dao.FileDao
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.io.IOException
-import kotlin.random.Random
 
 private const val notExist: String = "File doesn't exist!"
 
 class FileDaoImpl : FileDao {
-	override fun createFile(filePath: String) {
+	override fun createEmptyFile(filePath: String) {
 		val file = getFile(filePath)
 		if (!file.exists()) {
 			file.createNewFile()
 		}
 	}
 
-	override fun createFolder(folderPath: String) {
+	override fun createEmptyFolder(folderPath: String) {
 		val folder = getFolder(folderPath)
 		if (!folder.exists()) {
 			folder.mkdirs()
@@ -28,18 +26,14 @@ class FileDaoImpl : FileDao {
 	override fun removeFile(filePath: String) {
 		val file = getFile(filePath)
 		if (file.exists()) {
-			if (!file.delete()) {
-				throw IOException()
-			}
+			file.delete()
 		}
 	}
 
 	override fun removeFolder(folderPath: String) {
 		val folder = getFolder(folderPath)
 		if (folder.exists()) {
-			if (!folder.deleteRecursively()) {
-				throw IOException()
-			}
+			folder.deleteRecursively()
 		}
 	}
 
@@ -81,20 +75,5 @@ class FileDaoImpl : FileDao {
 		} else {
 			throw Exception(notExist)
 		}
-	}
-
-	override fun getRandomLine(filePath: String): String? {
-		val file = getFile(filePath)
-		if (file.exists()) {
-			val lines = file.readLines()
-			if (lines.isNotEmpty()) {
-				val randomLine = lines[Random.nextInt(lines.size)]
-				if (randomLine.isNotEmpty()) {
-					return randomLine
-				}
-			}
-			return null
-		}
-		throw Exception(notExist)
 	}
 }
