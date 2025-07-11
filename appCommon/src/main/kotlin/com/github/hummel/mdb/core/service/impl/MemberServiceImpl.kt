@@ -26,8 +26,12 @@ class MemberServiceImpl : MemberService {
 
 			guildData.birthdays.removeIf { guild.getMemberById(it.id) == null }
 			guildData.managers.removeIf { guild.getRoleById(it.id) == null }
-			guildData.secretChannels.removeIf { guild.getTextChannelById(it.id) == null }
-			guildData.mutedChannels.removeIf { guild.getTextChannelById(it.id) == null }
+			guildData.secretChannels.removeIf {
+				guild.getTextChannelById(it.id) == null && guild.getThreadChannelById(it.id) == null
+			}
+			guildData.mutedChannels.removeIf {
+				guild.getTextChannelById(it.id) == null && guild.getThreadChannelById(it.id) == null
+			}
 
 			val text = buildString {
 				val langName = I18n.of(guildData.lang, guildData)
