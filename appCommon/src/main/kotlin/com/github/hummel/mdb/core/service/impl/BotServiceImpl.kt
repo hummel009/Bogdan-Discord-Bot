@@ -57,7 +57,7 @@ class BotServiceImpl : BotService {
 			return
 		}
 
-		val aiRule1 = hasBotMention(event.message.contentRaw, guildData.name) && guildData.chanceAI != 0
+		val aiRule1 = hasBotMention(event.message.contentRaw, guildData.name) && guildData.chanceAI != -1
 		val aiRule2 = Random.nextInt(100) < guildData.chanceMessage && Random.nextInt(100) < guildData.chanceAI
 
 		// DEFAULT
