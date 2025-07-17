@@ -52,9 +52,9 @@ class LoginServiceImpl : LoginService {
 			"clear_bank".cmd("/clear_messages", empty()),
 			"clear_data".cmd("/clear_data", empty()),
 
-			"set_chance_message".cmd("/set_chance_message [number]", string()),
-			"set_chance_emoji".cmd("/set_chance_emoji [number]", string()),
-			"set_chance_ai".cmd("/set_chance_ai [number]", string()),
+			"set_chance_message".cmd("/set_chance_message [0..100]", string()),
+			"set_chance_emoji".cmd("/set_chance_emoji [0..100]", string()),
+			"set_chance_ai".cmd("/set_chance_ai [-1..100]", string()),
 
 			"set_language".cmd("/set_language [ru/be/uk/en]", string()),
 

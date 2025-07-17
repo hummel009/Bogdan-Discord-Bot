@@ -476,7 +476,7 @@ class ManagerServiceImpl : ManagerService {
 				if (arguments.size == 1) {
 					try {
 						val chance = arguments[0].toInt()
-						if (chance !in 0..100) {
+						if (chance !in -1..100) {
 							throw Exception()
 						}
 
