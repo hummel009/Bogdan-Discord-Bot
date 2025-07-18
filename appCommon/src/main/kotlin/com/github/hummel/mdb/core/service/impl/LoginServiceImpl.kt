@@ -74,10 +74,10 @@ class LoginServiceImpl : LoginService {
 	private fun empty(): List<OptionData> = emptyList()
 
 	private fun string(obligatory: Boolean = true): List<OptionData> = listOf(
-		OptionData(OptionType.STRING, "Arguments", "The list of arguments", obligatory)
+		OptionData(OptionType.STRING, "arguments", "The list of arguments", obligatory)
 	)
 
 	private fun attachment(): List<OptionData> = listOf(
-		OptionData(OptionType.ATTACHMENT, "Arguments", "The list of arguments", true)
+		OptionData(OptionType.ATTACHMENT, "arguments", "The list of arguments", true)
 	)
 }
