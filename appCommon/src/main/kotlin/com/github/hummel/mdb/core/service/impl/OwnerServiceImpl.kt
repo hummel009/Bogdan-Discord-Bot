@@ -79,23 +79,21 @@ class OwnerServiceImpl : OwnerService {
 			return
 		}
 
-		var exit = false
-
 		event.deferReply().queue {
 			val guild = event.guild ?: return@queue
 			val guildData = dataService.loadGuildData(guild)
 
-			val embed = if (!accessService.fromOwnerAtLeast(event)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
-			} else {
-				exit = true
-				EmbedBuilder().success(event.member, guildData, I18n.of("exit", guildData))
-			}
-			event.hook.sendMessageEmbeds(embed).queue()
-		}
+			if (!accessService.fromOwnerAtLeast(event)) {
+				val embed = EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
 
-		if (exit) {
-			BotData.exitFunction.invoke()
+				event.hook.sendMessageEmbeds(embed).queue()
+			} else {
+				val embed = EmbedBuilder().success(event.member, guildData, I18n.of("exit", guildData))
+
+				event.hook.sendMessageEmbeds(embed).queue {
+					BotData.exitFunction.invoke()
+				}
+			}
 		}
 	}
 }
