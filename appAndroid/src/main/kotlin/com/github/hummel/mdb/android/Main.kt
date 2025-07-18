@@ -53,8 +53,16 @@ class Main : ComponentActivity() {
 	@Composable
 	@Suppress("FunctionName")
 	fun ComposableOnCreate() {
-		var tokenState by remember { mutableStateOf(getTokenFromPrefs()) }
-		var ownerIdState by remember { mutableStateOf(getOwnerIdFromPrefs()) }
+		var tokenState by remember {
+			mutableStateOf(
+				sharedPreferences.getString("TOKEN_KEY", "TOKEN") ?: "TOKEN"
+			)
+		}
+		var ownerIdState by remember {
+			mutableStateOf(
+				sharedPreferences.getString("OWNER_ID_KEY", "1186780521624244278") ?: "OWNER_ID"
+			)
+		}
 
 		token = tokenState
 		ownerId = ownerIdState
@@ -66,7 +74,10 @@ class Main : ComponentActivity() {
 		) {
 			TextField(value = tokenState, onValueChange = {
 				tokenState = it
-				saveTokenToPrefs(it)
+				with(sharedPreferences.edit()) {
+					putString("TOKEN_KEY", it)
+					apply()
+				}
 			}, modifier = Modifier.fillMaxWidth().padding(16.dp), label = {
 				Text("Token")
 			})
@@ -75,7 +86,10 @@ class Main : ComponentActivity() {
 
 			TextField(value = ownerIdState, onValueChange = {
 				ownerIdState = it
-				saveOwnerIdToPrefs(it)
+				with(sharedPreferences.edit()) {
+					putString("OWNER_ID_KEY", it)
+					apply()
+				}
 			}, modifier = Modifier.fillMaxWidth().padding(16.dp), label = {
 				Text("Owner ID")
 			})
@@ -123,30 +137,6 @@ class Main : ComponentActivity() {
 			else -> {
 				requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
 			}
-		}
-	}
-
-	@Suppress("UseExpressionBody")
-	private fun getOwnerIdFromPrefs(): String {
-		return sharedPreferences.getString("OWNER_ID_KEY", "1186780521624244278") ?: "OWNER_ID"
-	}
-
-	private fun saveOwnerIdToPrefs(token: String) {
-		with(sharedPreferences.edit()) {
-			putString("OWNER_ID_KEY", token)
-			apply()
-		}
-	}
-
-	@Suppress("UseExpressionBody")
-	private fun getTokenFromPrefs(): String {
-		return sharedPreferences.getString("TOKEN_KEY", "TOKEN") ?: "TOKEN"
-	}
-
-	private fun saveTokenToPrefs(token: String) {
-		with(sharedPreferences.edit()) {
-			putString("TOKEN_KEY", token)
-			apply()
 		}
 	}
 }
