@@ -1,7 +1,7 @@
 package com.github.hummel.mdb.core.service.impl
 
 import com.github.hummel.mdb.core.bean.BotData
-import com.github.hummel.mdb.core.controller.impl.DiscordControllerImpl
+import com.github.hummel.mdb.core.controller.impl.EventHandlerImpl
 import com.github.hummel.mdb.core.service.LoginService
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.interactions.commands.OptionType
@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 
 class LoginServiceImpl : LoginService {
-	override fun loginBot(impl: DiscordControllerImpl) {
+	override fun loginBot(impl: EventHandlerImpl) {
 		impl.api = JDABuilder.createDefault(BotData.token).apply {
 			enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
 			enableCache(CacheFlag.entries)
@@ -20,7 +20,7 @@ class LoginServiceImpl : LoginService {
 		}.build().awaitReady()
 	}
 
-	override fun deleteCommands(impl: DiscordControllerImpl) {
+	override fun deleteCommands(impl: EventHandlerImpl) {
 		val commands = impl.api.retrieveCommands().complete()
 
 		commands.forEach {
@@ -30,7 +30,7 @@ class LoginServiceImpl : LoginService {
 		}
 	}
 
-	override fun registerCommands(impl: DiscordControllerImpl) {
+	override fun registerCommands(impl: EventHandlerImpl) {
 		fun String.cmd(description: String, options: List<OptionData>) =
 			Commands.slash(this, description).addOptions(options)
 

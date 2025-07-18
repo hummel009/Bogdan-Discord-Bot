@@ -1,13 +1,13 @@
 package com.github.hummel.mdb.core.controller.impl
 
-import com.github.hummel.mdb.core.controller.DiscordController
+import com.github.hummel.mdb.core.controller.EventHandler
 import com.github.hummel.mdb.core.factory.ServiceFactory
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 
-class DiscordControllerImpl : DiscordController {
+class EventHandlerImpl : EventHandler {
 	lateinit var api: JDA
 
 	override fun onCreate() {

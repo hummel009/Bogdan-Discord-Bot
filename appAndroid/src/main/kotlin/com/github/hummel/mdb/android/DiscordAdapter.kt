@@ -9,12 +9,12 @@ import android.os.IBinder
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
 import androidx.core.app.NotificationCompat
-import com.github.hummel.mdb.core.controller.DiscordController
-import com.github.hummel.mdb.core.controller.impl.DiscordControllerImpl
+import com.github.hummel.mdb.core.controller.EventHandler
+import com.github.hummel.mdb.core.controller.impl.EventHandlerImpl
 
 class DiscordAdapter : Service() {
 	private lateinit var wakeLock: WakeLock
-	private val controller: DiscordController = DiscordControllerImpl()
+	private val controller: EventHandler = EventHandlerImpl()
 
 	override fun onCreate() {
 		wakeLock = (getSystemService(POWER_SERVICE) as PowerManager).run {
