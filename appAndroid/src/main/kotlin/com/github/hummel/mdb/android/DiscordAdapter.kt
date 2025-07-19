@@ -39,8 +39,6 @@ class DiscordAdapter : Service() {
 
 		startForeground(1, notification)
 
-		controller.onStartCommand()
-
 		return START_STICKY
 	}
 
