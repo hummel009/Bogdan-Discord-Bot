@@ -8,7 +8,6 @@ import com.github.hummel.mdb.core.factory.DaoFactory
 import com.github.hummel.mdb.core.service.DataService
 import com.github.hummel.mdb.core.utils.defaultName
 import com.github.hummel.mdb.core.utils.defaultPreprompt
-import com.github.hummel.mdb.core.utils.version
 import net.dv8tion.jda.api.entities.Guild
 import java.time.LocalDate
 
@@ -21,24 +20,30 @@ class DataServiceImpl : DataService {
 		val folderName = guild.id
 		val filePath = "guilds/$folderName/data.json"
 
-		return jsonDao.readFromJson(filePath, GuildData::class.java) ?: initAndGet(guild)
+		return jsonDao.readFromFile(filePath, GuildData::class.java) ?: initAndGet(guild)
 	}
 
 	override fun saveGuildData(guild: Guild, guildData: GuildData) {
 		val folderName = guild.id
 		val filePath = "guilds/$folderName/data.json"
 
-		jsonDao.writeToJson(filePath, guildData)
+		jsonDao.writeToFile(filePath, guildData)
 	}
 
-	override fun saveMessage(guild: Guild, message: String) {
-		fun encodeMessage(message: String) = message.map { it.code }.joinToString(" ")
-
+	override fun wipeGuildBank(guild: Guild) {
 		val folderName = guild.id
 		val filePath = "guilds/$folderName/bank.bin"
 
-		fileDao.appendToFile(filePath, encodeMessage(message).toByteArray())
-		fileDao.appendToFile(filePath, "\r\n".toByteArray())
+		fileDao.removeFile(filePath)
+		fileDao.createEmptyFile(filePath)
+	}
+
+	override fun wipeGuildData(guild: Guild) {
+		val folderName = guild.id
+		val filePath = "guilds/$folderName/data.json"
+
+		fileDao.removeFile(filePath)
+		fileDao.createEmptyFile(filePath)
 	}
 
 	override fun getMessage(guild: Guild): String? {
@@ -56,20 +61,30 @@ class DataServiceImpl : DataService {
 		return decodeMessage(messages.random())
 	}
 
-	override fun wipeGuildBank(guild: Guild) {
+	override fun saveMessage(guild: Guild, message: String) {
+		fun encodeMessage(message: String) = message.map { it.code }.joinToString(" ")
+
 		val folderName = guild.id
 		val filePath = "guilds/$folderName/bank.bin"
 
-		fileDao.removeFile(filePath)
-		fileDao.createEmptyFile(filePath)
+		fileDao.appendToFile(filePath, encodeMessage(message).toByteArray())
+		fileDao.appendToFile(filePath, "\r\n".toByteArray())
 	}
 
-	override fun wipeGuildData(guild: Guild) {
-		val folderName = guild.id
-		val filePath = "guilds/$folderName/data.json"
+	override fun exportBotData(): ByteArray {
+		val targetFolderPath = "guilds"
+		val exportFolderPath = "export"
+		val exportFilePath = "export/bot.zip"
 
-		fileDao.removeFile(filePath)
-		fileDao.createEmptyFile(filePath)
+		fileDao.createEmptyFolder(exportFolderPath)
+		zipDao.zipFolderToFile(targetFolderPath, exportFilePath)
+
+		val file = fileDao.readFromFile(exportFilePath)
+
+		fileDao.removeFile(exportFilePath)
+		fileDao.removeFolder(exportFolderPath)
+
+		return file
 	}
 
 	override fun importBotData(byteArray: ByteArray) {
@@ -90,22 +105,6 @@ class DataServiceImpl : DataService {
 		fileDao.removeFolder(importFolderPath)
 	}
 
-	override fun exportBotData(): ByteArray {
-		val targetFolderPath = "guilds"
-		val exportFolderPath = "export"
-		val exportFilePath = "export/bot.zip"
-
-		fileDao.createEmptyFolder(exportFolderPath)
-		zipDao.zipFolderToFile(targetFolderPath, exportFilePath)
-
-		val file = fileDao.readFromFile(exportFilePath)
-
-		fileDao.removeFile(exportFilePath)
-		fileDao.removeFolder(exportFolderPath)
-
-		return file
-	}
-
 	private fun initAndGet(guild: Guild): GuildData {
 		val folderName = guild.id
 		val serverPath = "guilds/$folderName"
@@ -116,33 +115,26 @@ class DataServiceImpl : DataService {
 		fileDao.createEmptyFile(dataPath)
 		fileDao.createEmptyFile(bankPath)
 
-		val guildId = guild.id
-		val guildName = guild.name
-		val chanceMessage = 10
-		val chanceEmoji = 1
-		val chanceAI = 20
-		val lang = "ru"
 		val yesterday = LocalDate.now().minusDays(1)
 		val lastWish = GuildData.Date(yesterday.dayOfMonth, yesterday.monthValue)
 
 		val guildData = GuildData(
-			dataVer = version,
-			guildId = guildId,
-			guildName = guildName,
-			chanceMessage = chanceMessage,
-			chanceEmoji = chanceEmoji,
-			chanceAI = chanceAI,
-			lang = lang,
-			lastWish = lastWish,
-			secretChannels = mutableSetOf(),
-			mutedChannels = mutableSetOf(),
-			managers = mutableSetOf(),
+			guildId = guild.id,
+			guildName = guild.name,
+			chanceMessage = 10,
+			chanceEmoji = 1,
+			chanceAI = 0,
+			lang = "ru",
+			secretChannelIds = mutableSetOf(),
+			mutedChannelIds = mutableSetOf(),
+			managerRoleIds = mutableSetOf(),
 			birthdays = mutableSetOf(),
-			preprompt = defaultPreprompt,
-			name = defaultName
+			lastWish = lastWish,
+			name = defaultName,
+			preprompt = defaultPreprompt
 		)
 
-		jsonDao.writeToJson(dataPath, guildData)
+		jsonDao.writeToFile(dataPath, guildData)
 
 		return guildData
 	}

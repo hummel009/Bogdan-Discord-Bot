@@ -10,7 +10,7 @@ private const val notExist: String = "File doesn't exist!"
 class JsonDaoImpl : JsonDao {
 	private val fileDao: FileDao = DaoFactory.fileDao
 
-	override fun <T> readFromJson(filePath: String, clazz: Class<T>): T? {
+	override fun <T> readFromFile(filePath: String, clazz: Class<T>): T? {
 		val file = fileDao.getFile(filePath)
 		if (file.exists()) {
 			try {
@@ -23,7 +23,7 @@ class JsonDaoImpl : JsonDao {
 		return null
 	}
 
-	override fun <T> writeToJson(filePath: String, obj: T) {
+	override fun <T> writeToFile(filePath: String, obj: T) {
 		val file = fileDao.getFile(filePath)
 		if (file.exists()) {
 			val json = gson.toJson(obj)

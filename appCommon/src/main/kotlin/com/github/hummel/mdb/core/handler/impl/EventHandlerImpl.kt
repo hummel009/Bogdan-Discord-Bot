@@ -21,21 +21,26 @@ class EventHandlerImpl : ListenerAdapter() {
 		memberService.clearContext(event)
 
 		managerService.addBirthday(event)
-		managerService.addManager(event)
+		managerService.addManagerRole(event)
 		managerService.addSecretChannel(event)
 		managerService.addMutedChannel(event)
+
 		managerService.clearBirthdays(event)
-		managerService.clearManagers(event)
+		managerService.clearManagerRoles(event)
 		managerService.clearSecretChannels(event)
 		managerService.clearMutedChannels(event)
+
 		managerService.setChanceMessage(event)
 		managerService.setChanceEmoji(event)
 		managerService.setChanceAI(event)
+
 		managerService.setLanguage(event)
+
 		managerService.setName(event)
-		managerService.resetName(event)
 		managerService.setPreprompt(event)
+		managerService.resetName(event)
 		managerService.resetPreprompt(event)
+
 		managerService.wipeBank(event)
 		managerService.wipeData(event)
 

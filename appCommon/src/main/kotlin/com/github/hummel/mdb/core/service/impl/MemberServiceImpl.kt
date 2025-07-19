@@ -25,12 +25,12 @@ class MemberServiceImpl : MemberService {
 			val guildData = dataService.loadGuildData(guild)
 
 			guildData.birthdays.removeIf { guild.getMemberById(it.id) == null }
-			guildData.managers.removeIf { guild.getRoleById(it.id) == null }
-			guildData.secretChannels.removeIf {
-				guild.getTextChannelById(it.id) == null && guild.getThreadChannelById(it.id) == null
+			guildData.managerRoleIds.removeIf { guild.getRoleById(it) == null }
+			guildData.secretChannelIds.removeIf {
+				guild.getTextChannelById(it) == null && guild.getThreadChannelById(it) == null
 			}
-			guildData.mutedChannels.removeIf {
-				guild.getTextChannelById(it.id) == null && guild.getThreadChannelById(it.id) == null
+			guildData.mutedChannelIds.removeIf {
+				guild.getTextChannelById(it) == null && guild.getThreadChannelById(it) == null
 			}
 
 			val text = buildString {
@@ -56,36 +56,30 @@ class MemberServiceImpl : MemberService {
 					}
 					append("\r\n")
 				}
-				if (guildData.managers.isEmpty()) {
+				if (guildData.managerRoleIds.isEmpty()) {
 					append("\r\n", I18n.of("no_managers", guildData), "\r\n")
 				} else {
 					append("\r\n", I18n.of("has_managers", guildData), "\r\n")
-					guildData.managers.sortedWith(compareBy {
-						it.id
-					}).joinTo(this, "\r\n") {
-						I18n.of("manager", guildData).format(it.id)
+					guildData.managerRoleIds.joinTo(this, "\r\n") {
+						I18n.of("manager", guildData).format(it)
 					}
 					append("\r\n")
 				}
-				if (guildData.secretChannels.isEmpty()) {
+				if (guildData.secretChannelIds.isEmpty()) {
 					append("\r\n", I18n.of("no_secret_channels", guildData), "\r\n")
 				} else {
 					append("\r\n", I18n.of("has_secret_channels", guildData), "\r\n")
-					guildData.secretChannels.sortedWith(compareBy {
-						it.id
-					}).joinTo(this, "\r\n") {
-						I18n.of("secret_channel", guildData).format(it.id)
+					guildData.secretChannelIds.joinTo(this, "\r\n") {
+						I18n.of("secret_channel", guildData).format(it)
 					}
 					append("\r\n")
 				}
-				if (guildData.mutedChannels.isEmpty()) {
+				if (guildData.mutedChannelIds.isEmpty()) {
 					append("\r\n", I18n.of("no_muted_channels", guildData), "\r\n")
 				} else {
 					append("\r\n", I18n.of("has_muted_channels", guildData), "\r\n")
-					guildData.mutedChannels.sortedWith(compareBy {
-						it.id
-					}).joinTo(this, "\r\n") {
-						I18n.of("muted_channel", guildData).format(it.id)
+					guildData.mutedChannelIds.joinTo(this, "\r\n") {
+						I18n.of("muted_channel", guildData).format(it)
 					}
 					append("\r\n")
 				}

@@ -11,8 +11,8 @@ class AccessServiceImpl : AccessService {
 		val member = event.member ?: return false
 
 		val isManager = member.roles.any { role ->
-			guildData.managers.any {
-				it.id == role.idLong
+			guildData.managerRoleIds.any {
+				it == role.idLong
 			}
 		}
 		val isOwner = member.idLong == BotData.ownerId.toLong()

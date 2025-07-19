@@ -27,22 +27,19 @@ class LoginServiceImpl : LoginService {
 			Commands.slash(this, description).addOptions(options)
 
 		val commands = listOf(
-			"clear_context".cmd("/clear_context", empty()),
-			"complete".cmd("/complete [text]", string()),
 			"info".cmd("/info", empty()),
+			"complete".cmd("/complete [text]", string()),
+			"clear_context".cmd("/clear_context", empty()),
 
 			"add_birthday".cmd("/add_birthday [member_id] [month_number] [day_number]", string()),
-			"add_manager".cmd("/add_manager [role_id]", string()),
+			"add_manager_role".cmd("/add_manager_role [role_id]", string()),
 			"add_secret_channel".cmd("/add_secret_channel [channel_id]", string()),
 			"add_muted_channel".cmd("/add_muted_channel [channel_id]", string()),
 
 			"clear_birthdays".cmd("/clear_birthdays {member_id}", string(false)),
-			"clear_managers".cmd("/clear_managers {role_id}", string(false)),
+			"clear_manager_roles".cmd("/clear_manager_roles {role_id}", string(false)),
 			"clear_secret_channels".cmd("/clear_secret_channels {channel_id}", string(false)),
 			"clear_muted_channels".cmd("/clear_muted_channels {channel_id}", string(false)),
-
-			"clear_bank".cmd("/clear_messages", empty()),
-			"clear_data".cmd("/clear_data", empty()),
 
 			"set_chance_message".cmd("/set_chance_message [0..100]", string()),
 			"set_chance_emoji".cmd("/set_chance_emoji [0..100]", string()),
@@ -50,11 +47,13 @@ class LoginServiceImpl : LoginService {
 
 			"set_language".cmd("/set_language [ru/be/uk/en]", string()),
 
+			"set_name".cmd("/set_name [text]", string()),
 			"set_preprompt".cmd("/set_preprompt [text]", string()),
+			"reset_name".cmd("/reset_name", empty()),
 			"reset_preprompt".cmd("/reset_preprompt", empty()),
 
-			"set_name".cmd("/set_name [text]", string()),
-			"reset_name".cmd("/reset_name", empty()),
+			"wipe_bank".cmd("/clear_messages", empty()),
+			"wipe_data".cmd("/clear_data", empty()),
 
 			"import".cmd("/import", attachment()),
 			"export".cmd("/export", empty()),

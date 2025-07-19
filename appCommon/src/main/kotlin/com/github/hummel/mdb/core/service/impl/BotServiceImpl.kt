@@ -34,7 +34,7 @@ class BotServiceImpl : BotService {
 			channelHistory.removeAt(0)
 		}
 
-		if (guildData.secretChannels.any { it.id == channelId }) {
+		if (guildData.secretChannelIds.any { it == channelId }) {
 			return
 		}
 
@@ -43,6 +43,18 @@ class BotServiceImpl : BotService {
 		}
 	}
 
+	override fun addRandomEmoji(event: MessageReceivedEvent) {
+		if (event.author.isBot) {
+			return
+		}
+
+		val guild = event.guild
+		val guildData = dataService.loadGuildData(guild)
+
+		if (Random.nextInt(100) < guildData.chanceEmoji) {
+			event.message.addReaction(guild.emojis.random()).queue()
+		}
+	}
 
 	override fun sendRandomMessage(event: MessageReceivedEvent) {
 		if (event.jda.selfUser.idLong == event.message.author.idLong) {
@@ -53,7 +65,7 @@ class BotServiceImpl : BotService {
 		val guildData = dataService.loadGuildData(guild)
 		val channelId = event.channel.idLong
 
-		if (guildData.mutedChannels.any { it.id == channelId }) {
+		if (guildData.mutedChannelIds.any { it == channelId }) {
 			return
 		}
 
@@ -119,19 +131,6 @@ class BotServiceImpl : BotService {
 			guildData.lastWish.month = todayMonth
 
 			dataService.saveGuildData(guild, guildData)
-		}
-	}
-
-	override fun addRandomEmoji(event: MessageReceivedEvent) {
-		if (event.author.isBot) {
-			return
-		}
-
-		val guild = event.guild
-		val guildData = dataService.loadGuildData(guild)
-
-		if (Random.nextInt(100) < guildData.chanceEmoji) {
-			event.message.addReaction(guild.emojis.random()).queue()
 		}
 	}
 

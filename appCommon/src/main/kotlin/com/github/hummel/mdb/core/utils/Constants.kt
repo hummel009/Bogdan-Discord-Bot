@@ -5,8 +5,6 @@ import com.google.gson.GsonBuilder
 
 val gson: Gson = GsonBuilder().setPrettyPrinting().create()
 
-const val version: Int = 4
-
 const val prepromptTemplate: String = """
 	Ты — участник этого чата, тебя зовут %s.
 	Не пиши что-то вроде «%s на связи» или «Эй, ребята, я тут!».

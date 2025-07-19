@@ -9,6 +9,6 @@ class ControllerImpl : Controller {
 
 	override fun onCreate() {
 		loginService.loginBot()
-		//loginService.recreateCommands()
+		loginService.recreateCommands()
 	}
 }

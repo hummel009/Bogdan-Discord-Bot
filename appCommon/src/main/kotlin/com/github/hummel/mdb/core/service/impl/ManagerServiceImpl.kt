@@ -70,7 +70,7 @@ class ManagerServiceImpl : ManagerService {
 		}
 	}
 
-	override fun addManager(event: SlashCommandInteractionEvent) {
+	override fun addManagerRole(event: SlashCommandInteractionEvent) {
 		if (event.fullCommandName != "add_manager") {
 			return
 		}
@@ -88,7 +88,7 @@ class ManagerServiceImpl : ManagerService {
 						val roleId = arguments[0].toLong()
 						guild.getRoleById(roleId) ?: throw Exception()
 
-						guildData.managers.add(GuildData.Role(roleId))
+						guildData.managerRoleIds.add(roleId)
 
 						EmbedBuilder().success(
 							event.member, guildData, I18n.of("added_manager", guildData).format(roleId)
@@ -125,7 +125,7 @@ class ManagerServiceImpl : ManagerService {
 						guild.getTextChannelById(channelId) ?: guild.getThreadChannelById(channelId)
 						?: throw Exception()
 
-						guildData.secretChannels.add(GuildData.Channel(channelId))
+						guildData.secretChannelIds.add(channelId)
 
 						EmbedBuilder().success(
 							event.member, guildData, I18n.of("added_secret_channel", guildData).format(channelId)
@@ -162,7 +162,7 @@ class ManagerServiceImpl : ManagerService {
 						guild.getTextChannelById(channelId) ?: guild.getThreadChannelById(channelId)
 						?: throw Exception()
 
-						guildData.mutedChannels.add(GuildData.Channel(channelId))
+						guildData.mutedChannelIds.add(channelId)
 
 						EmbedBuilder().success(
 							event.member, guildData, I18n.of("added_muted_channel", guildData).format(channelId)
@@ -221,7 +221,7 @@ class ManagerServiceImpl : ManagerService {
 		}
 	}
 
-	override fun clearManagers(event: SlashCommandInteractionEvent) {
+	override fun clearManagerRoles(event: SlashCommandInteractionEvent) {
 		if (event.fullCommandName != "clear_managers") {
 			return
 		}
@@ -235,7 +235,7 @@ class ManagerServiceImpl : ManagerService {
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 				if (arguments.isEmpty()) {
-					guildData.managers.clear()
+					guildData.managerRoleIds.clear()
 
 					EmbedBuilder().success(event.member, guildData, I18n.of("cleared_managers", guildData))
 				} else {
@@ -243,7 +243,7 @@ class ManagerServiceImpl : ManagerService {
 						try {
 							val roleId = arguments[0].toLong()
 
-							guildData.managers.removeIf { it.id == roleId }
+							guildData.managerRoleIds.removeIf { it == roleId }
 
 							EmbedBuilder().success(
 								event.member, guildData, I18n.of("removed_manager", guildData).format(roleId)
@@ -276,7 +276,7 @@ class ManagerServiceImpl : ManagerService {
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 				if (arguments.isEmpty()) {
-					guildData.secretChannels.clear()
+					guildData.secretChannelIds.clear()
 
 					EmbedBuilder().success(event.member, guildData, I18n.of("cleared_secret_channels", guildData))
 				} else {
@@ -284,7 +284,7 @@ class ManagerServiceImpl : ManagerService {
 						try {
 							val channelId = arguments[0].toLong()
 
-							guildData.secretChannels.removeIf { it.id == channelId }
+							guildData.secretChannelIds.removeIf { it == channelId }
 
 							EmbedBuilder().success(
 								event.member, guildData, I18n.of("removed_secret_channel", guildData).format(channelId)
@@ -317,7 +317,7 @@ class ManagerServiceImpl : ManagerService {
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 				if (arguments.isEmpty()) {
-					guildData.mutedChannels.clear()
+					guildData.mutedChannelIds.clear()
 
 					EmbedBuilder().success(event.member, guildData, I18n.of("cleared_muted_channels", guildData))
 				} else {
@@ -325,7 +325,7 @@ class ManagerServiceImpl : ManagerService {
 						try {
 							val channelId = arguments[0].toLong()
 
-							guildData.mutedChannels.removeIf { it.id == channelId }
+							guildData.mutedChannelIds.removeIf { it == channelId }
 
 							EmbedBuilder().success(
 								event.member, guildData, I18n.of("removed_muted_channel", guildData).format(channelId)
@@ -534,38 +534,6 @@ class ManagerServiceImpl : ManagerService {
 		}
 	}
 
-	@Suppress("StringFormatTrivial")
-	override fun resetName(event: SlashCommandInteractionEvent) {
-		if (event.fullCommandName != "reset_name") {
-			return
-		}
-
-		event.deferReply().queue {
-			val guild = event.guild ?: return@queue
-			val guildData = dataService.loadGuildData(guild)
-
-			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
-			} else {
-				try {
-					guildData.name = defaultName
-
-					val bot = guild.getMemberById(event.jda.selfUser.idLong) ?: throw Exception()
-					bot.modifyNickname(defaultName).queue()
-
-					EmbedBuilder().success(
-						event.member, guildData, I18n.of("reset_name", guildData).format(defaultName)
-					)
-				} catch (_: Exception) {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
-				}
-			}
-			dataService.saveGuildData(guild, guildData)
-
-			event.hook.sendMessageEmbeds(embed).queue()
-		}
-	}
-
 	override fun setPreprompt(event: SlashCommandInteractionEvent) {
 		if (event.fullCommandName != "set_preprompt") {
 			return
@@ -590,6 +558,38 @@ class ManagerServiceImpl : ManagerService {
 
 					EmbedBuilder().success(
 						event.member, guildData, I18n.of("set_preprompt", guildData).format(prompt)
+					)
+				} catch (_: Exception) {
+					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+				}
+			}
+			dataService.saveGuildData(guild, guildData)
+
+			event.hook.sendMessageEmbeds(embed).queue()
+		}
+	}
+
+	@Suppress("StringFormatTrivial")
+	override fun resetName(event: SlashCommandInteractionEvent) {
+		if (event.fullCommandName != "reset_name") {
+			return
+		}
+
+		event.deferReply().queue {
+			val guild = event.guild ?: return@queue
+			val guildData = dataService.loadGuildData(guild)
+
+			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
+				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+			} else {
+				try {
+					guildData.name = defaultName
+
+					val bot = guild.getMemberById(event.jda.selfUser.idLong) ?: throw Exception()
+					bot.modifyNickname(defaultName).queue()
+
+					EmbedBuilder().success(
+						event.member, guildData, I18n.of("reset_name", guildData).format(defaultName)
 					)
 				} catch (_: Exception) {
 					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))

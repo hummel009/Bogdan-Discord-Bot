@@ -1,26 +1,20 @@
 package com.github.hummel.mdb.core.bean
 
 data class GuildData(
-	val dataVer: Int,
 	val guildId: String,
 	val guildName: String,
 	var chanceMessage: Int,
 	var chanceEmoji: Int,
 	var chanceAI: Int,
 	var lang: String,
-	val lastWish: Date,
-	val secretChannels: MutableSet<Channel>,
-	val mutedChannels: MutableSet<Channel>,
-	val managers: MutableSet<Role>,
+	val secretChannelIds: MutableSet<Long>,
+	val mutedChannelIds: MutableSet<Long>,
+	val managerRoleIds: MutableSet<Long>,
 	val birthdays: MutableSet<Birthday>,
-	var preprompt: String,
-	var name: String
+	val lastWish: Date,
+	var name: String,
+	var preprompt: String
 ) {
 	data class Date(var day: Int, var month: Int)
-
-	data class Role(var id: Long)
-
-	data class Channel(var id: Long)
-
 	data class Birthday(var id: Long, var date: Date)
 }
