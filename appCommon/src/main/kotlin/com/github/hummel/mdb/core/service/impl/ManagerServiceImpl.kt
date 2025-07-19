@@ -372,7 +372,7 @@ class ManagerServiceImpl : ManagerService {
 							event.member, guildData, I18n.of("set_language", guildData).format(langName)
 						)
 					} catch (_: Exception) {
-						EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+						EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
 					}
 				} else {
 					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
@@ -525,7 +525,7 @@ class ManagerServiceImpl : ManagerService {
 
 					EmbedBuilder().success(event.member, guildData, I18n.of("set_name", guildData).format(name))
 				} catch (_: Exception) {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -560,7 +560,7 @@ class ManagerServiceImpl : ManagerService {
 						event.member, guildData, I18n.of("set_preprompt", guildData).format(prompt)
 					)
 				} catch (_: Exception) {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -592,7 +592,7 @@ class ManagerServiceImpl : ManagerService {
 						event.member, guildData, I18n.of("reset_name", guildData).format(defaultName)
 					)
 				} catch (_: Exception) {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -621,7 +621,7 @@ class ManagerServiceImpl : ManagerService {
 						event.member, guildData, I18n.of("reset_preprompt", guildData).format(defaultPreprompt)
 					)
 				} catch (_: Exception) {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
 				}
 			}
 			event.hook.sendMessageEmbeds(embed).queue()
@@ -631,7 +631,7 @@ class ManagerServiceImpl : ManagerService {
 	}
 
 	override fun wipeData(event: SlashCommandInteractionEvent) {
-		if (event.fullCommandName != "clear_data") {
+		if (event.fullCommandName != "wipe_data") {
 			return
 		}
 
@@ -651,7 +651,7 @@ class ManagerServiceImpl : ManagerService {
 	}
 
 	override fun wipeBank(event: SlashCommandInteractionEvent) {
-		if (event.fullCommandName != "clear_bank") {
+		if (event.fullCommandName != "wipe_bank") {
 			return
 		}
 

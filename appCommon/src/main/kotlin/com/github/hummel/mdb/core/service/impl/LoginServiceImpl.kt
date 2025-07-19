@@ -52,8 +52,8 @@ class LoginServiceImpl : LoginService {
 			"reset_name".cmd("/reset_name", empty()),
 			"reset_preprompt".cmd("/reset_preprompt", empty()),
 
-			"wipe_bank".cmd("/clear_messages", empty()),
-			"wipe_data".cmd("/clear_data", empty()),
+			"wipe_bank".cmd("/wipe_bank", empty()),
+			"wipe_data".cmd("/wipe_data", empty()),
 
 			"import".cmd("/import", attachment()),
 			"export".cmd("/export", empty()),

@@ -119,7 +119,7 @@ class MemberServiceImpl : MemberService {
 					)
 				}
 			} catch (_: Exception) {
-				EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+				EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
 			}
 
 			event.hook.sendMessageEmbeds(embed).queue()

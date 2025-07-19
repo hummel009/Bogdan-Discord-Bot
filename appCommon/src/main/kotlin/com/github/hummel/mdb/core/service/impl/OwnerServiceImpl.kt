@@ -40,7 +40,7 @@ class OwnerServiceImpl : OwnerService {
 
 					EmbedBuilder().success(event.member, guildData, I18n.of("import", guildData))
 				} catch (_: Exception) {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
 				}
 				event.hook.sendMessageEmbeds(embed).queue()
 			}
@@ -66,7 +66,7 @@ class OwnerServiceImpl : OwnerService {
 
 					event.hook.sendFiles(FileUpload.fromData(byteArray, "bot.zip")).queue()
 				} catch (_: Exception) {
-					val embed = EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+					val embed = EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
 
 					event.hook.sendMessageEmbeds(embed).queue()
 				}
