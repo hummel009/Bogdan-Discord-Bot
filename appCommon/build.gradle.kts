@@ -14,3 +14,9 @@ java {
 		languageVersion = JavaLanguageVersion.of(17)
 	}
 }
+
+tasks {
+	jar {
+		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	}
+}
