@@ -20,9 +20,11 @@ class LoginServiceImpl : LoginService {
 			setMemberCachePolicy(MemberCachePolicy.ALL)
 			addEventListeners(EventHandlerImpl())
 		}.build().awaitReady()
+		// recreateCommands()
 	}
 
-	override fun recreateCommands() {
+	@Suppress("unused")
+	private fun recreateCommands() {
 		fun String.cmd(description: String, options: List<OptionData>) =
 			Commands.slash(this, description).addOptions(options)
 
