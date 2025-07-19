@@ -11,6 +11,7 @@ import com.github.hummel.mdb.core.utils.error
 import com.github.hummel.mdb.core.utils.prepromptTemplate
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.User
+import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import java.time.LocalDate
 import kotlin.random.Random
@@ -52,7 +53,17 @@ class BotServiceImpl : BotService {
 		val guildData = dataService.loadGuildData(guild)
 
 		if (Random.nextInt(100) < guildData.chanceEmoji) {
-			event.message.addReaction(guild.emojis.random()).queue()
+			if (Random.nextInt(100) != 0) {
+				event.message.addReaction(guild.emojis.random()).queue()
+			} else {
+				val emojis = listOf(
+					"🇳", "🇦", "🇪", "🇧", "🅰️", "🇱", "🇴", "🇻", "🅾️"
+				)
+
+				emojis.forEach { emojiUnicode ->
+					event.message.addReaction(Emoji.fromUnicode(emojiUnicode)).queue()
+				}
+			}
 		}
 	}
 
