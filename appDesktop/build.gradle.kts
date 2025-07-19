@@ -18,7 +18,6 @@ dependencies {
 
 	implementation(project(":appCommon"))
 	implementation("com.google.code.gson:gson:latest.release")
-
 }
 
 java {
