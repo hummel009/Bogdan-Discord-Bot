@@ -138,7 +138,7 @@ class MemberServiceImpl : MemberService {
 
 			BotData.channelHistories[channelId] = mutableListOf()
 
-			val embed = EmbedBuilder().success(event.member, guildData, I18n.of("cleared_context", guildData))
+			val embed = EmbedBuilder().success(event.member, guildData, I18n.of("clear_context", guildData))
 
 			event.hook.sendMessageEmbeds(embed).queue()
 		}
