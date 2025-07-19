@@ -71,7 +71,7 @@ class ManagerServiceImpl : ManagerService {
 	}
 
 	override fun addManagerRole(event: SlashCommandInteractionEvent) {
-		if (event.fullCommandName != "add_manager") {
+		if (event.fullCommandName != "add_manager_role") {
 			return
 		}
 
@@ -91,7 +91,7 @@ class ManagerServiceImpl : ManagerService {
 						guildData.managerRoleIds.add(roleId)
 
 						EmbedBuilder().success(
-							event.member, guildData, I18n.of("added_manager", guildData).format(roleId)
+							event.member, guildData, I18n.of("added_manager_role", guildData).format(roleId)
 						)
 					} catch (_: Exception) {
 						EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
@@ -222,7 +222,7 @@ class ManagerServiceImpl : ManagerService {
 	}
 
 	override fun clearManagerRoles(event: SlashCommandInteractionEvent) {
-		if (event.fullCommandName != "clear_managers") {
+		if (event.fullCommandName != "clear_manager_roles") {
 			return
 		}
 
@@ -237,7 +237,7 @@ class ManagerServiceImpl : ManagerService {
 				if (arguments.isEmpty()) {
 					guildData.managerRoleIds.clear()
 
-					EmbedBuilder().success(event.member, guildData, I18n.of("cleared_managers", guildData))
+					EmbedBuilder().success(event.member, guildData, I18n.of("cleared_manager_roles", guildData))
 				} else {
 					if (arguments.size == 1) {
 						try {
@@ -246,7 +246,7 @@ class ManagerServiceImpl : ManagerService {
 							guildData.managerRoleIds.removeIf { it == roleId }
 
 							EmbedBuilder().success(
-								event.member, guildData, I18n.of("removed_manager", guildData).format(roleId)
+								event.member, guildData, I18n.of("removed_manager_role", guildData).format(roleId)
 							)
 						} catch (_: Exception) {
 							EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
