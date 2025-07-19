@@ -28,7 +28,7 @@ class OwnerServiceImpl : OwnerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			if (!accessService.fromOwnerAtLeast(event)) {
-				val embed = EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				val embed = EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 
 				event.hook.sendMessageEmbeds(embed).queue()
 			} else {
@@ -40,7 +40,7 @@ class OwnerServiceImpl : OwnerService {
 
 					EmbedBuilder().success(event.member, guildData, I18n.of("import", guildData))
 				} catch (_: Exception) {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 				}
 				event.hook.sendMessageEmbeds(embed).queue()
 			}
@@ -57,7 +57,7 @@ class OwnerServiceImpl : OwnerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			if (!accessService.fromOwnerAtLeast(event)) {
-				val embed = EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				val embed = EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 
 				event.hook.sendMessageEmbeds(embed).queue()
 			} else {
@@ -66,7 +66,7 @@ class OwnerServiceImpl : OwnerService {
 
 					event.hook.sendFiles(FileUpload.fromData(byteArray, "bot.zip")).queue()
 				} catch (_: Exception) {
-					val embed = EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+					val embed = EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 
 					event.hook.sendMessageEmbeds(embed).queue()
 				}
@@ -84,7 +84,7 @@ class OwnerServiceImpl : OwnerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			if (!accessService.fromOwnerAtLeast(event)) {
-				val embed = EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				val embed = EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 
 				event.hook.sendMessageEmbeds(embed).queue()
 			} else {

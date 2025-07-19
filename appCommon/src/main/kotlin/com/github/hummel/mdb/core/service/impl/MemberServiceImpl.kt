@@ -35,10 +35,10 @@ class MemberServiceImpl : MemberService {
 
 			val text = buildString {
 				val langName = I18n.of(guildData.lang, guildData)
-				append(I18n.of("current_language", guildData).format(langName), "\r\n")
-				append(I18n.of("current_chance_message", guildData).format(guildData.chanceMessage), "\r\n")
-				append(I18n.of("current_chance_emoji", guildData).format(guildData.chanceEmoji), "\r\n")
-				append(I18n.of("current_chance_ai", guildData).format(guildData.chanceAI), "\r\n")
+				append(I18n.of("info_language", guildData).format(langName), "\r\n")
+				append(I18n.of("info_chance_message", guildData).format(guildData.chanceMessage), "\r\n")
+				append(I18n.of("info_chance_emoji", guildData).format(guildData.chanceEmoji), "\r\n")
+				append(I18n.of("info_chance_ai", guildData).format(guildData.chanceAI), "\r\n")
 				if (guildData.birthdays.isEmpty()) {
 					append("\r\n", I18n.of("no_birthdays", guildData), "\r\n")
 				} else {
@@ -83,8 +83,8 @@ class MemberServiceImpl : MemberService {
 					}
 					append("\r\n")
 				}
-				append("\r\n", I18n.of("current_name", guildData).format(guildData.name), "\r\n")
-				append("\r\n", I18n.of("current_preprompt", guildData).format(guildData.preprompt), "\r\n")
+				append("\r\n", I18n.of("info_name", guildData).format(guildData.name), "\r\n")
+				append("\r\n", I18n.of("info_preprompt", guildData).format(guildData.preprompt), "\r\n")
 			}
 			dataService.saveGuildData(guild, guildData)
 
@@ -115,11 +115,11 @@ class MemberServiceImpl : MemberService {
 					EmbedBuilder().success(event.member, guildData, it)
 				} ?: run {
 					EmbedBuilder().error(
-						event.member, guildData, I18n.of("site_error", guildData).format(error)
+						event.member, guildData, I18n.of("msg_error_http", guildData).format(error)
 					)
 				}
 			} catch (_: Exception) {
-				EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+				EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 			}
 
 			event.hook.sendMessageEmbeds(embed).queue()

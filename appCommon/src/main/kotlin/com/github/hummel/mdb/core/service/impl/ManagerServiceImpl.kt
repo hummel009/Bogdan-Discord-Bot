@@ -39,7 +39,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 				if (arguments.size == 3) {
@@ -55,13 +55,13 @@ class ManagerServiceImpl : ManagerService {
 						val date = I18n.of(Month.of(month).name.lowercase(), guildData).format(day)
 
 						EmbedBuilder().success(
-							event.member, guildData, I18n.of("added_birthday", guildData).format(memberId, date)
+							event.member, guildData, I18n.of("add_birthday", guildData).format(memberId, date)
 						)
 					} catch (_: Exception) {
-						EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 					}
 				} else {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -80,7 +80,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 				if (arguments.size == 1) {
@@ -91,13 +91,13 @@ class ManagerServiceImpl : ManagerService {
 						guildData.managerRoleIds.add(roleId)
 
 						EmbedBuilder().success(
-							event.member, guildData, I18n.of("added_manager_role", guildData).format(roleId)
+							event.member, guildData, I18n.of("add_manager_role", guildData).format(roleId)
 						)
 					} catch (_: Exception) {
-						EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 					}
 				} else {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -116,7 +116,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 				if (arguments.size == 1) {
@@ -128,13 +128,13 @@ class ManagerServiceImpl : ManagerService {
 						guildData.secretChannelIds.add(channelId)
 
 						EmbedBuilder().success(
-							event.member, guildData, I18n.of("added_secret_channel", guildData).format(channelId)
+							event.member, guildData, I18n.of("add_secret_channel", guildData).format(channelId)
 						)
 					} catch (_: Exception) {
-						EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 					}
 				} else {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -153,7 +153,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 				if (arguments.size == 1) {
@@ -165,13 +165,13 @@ class ManagerServiceImpl : ManagerService {
 						guildData.mutedChannelIds.add(channelId)
 
 						EmbedBuilder().success(
-							event.member, guildData, I18n.of("added_muted_channel", guildData).format(channelId)
+							event.member, guildData, I18n.of("add_muted_channel", guildData).format(channelId)
 						)
 					} catch (_: Exception) {
-						EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 					}
 				} else {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -190,13 +190,13 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 				if (arguments.isEmpty()) {
 					guildData.birthdays.clear()
 
-					EmbedBuilder().success(event.member, guildData, I18n.of("cleared_birthdays", guildData))
+					EmbedBuilder().success(event.member, guildData, I18n.of("clear_birthdays", guildData))
 				} else {
 					if (arguments.size == 1) {
 						try {
@@ -205,13 +205,13 @@ class ManagerServiceImpl : ManagerService {
 							guildData.birthdays.removeIf { it.id == memberId }
 
 							EmbedBuilder().success(
-								event.member, guildData, I18n.of("removed_birthday", guildData).format(memberId)
+								event.member, guildData, I18n.of("clear_birthdays_single", guildData).format(memberId)
 							)
 						} catch (_: Exception) {
-							EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+							EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 						}
 					} else {
-						EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
 					}
 				}
 			}
@@ -231,13 +231,13 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 				if (arguments.isEmpty()) {
 					guildData.managerRoleIds.clear()
 
-					EmbedBuilder().success(event.member, guildData, I18n.of("cleared_manager_roles", guildData))
+					EmbedBuilder().success(event.member, guildData, I18n.of("clear_manager_roles", guildData))
 				} else {
 					if (arguments.size == 1) {
 						try {
@@ -246,13 +246,13 @@ class ManagerServiceImpl : ManagerService {
 							guildData.managerRoleIds.removeIf { it == roleId }
 
 							EmbedBuilder().success(
-								event.member, guildData, I18n.of("removed_manager_role", guildData).format(roleId)
+								event.member, guildData, I18n.of("clear_manager_roles_single", guildData).format(roleId)
 							)
 						} catch (_: Exception) {
-							EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+							EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 						}
 					} else {
-						EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
 					}
 				}
 			}
@@ -272,13 +272,13 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 				if (arguments.isEmpty()) {
 					guildData.secretChannelIds.clear()
 
-					EmbedBuilder().success(event.member, guildData, I18n.of("cleared_secret_channels", guildData))
+					EmbedBuilder().success(event.member, guildData, I18n.of("clear_secret_channels", guildData))
 				} else {
 					if (arguments.size == 1) {
 						try {
@@ -287,13 +287,13 @@ class ManagerServiceImpl : ManagerService {
 							guildData.secretChannelIds.removeIf { it == channelId }
 
 							EmbedBuilder().success(
-								event.member, guildData, I18n.of("removed_secret_channel", guildData).format(channelId)
+								event.member, guildData, I18n.of("clear_secret_channels_single", guildData).format(channelId)
 							)
 						} catch (_: Exception) {
-							EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+							EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 						}
 					} else {
-						EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
 					}
 				}
 			}
@@ -313,13 +313,13 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 				if (arguments.isEmpty()) {
 					guildData.mutedChannelIds.clear()
 
-					EmbedBuilder().success(event.member, guildData, I18n.of("cleared_muted_channels", guildData))
+					EmbedBuilder().success(event.member, guildData, I18n.of("clear_muted_channels", guildData))
 				} else {
 					if (arguments.size == 1) {
 						try {
@@ -328,13 +328,13 @@ class ManagerServiceImpl : ManagerService {
 							guildData.mutedChannelIds.removeIf { it == channelId }
 
 							EmbedBuilder().success(
-								event.member, guildData, I18n.of("removed_muted_channel", guildData).format(channelId)
+								event.member, guildData, I18n.of("cleared_muted_channels_single", guildData).format(channelId)
 							)
 						} catch (_: Exception) {
-							EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+							EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 						}
 					} else {
-						EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
 					}
 				}
 			}
@@ -354,7 +354,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 				if (arguments.size == 1) {
@@ -372,10 +372,10 @@ class ManagerServiceImpl : ManagerService {
 							event.member, guildData, I18n.of("set_language", guildData).format(langName)
 						)
 					} catch (_: Exception) {
-						EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 					}
 				} else {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -394,7 +394,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 				if (arguments.size == 1) {
@@ -410,10 +410,10 @@ class ManagerServiceImpl : ManagerService {
 							event.member, guildData, I18n.of("set_chance_message", guildData).format(chance)
 						)
 					} catch (_: Exception) {
-						EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 					}
 				} else {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -432,7 +432,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 				if (arguments.size == 1) {
@@ -448,10 +448,10 @@ class ManagerServiceImpl : ManagerService {
 							event.member, guildData, I18n.of("set_chance_emoji", guildData).format(chance)
 						)
 					} catch (_: Exception) {
-						EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 					}
 				} else {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -470,7 +470,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 				if (arguments.size == 1) {
@@ -486,10 +486,10 @@ class ManagerServiceImpl : ManagerService {
 							event.member, guildData, I18n.of("set_chance_ai", guildData).format(chance)
 						)
 					} catch (_: Exception) {
-						EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 					}
 				} else {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_arg", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -508,7 +508,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				try {
 					val arguments = event.getOption("arguments")?.asString ?: throw Exception()
@@ -525,7 +525,7 @@ class ManagerServiceImpl : ManagerService {
 
 					EmbedBuilder().success(event.member, guildData, I18n.of("set_name", guildData).format(name))
 				} catch (_: Exception) {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -544,7 +544,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				try {
 					val arguments = event.getOption("arguments")?.asString ?: throw Exception()
@@ -560,7 +560,7 @@ class ManagerServiceImpl : ManagerService {
 						event.member, guildData, I18n.of("set_preprompt", guildData).format(prompt)
 					)
 				} catch (_: Exception) {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -580,7 +580,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				try {
 					guildData.name = defaultName
@@ -592,7 +592,7 @@ class ManagerServiceImpl : ManagerService {
 						event.member, guildData, I18n.of("reset_name", guildData).format(defaultName)
 					)
 				} catch (_: Exception) {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -612,7 +612,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				try {
 					guildData.preprompt = defaultPreprompt
@@ -621,7 +621,7 @@ class ManagerServiceImpl : ManagerService {
 						event.member, guildData, I18n.of("reset_preprompt", guildData).format(defaultPreprompt)
 					)
 				} catch (_: Exception) {
-					EmbedBuilder().error(event.member, guildData, I18n.of("invalid_format", guildData))
+					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
 				}
 			}
 			event.hook.sendMessageEmbeds(embed).queue()
@@ -640,11 +640,11 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				dataService.wipeGuildData(guild)
 
-				EmbedBuilder().success(event.member, guildData, I18n.of("cleared_data", guildData))
+				EmbedBuilder().success(event.member, guildData, I18n.of("wipe_data", guildData))
 			}
 			event.hook.sendMessageEmbeds(embed).queue()
 		}
@@ -660,11 +660,11 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("no_access", guildData))
+				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				dataService.wipeGuildBank(guild)
 
-				EmbedBuilder().success(event.member, guildData, I18n.of("cleared_bank", guildData))
+				EmbedBuilder().success(event.member, guildData, I18n.of("wipe_bank", guildData))
 			}
 			event.hook.sendMessageEmbeds(embed).queue()
 		}

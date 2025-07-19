@@ -92,7 +92,7 @@ class BotServiceImpl : BotService {
 		data?.let {
 			if (it.length > 2000) {
 				val embed = EmbedBuilder().error(
-					event.member, guildData, I18n.of("long_message", guildData)
+					event.member, guildData, I18n.of("msg_error_long", guildData)
 				)
 				event.channel.sendMessageEmbeds(embed).queue()
 			} else {
@@ -100,7 +100,7 @@ class BotServiceImpl : BotService {
 			}
 		} ?: run {
 			val embed = EmbedBuilder().error(
-				event.member, guildData, I18n.of("site_error", guildData).format(error)
+				event.member, guildData, I18n.of("msg_error_http", guildData).format(error)
 			)
 			event.channel.sendMessageEmbeds(embed).queue()
 		}
