@@ -1,13 +1,12 @@
 package com.github.hummel.mdb.windows
 
-import com.github.hummel.mdb.core.controller.EventHandler
-import com.github.hummel.mdb.core.controller.impl.EventHandlerImpl
+import com.github.hummel.mdb.core.controller.Controller
+import com.github.hummel.mdb.core.controller.impl.ControllerImpl
 
 class DiscordAdapter {
-	private val controller: EventHandler = EventHandlerImpl()
+	private val controller: Controller = ControllerImpl()
 
 	fun launch() {
 		controller.onCreate()
-		controller.onStartCommand()
 	}
 }

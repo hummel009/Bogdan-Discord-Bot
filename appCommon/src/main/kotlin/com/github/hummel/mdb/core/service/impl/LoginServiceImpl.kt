@@ -1,7 +1,8 @@
 package com.github.hummel.mdb.core.service.impl
 
+import com.github.hummel.mdb.core.ApiHolder
 import com.github.hummel.mdb.core.bean.BotData
-import com.github.hummel.mdb.core.controller.impl.EventHandlerImpl
+import com.github.hummel.mdb.core.handler.impl.EventHandlerImpl
 import com.github.hummel.mdb.core.service.LoginService
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.interactions.commands.OptionType
@@ -12,25 +13,16 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 
 class LoginServiceImpl : LoginService {
-	override fun loginBot(impl: EventHandlerImpl) {
-		impl.api = JDABuilder.createDefault(BotData.token).apply {
+	override fun loginBot() {
+		ApiHolder.discord = JDABuilder.createDefault(BotData.token).apply {
 			enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
 			enableCache(CacheFlag.entries)
 			setMemberCachePolicy(MemberCachePolicy.ALL)
+			addEventListeners(EventHandlerImpl())
 		}.build().awaitReady()
 	}
 
-	override fun deleteCommands(impl: EventHandlerImpl) {
-		val commands = impl.api.retrieveCommands().complete()
-
-		commands.forEach {
-			impl.api.deleteCommandById(it.id).complete()
-
-			println("${it.id}/${commands.size} was deleted.")
-		}
-	}
-
-	override fun registerCommands(impl: EventHandlerImpl) {
+	override fun recreateCommands() {
 		fun String.cmd(description: String, options: List<OptionData>) =
 			Commands.slash(this, description).addOptions(options)
 
@@ -68,7 +60,7 @@ class LoginServiceImpl : LoginService {
 			"export".cmd("/export", empty()),
 			"exit".cmd("/exit", empty())
 		)
-		impl.api.updateCommands().addCommands(commands).complete()
+		ApiHolder.discord.updateCommands().addCommands(commands).complete()
 	}
 
 	private fun empty(): List<OptionData> = emptyList()

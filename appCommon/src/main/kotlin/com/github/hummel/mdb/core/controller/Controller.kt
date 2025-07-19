@@ -1,6 +1,5 @@
 package com.github.hummel.mdb.core.controller
 
-interface EventHandler {
+interface Controller {
 	fun onCreate()
-	fun onStartCommand()
 }
