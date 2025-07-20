@@ -1,5 +1,5 @@
 package com.github.hummel.mdb.service
 
 interface LoginService {
-	fun loginBot()
+	fun loginBot(reinit: Boolean)
 }

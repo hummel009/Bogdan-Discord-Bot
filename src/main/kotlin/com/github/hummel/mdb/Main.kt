@@ -66,7 +66,7 @@ fun launchWithData(token: String, ownerId: String, root: String) {
 
 fun startFunction() {
 	val loginService = ServiceFactory.loginService
-	loginService.loginBot()
+	loginService.loginBot(false)
 }
 
 fun exitFunction() {
