@@ -6,23 +6,19 @@ import com.github.hummel.bogdan.utils.gson
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
-import kotlin.system.exitProcess
 
 data class Config(
-	val token: String?, val ownerId: String?
+	val token: String, val ownerId: String, val reinit: String?
 )
 
 fun main() {
 	try {
 		val file = File("config.json")
 		if (file.exists()) {
-			FileReader(file).use { reader ->
-				val config = gson.fromJson(reader, Config::class.java)
-				if (config.token != null && config.ownerId != null) {
-					launchWithData(config.token, config.ownerId, "files")
-				} else {
-					requestUserInput()
-				}
+			FileReader(file).use {
+				val config = gson.fromJson(it, Config::class.java)
+
+				launchWithData(config, "files")
 			}
 		} else {
 			requestUserInput()
@@ -36,39 +32,28 @@ fun requestUserInput() {
 	print("Enter the Token: ")
 	val token = readln()
 
-	print("Enter the OwnerID: ")
+	print("Enter the Owner ID: ")
 	val ownerId = readln()
 
-	val config = Config(token, ownerId)
+	val config = Config(token, ownerId, "false")
 	try {
 		val file = File("config.json")
-		if (!file.exists()) {
-			FileWriter(file).use { writer ->
-				gson.toJson(config, writer)
-			}
+		FileWriter(file).use {
+			gson.toJson(config, it)
 		}
 	} catch (e: Exception) {
 		e.printStackTrace()
 	}
 
-	launchWithData(token, ownerId, "files")
+	launchWithData(config, "files")
 }
 
 @Suppress("UNUSED_PARAMETER")
-fun launchWithData(token: String, ownerId: String, root: String) {
-	BotData.token = token
-	BotData.ownerId = ownerId
+fun launchWithData(config: Config, root: String) {
+	BotData.token = config.token
+	BotData.ownerId = config.ownerId
 	BotData.root = root
-	BotData.exitFunction = { exitFunction() }
 
-	startFunction()
-}
-
-fun startFunction() {
 	val loginService = ServiceFactory.loginService
 	loginService.loginBot(false)
-}
-
-fun exitFunction() {
-	exitProcess(0)
 }
