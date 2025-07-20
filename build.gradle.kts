@@ -32,7 +32,7 @@ java {
 }
 
 application {
-	mainClass = "com.github.hummel.mdb.core.MainKt"
+	mainClass = "com.github.hummel.mdb.MainKt"
 }
 
 tasks {
@@ -43,7 +43,7 @@ tasks {
 		manifest {
 			attributes(
 				mapOf(
-					"Main-Class" to "com.github.hummel.mdb.core.MainKt"
+					"Main-Class" to "com.github.hummel.mdb.MainKt"
 				)
 			)
 		}
