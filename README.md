@@ -1,5 +1,3 @@
-<div align = "center">
-
 [![Code Smells][code_smells_badge]][code_smells_link]
 [![Maintainability Rating][maintainability_rating_badge]][maintainability_rating_link]
 [![Security Rating][security_rating_badge]][security_rating_link]
@@ -23,8 +21,6 @@ My discord bot for my discord servers. His name is Богдан (Bogdan). Key fe
   0% is reference only, -1% is disabled. Bot name and vibe can be changed.
 * Adding bot manager roles to allow not only admins change upper settings.
 * Server data is encrypted and can be deleted by admins and manager roles, if you are concerned about your privacy.
-
-</div>
 
 <!----------------------------------------------------------------------------->
 
