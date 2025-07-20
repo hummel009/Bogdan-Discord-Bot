@@ -1,6 +1,5 @@
 pluginManagement {
 	repositories {
-		google()
 		mavenLocal()
 		mavenCentral()
 		gradlePluginPortal()
@@ -10,7 +9,6 @@ pluginManagement {
 dependencyResolutionManagement {
 	repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
 	repositories {
-		google()
 		mavenLocal()
 		mavenCentral()
 		gradlePluginPortal()
@@ -20,7 +18,3 @@ dependencyResolutionManagement {
 plugins {
 	id("org.gradle.toolchains.foojay-resolver-convention") version "latest.release"
 }
-
-include(":appAndroid")
-include(":appDesktop")
-include(":appCommon")

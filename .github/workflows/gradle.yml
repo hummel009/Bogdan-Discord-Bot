@@ -11,9 +11,6 @@ permissions:
 jobs:
   build:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        version: [ 'Desktop', 'Android' ]
     steps:
       - uses: actions/checkout@main
       - name: Set up JDK 21
@@ -24,4 +21,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@main
       - name: Build with Gradle
-        run: ./gradlew :app${{matrix.version}}:build
+        run: ./gradlew build
+      - name: Upload Artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: compiled-artifact
+          path: ./build/libs/*.jar

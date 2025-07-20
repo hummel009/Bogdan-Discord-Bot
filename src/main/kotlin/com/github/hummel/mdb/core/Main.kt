@@ -1,6 +1,7 @@
-package com.github.hummel.mdb.windows
+package com.github.hummel.mdb.core
 
 import com.github.hummel.mdb.core.bean.BotData
+import com.github.hummel.mdb.core.factory.ServiceFactory
 import com.github.hummel.mdb.core.utils.gson
 import java.io.File
 import java.io.FileReader
@@ -64,8 +65,8 @@ fun launchWithData(token: String, ownerId: String, root: String) {
 }
 
 fun startFunction() {
-	val adapter = DiscordAdapter()
-	adapter.launch()
+	val loginService = ServiceFactory.loginService
+	loginService.loginBot()
 }
 
 fun exitFunction() {

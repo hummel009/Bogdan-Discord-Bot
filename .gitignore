@@ -39,8 +39,6 @@ bin/
 .DS_Store
 
 ### SECURITY ###
-token.txt
-**/*.bin
-appWindows/start.properties
-appDesktop/config.json
-/appDesktop/files
+
+/config.json
+/files/
