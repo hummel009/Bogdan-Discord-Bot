@@ -10,8 +10,8 @@ import com.github.hummel.bogdan.utils.error
 import com.github.hummel.bogdan.utils.success
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
-import net.dv8tion.jda.api.utils.FileProxy
 import net.dv8tion.jda.api.utils.FileUpload
+import java.net.URL
 import kotlin.system.exitProcess
 
 class OwnerServiceImpl : OwnerService {
@@ -34,7 +34,7 @@ class OwnerServiceImpl : OwnerService {
 			} else {
 				val embed = try {
 					val attachment = event.getOption("arguments")?.asAttachment ?: throw Exception()
-					val byteArray = FileProxy(attachment.url).download().join().readBytes()
+					val byteArray = URL(attachment.url).readBytes()
 
 					dataService.importBotData(byteArray)
 

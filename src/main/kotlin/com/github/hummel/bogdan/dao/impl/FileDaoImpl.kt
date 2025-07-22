@@ -3,8 +3,6 @@ package com.github.hummel.bogdan.dao.impl
 import com.github.hummel.bogdan.bean.BotData
 import com.github.hummel.bogdan.dao.FileDao
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 
 private const val notExist: String = "File doesn't exist!"
 
@@ -42,38 +40,26 @@ class FileDaoImpl : FileDao {
 	override fun getFolder(folderPath: String): File = File(BotData.root, folderPath)
 
 	override fun readFromFile(filePath: String): ByteArray {
-		var byteArray: ByteArray
 		val file = getFile(filePath)
-		if (file.exists()) {
-			FileInputStream(file).use {
-				byteArray = ByteArray(it.available())
-				it.read(byteArray)
-			}
-		} else {
+		if (!file.exists()) {
 			throw Exception(notExist)
 		}
-		return byteArray
+		return file.readBytes()
 	}
 
 	override fun writeToFile(filePath: String, byteArray: ByteArray) {
 		val file = getFile(filePath)
-		if (file.exists()) {
-			FileOutputStream(file).use {
-				it.write(byteArray)
-			}
-		} else {
+		if (!file.exists()) {
 			throw Exception(notExist)
 		}
+		file.writeBytes(byteArray)
 	}
 
 	override fun appendToFile(filePath: String, byteArray: ByteArray) {
 		val file = getFile(filePath)
-		if (file.exists()) {
-			FileOutputStream(file, true).use {
-				it.write(byteArray)
-			}
-		} else {
+		if (!file.exists()) {
 			throw Exception(notExist)
 		}
+		file.appendBytes(byteArray)
 	}
 }
