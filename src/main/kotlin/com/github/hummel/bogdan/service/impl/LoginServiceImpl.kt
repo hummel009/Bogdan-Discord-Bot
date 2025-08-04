@@ -2,7 +2,7 @@ package com.github.hummel.bogdan.service.impl
 
 import com.github.hummel.bogdan.ApiHolder
 import com.github.hummel.bogdan.bean.BotData
-import com.github.hummel.bogdan.handler.impl.EventHandlerImpl
+import com.github.hummel.bogdan.handler.EventHandler
 import com.github.hummel.bogdan.service.LoginService
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.interactions.commands.OptionType
@@ -18,7 +18,7 @@ class LoginServiceImpl : LoginService {
 			enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
 			enableCache(CacheFlag.entries)
 			setMemberCachePolicy(MemberCachePolicy.ALL)
-			addEventListeners(EventHandlerImpl())
+			addEventListeners(EventHandler)
 		}.build().awaitReady()
 
 		if (reinit) {

@@ -1,4 +1,4 @@
-package com.github.hummel.bogdan.handler.impl
+package com.github.hummel.bogdan.handler
 
 import com.github.hummel.bogdan.factory.ServiceFactory
 import com.github.hummel.bogdan.service.BotService
@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 
-class EventHandlerImpl : ListenerAdapter() {
+object EventHandler : ListenerAdapter() {
 	private val memberService: MemberService = ServiceFactory.memberService
 	private val managerService: ManagerService = ServiceFactory.managerService
 	private val ownerService: OwnerService = ServiceFactory.ownerService
