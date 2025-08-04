@@ -88,6 +88,7 @@ class ManagerServiceImpl : ManagerService {
 						val month = if (arguments[1].toInt() in 1..12) arguments[1].toInt() else throw Exception()
 						val range = ranges[month] ?: throw Exception()
 						val day = if (arguments[2].toInt() in range) arguments[2].toInt() else throw Exception()
+
 						guild.getMemberById(memberId) ?: throw Exception()
 
 						guildData.birthdays.add(GuildData.Birthday(memberId, GuildData.Date(day, month)))
@@ -132,7 +133,9 @@ class ManagerServiceImpl : ManagerService {
 						try {
 							val memberId = arguments[0].toLong()
 
-							guildData.birthdays.removeIf { it.id == memberId }
+							if (!guildData.birthdays.removeIf { it.id == memberId }) {
+								throw Exception()
+							}
 
 							EmbedBuilder().success(
 								event.member, guildData, I18n.of("clear_birthdays_single", guildData).format(memberId)
@@ -167,6 +170,7 @@ class ManagerServiceImpl : ManagerService {
 				if (arguments.size == 1) {
 					try {
 						val roleId = arguments[0].toLong()
+
 						guild.getRoleById(roleId) ?: throw Exception()
 
 						guildData.managerRoleIds.add(roleId)
@@ -209,7 +213,9 @@ class ManagerServiceImpl : ManagerService {
 						try {
 							val roleId = arguments[0].toLong()
 
-							guildData.managerRoleIds.removeIf { it == roleId }
+							if (!guildData.managerRoleIds.removeIf { it == roleId }) {
+								throw Exception()
+							}
 
 							EmbedBuilder().success(
 								event.member, guildData, I18n.of("clear_manager_roles_single", guildData).format(roleId)
@@ -291,7 +297,9 @@ class ManagerServiceImpl : ManagerService {
 						try {
 							val channelId = arguments[0].toLong()
 
-							guildData.secretChannelIds.removeIf { it == channelId }
+							if (!guildData.secretChannelIds.removeIf { it == channelId }) {
+								throw Exception()
+							}
 
 							EmbedBuilder().success(
 								event.member,
@@ -375,7 +383,9 @@ class ManagerServiceImpl : ManagerService {
 						try {
 							val channelId = arguments[0].toLong()
 
-							guildData.mutedChannelIds.removeIf { it == channelId }
+							if (!guildData.mutedChannelIds.removeIf { it == channelId }) {
+								throw Exception()
+							}
 
 							EmbedBuilder().success(
 								event.member,
@@ -412,6 +422,7 @@ class ManagerServiceImpl : ManagerService {
 				if (arguments.size == 1) {
 					try {
 						val chance = arguments[0].toInt()
+
 						if (chance !in 0..100) {
 							throw Exception()
 						}
@@ -450,6 +461,7 @@ class ManagerServiceImpl : ManagerService {
 				if (arguments.size == 1) {
 					try {
 						val chance = arguments[0].toInt()
+
 						if (chance !in 0..100) {
 							throw Exception()
 						}
@@ -488,6 +500,7 @@ class ManagerServiceImpl : ManagerService {
 				if (arguments.size == 1) {
 					try {
 						val chance = arguments[0].toInt()
+
 						if (chance !in -1..100) {
 							throw Exception()
 						}
