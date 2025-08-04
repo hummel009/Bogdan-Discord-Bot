@@ -24,8 +24,12 @@ class MemberServiceImpl : MemberService {
 			val guild = event.guild ?: return@queue
 			val guildData = dataService.loadGuildData(guild)
 
-			guildData.birthdays.removeIf { guild.getMemberById(it.id) == null }
-			guildData.managerRoleIds.removeIf { guild.getRoleById(it) == null }
+			guildData.birthdays.removeIf {
+				guild.getMemberById(it.id) == null
+			}
+			guildData.managerRoleIds.removeIf {
+				guild.getRoleById(it) == null
+			}
 			guildData.secretChannelIds.removeIf {
 				guild.getTextChannelById(it) == null && guild.getThreadChannelById(it) == null
 			}

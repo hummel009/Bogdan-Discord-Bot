@@ -122,8 +122,12 @@ class ManagerServiceImpl : ManagerService {
 				if (arguments.size == 1) {
 					try {
 						val channelId = arguments[0].toLong()
-						guild.getTextChannelById(channelId) ?: guild.getThreadChannelById(channelId)
-						?: throw Exception()
+
+						guild.getTextChannelById(
+							channelId
+						) ?: guild.getThreadChannelById(
+							channelId
+						) ?: throw Exception()
 
 						guildData.secretChannelIds.add(channelId)
 
@@ -159,8 +163,12 @@ class ManagerServiceImpl : ManagerService {
 				if (arguments.size == 1) {
 					try {
 						val channelId = arguments[0].toLong()
-						guild.getTextChannelById(channelId) ?: guild.getThreadChannelById(channelId)
-						?: throw Exception()
+
+						guild.getTextChannelById(
+							channelId
+						) ?: guild.getThreadChannelById(
+							channelId
+						) ?: throw Exception()
 
 						guildData.mutedChannelIds.add(channelId)
 
