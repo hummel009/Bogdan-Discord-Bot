@@ -55,5 +55,5 @@ fun launchWithData(config: Config, root: String) {
 	BotData.root = root
 
 	val loginService = ServiceFactory.loginService
-	loginService.loginBot(false)
+	loginService.loginBot(config.reinit.toBoolean())
 }
