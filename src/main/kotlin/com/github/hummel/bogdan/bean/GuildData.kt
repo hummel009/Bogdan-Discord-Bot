@@ -1,7 +1,7 @@
 package com.github.hummel.bogdan.bean
 
 data class GuildData(
-	val guildId: String,
+	val guildId: Long,
 	val guildName: String,
 	var chanceMessage: Int,
 	var chanceEmoji: Int,

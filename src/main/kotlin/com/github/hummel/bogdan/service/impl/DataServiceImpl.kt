@@ -119,7 +119,7 @@ class DataServiceImpl : DataService {
 		val lastWish = GuildData.Date(yesterday.dayOfMonth, yesterday.monthValue)
 
 		val guildData = GuildData(
-			guildId = guild.id,
+			guildId = guild.idLong,
 			guildName = guild.name,
 			chanceMessage = 10,
 			chanceEmoji = 1,
