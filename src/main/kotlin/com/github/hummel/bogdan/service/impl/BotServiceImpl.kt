@@ -35,7 +35,7 @@ class BotServiceImpl : BotService {
 			channelHistory.removeAt(0)
 		}
 
-		if (guildData.secretChannelIds.any { it == channelId }) {
+		if (guildData.excludedChannelIds.any { it == channelId }) {
 			return
 		}
 
@@ -76,7 +76,7 @@ class BotServiceImpl : BotService {
 		val guildData = dataService.loadGuildData(guild)
 		val channelId = event.channel.idLong
 
-		if (guildData.mutedChannelIds.any { it == channelId }) {
+		if (guildData.excludedChannelIds.any { it == channelId }) {
 			return
 		}
 

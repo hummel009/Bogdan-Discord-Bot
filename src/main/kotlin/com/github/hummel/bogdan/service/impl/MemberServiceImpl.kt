@@ -30,10 +30,10 @@ class MemberServiceImpl : MemberService {
 			guildData.managerRoleIds.removeIf {
 				guild.getRoleById(it) == null
 			}
-			guildData.secretChannelIds.removeIf {
+			guildData.excludedChannelIds.removeIf {
 				guild.getTextChannelById(it) == null && guild.getThreadChannelById(it) == null
 			}
-			guildData.mutedChannelIds.removeIf {
+			guildData.excludedChannelIds.removeIf {
 				guild.getTextChannelById(it) == null && guild.getThreadChannelById(it) == null
 			}
 
@@ -43,6 +43,26 @@ class MemberServiceImpl : MemberService {
 				append(I18n.of("info_chance_message", guildData).format(guildData.chanceMessage), "\r\n")
 				append(I18n.of("info_chance_emoji", guildData).format(guildData.chanceEmoji), "\r\n")
 				append(I18n.of("info_chance_ai", guildData).format(guildData.chanceAI), "\r\n")
+
+				if (guildData.managerRoleIds.isEmpty()) {
+					append("\r\n", I18n.of("no_manager_roles", guildData), "\r\n")
+				} else {
+					append("\r\n", I18n.of("has_manager_roles", guildData), "\r\n")
+					guildData.managerRoleIds.joinTo(this, "\r\n") {
+						I18n.of("manager_role", guildData).format(it)
+					}
+					append("\r\n")
+				}
+
+				if (guildData.excludedChannelIds.isEmpty()) {
+					append("\r\n", I18n.of("no_excluded_channels", guildData), "\r\n")
+				} else {
+					append("\r\n", I18n.of("has_excluded_channels", guildData), "\r\n")
+					guildData.excludedChannelIds.joinTo(this, "\r\n") {
+						I18n.of("excluded_channel", guildData).format(it)
+					}
+					append("\r\n")
+				}
 
 				if (guildData.birthdays.isEmpty()) {
 					append("\r\n", I18n.of("no_birthdays", guildData), "\r\n")
@@ -58,36 +78,6 @@ class MemberServiceImpl : MemberService {
 						val date = "${I18n.of(month.name.lowercase(), guildData).format(day)} ($numericDate)"
 
 						I18n.of("birthday", guildData).format(memberId, date)
-					}
-					append("\r\n")
-				}
-
-				if (guildData.managerRoleIds.isEmpty()) {
-					append("\r\n", I18n.of("no_manager_roles", guildData), "\r\n")
-				} else {
-					append("\r\n", I18n.of("has_manager_roles", guildData), "\r\n")
-					guildData.managerRoleIds.joinTo(this, "\r\n") {
-						I18n.of("manager_role", guildData).format(it)
-					}
-					append("\r\n")
-				}
-
-				if (guildData.secretChannelIds.isEmpty()) {
-					append("\r\n", I18n.of("no_secret_channels", guildData), "\r\n")
-				} else {
-					append("\r\n", I18n.of("has_secret_channels", guildData), "\r\n")
-					guildData.secretChannelIds.joinTo(this, "\r\n") {
-						I18n.of("secret_channel", guildData).format(it)
-					}
-					append("\r\n")
-				}
-
-				if (guildData.mutedChannelIds.isEmpty()) {
-					append("\r\n", I18n.of("no_muted_channels", guildData), "\r\n")
-				} else {
-					append("\r\n", I18n.of("has_muted_channels", guildData), "\r\n")
-					guildData.mutedChannelIds.joinTo(this, "\r\n") {
-						I18n.of("muted_channel", guildData).format(it)
 					}
 					append("\r\n")
 				}

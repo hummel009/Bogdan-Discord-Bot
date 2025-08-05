@@ -11,11 +11,8 @@ interface ManagerService {
 	fun addManagerRole(event: SlashCommandInteractionEvent)
 	fun clearManagerRoles(event: SlashCommandInteractionEvent)
 
-	fun addSecretChannel(event: SlashCommandInteractionEvent)
-	fun clearSecretChannels(event: SlashCommandInteractionEvent)
-
-	fun addMutedChannel(event: SlashCommandInteractionEvent)
-	fun clearMutedChannels(event: SlashCommandInteractionEvent)
+	fun addExcludedChannel(event: SlashCommandInteractionEvent)
+	fun clearExcludedChannels(event: SlashCommandInteractionEvent)
 
 	fun setChanceMessage(event: SlashCommandInteractionEvent)
 	fun setChanceEmoji(event: SlashCommandInteractionEvent)

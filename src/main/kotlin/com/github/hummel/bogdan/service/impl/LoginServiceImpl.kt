@@ -38,13 +38,11 @@ class LoginServiceImpl : LoginService {
 
 			"add_birthday".cmd("/add_birthday [member_id] [month_number] [day_number]", string()),
 			"add_manager_role".cmd("/add_manager_role [role_id]", string()),
-			"add_secret_channel".cmd("/add_secret_channel [channel_id]", string()),
-			"add_muted_channel".cmd("/add_muted_channel [channel_id]", string()),
+			"add_excluded_channel".cmd("/add_excluded_channel [channel_id]", string()),
 
 			"clear_birthdays".cmd("/clear_birthdays {member_id}", string(false)),
 			"clear_manager_roles".cmd("/clear_manager_roles {role_id}", string(false)),
-			"clear_secret_channels".cmd("/clear_secret_channels {channel_id}", string(false)),
-			"clear_muted_channels".cmd("/clear_muted_channels {channel_id}", string(false)),
+			"clear_excluded_channels".cmd("/clear_excluded_channels {channel_id}", string(false)),
 
 			"set_chance_message".cmd("/set_chance_message [0..100]", string()),
 			"set_chance_emoji".cmd("/set_chance_emoji [0..100]", string()),

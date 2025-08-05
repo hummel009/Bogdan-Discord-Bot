@@ -240,8 +240,8 @@ class ManagerServiceImpl : ManagerService {
 		}
 	}
 
-	override fun addSecretChannel(event: SlashCommandInteractionEvent) {
-		if (event.fullCommandName != "add_secret_channel") {
+	override fun addExcludedChannel(event: SlashCommandInteractionEvent) {
+		if (event.fullCommandName != "add_excluded_channel") {
 			return
 		}
 
@@ -264,10 +264,10 @@ class ManagerServiceImpl : ManagerService {
 							channelId
 						) ?: throw Exception()
 
-						guildData.secretChannelIds.add(channelId)
+						guildData.excludedChannelIds.add(channelId)
 
 						EmbedBuilder().success(
-							event.member, guildData, I18n.of("add_secret_channel", guildData).format(channelId)
+							event.member, guildData, I18n.of("add_excluded_channel", guildData).format(channelId)
 						)
 					} catch (_: Exception) {
 						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
@@ -282,8 +282,8 @@ class ManagerServiceImpl : ManagerService {
 		}
 	}
 
-	override fun clearSecretChannels(event: SlashCommandInteractionEvent) {
-		if (event.fullCommandName != "clear_secret_channels") {
+	override fun clearExcludedChannels(event: SlashCommandInteractionEvent) {
+		if (event.fullCommandName != "clear_excluded_channels") {
 			return
 		}
 
@@ -297,110 +297,22 @@ class ManagerServiceImpl : ManagerService {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 
 				if (arguments.isEmpty()) {
-					guildData.secretChannelIds.clear()
+					guildData.excludedChannelIds.clear()
 
-					EmbedBuilder().success(event.member, guildData, I18n.of("clear_secret_channels", guildData))
+					EmbedBuilder().success(event.member, guildData, I18n.of("clear_excluded_channels", guildData))
 				} else {
 					if (arguments.size == 1) {
 						try {
 							val channelId = arguments[0].toLong()
 
-							if (!guildData.secretChannelIds.removeIf { it == channelId }) {
+							if (!guildData.excludedChannelIds.removeIf { it == channelId }) {
 								throw Exception()
 							}
 
 							EmbedBuilder().success(
 								event.member,
 								guildData,
-								I18n.of("clear_secret_channels_single", guildData).format(channelId)
-							)
-						} catch (_: Exception) {
-							EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
-						}
-					} else {
-						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
-					}
-				}
-			}
-			dataService.saveGuildData(guild, guildData)
-
-			event.hook.sendMessageEmbeds(embed).queue()
-		}
-	}
-
-	override fun addMutedChannel(event: SlashCommandInteractionEvent) {
-		if (event.fullCommandName != "add_muted_channel") {
-			return
-		}
-
-		event.deferReply().queue {
-			val guild = event.guild ?: return@queue
-			val guildData = dataService.loadGuildData(guild)
-
-			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
-			} else {
-				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
-
-				if (arguments.size == 1) {
-					try {
-						val channelId = arguments[0].toLong()
-
-						guild.getTextChannelById(
-							channelId
-						) ?: guild.getThreadChannelById(
-							channelId
-						) ?: throw Exception()
-
-						guildData.mutedChannelIds.add(channelId)
-
-						EmbedBuilder().success(
-							event.member, guildData, I18n.of("add_muted_channel", guildData).format(channelId)
-						)
-					} catch (_: Exception) {
-						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
-					}
-				} else {
-					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
-				}
-			}
-			dataService.saveGuildData(guild, guildData)
-
-			event.hook.sendMessageEmbeds(embed).queue()
-		}
-	}
-
-	override fun clearMutedChannels(event: SlashCommandInteractionEvent) {
-		if (event.fullCommandName != "clear_muted_channels") {
-			return
-		}
-
-		event.deferReply().queue {
-			val guild = event.guild ?: return@queue
-			val guildData = dataService.loadGuildData(guild)
-
-			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
-			} else {
-				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
-
-				if (arguments.isEmpty()) {
-					guildData.mutedChannelIds.clear()
-
-					EmbedBuilder().success(event.member, guildData, I18n.of("clear_muted_channels", guildData))
-				} else {
-					if (arguments.size == 1) {
-						try {
-							val channelId = arguments[0].toLong()
-
-							if (!guildData.mutedChannelIds.removeIf { it == channelId }) {
-								throw Exception()
-							}
-
-							EmbedBuilder().success(
-								event.member,
-								guildData,
-								I18n.of("cleared_muted_channels_single", guildData).format(channelId)
+								I18n.of("clear_excluded_channels_single", guildData).format(channelId)
 							)
 						} catch (_: Exception) {
 							EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
