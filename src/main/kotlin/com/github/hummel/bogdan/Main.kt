@@ -8,7 +8,7 @@ import java.io.FileReader
 import java.io.FileWriter
 
 data class Config(
-	val token: String, val ownerId: String, val reinit: String?
+	val token: String, val ownerId: String, val reinit: Boolean?
 )
 
 fun main() {
@@ -35,7 +35,10 @@ fun requestUserInput() {
 	print("Enter the Owner ID: ")
 	val ownerId = readln()
 
-	val config = Config(token, ownerId, "false")
+	print("Reinit? Type true/false: ")
+	val reinit = readln()
+
+	val config = Config(token, ownerId, reinit.toBoolean())
 	try {
 		val file = File("config.json")
 		FileWriter(file).use {
@@ -55,5 +58,5 @@ fun launchWithData(config: Config, root: String) {
 	BotData.root = root
 
 	val loginService = ServiceFactory.loginService
-	loginService.loginBot(config.reinit.toBoolean())
+	loginService.loginBot(config.reinit ?: false)
 }
