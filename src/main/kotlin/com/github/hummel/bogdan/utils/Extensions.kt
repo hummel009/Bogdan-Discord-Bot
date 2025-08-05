@@ -50,6 +50,6 @@ fun String.encode(): String {
 }
 
 fun String.decode(): String {
-	val bytes = Base64.getDecoder().decode(this)
-	return bytes.toString(Charsets.UTF_8).reversed()
+	val bytes = Base64.getDecoder().decode(reversed())
+	return bytes.toString(Charsets.UTF_8)
 }
