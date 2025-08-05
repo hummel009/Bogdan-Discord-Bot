@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.MessageEmbed
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase
+import java.util.*
 
 fun EmbedBuilder.error(member: Member?, guildData: GuildData, desc: String): MessageEmbed = apply {
 	member ?: return@apply
@@ -41,4 +42,14 @@ fun HttpUriRequestBase.setHeaders(vararg headers: Pair<String, String>) {
 	headers.forEach { (name, value) ->
 		setHeader(name, value)
 	}
+}
+
+fun String.encode(): String {
+	val bytes = toByteArray(Charsets.UTF_8)
+	return Base64.getEncoder().encodeToString(bytes).reversed()
+}
+
+fun String.decode(): String {
+	val bytes = Base64.getDecoder().decode(this)
+	return bytes.toString(Charsets.UTF_8).reversed()
 }

@@ -4,7 +4,6 @@ import com.github.hummel.bogdan.dao.FileDao
 import com.github.hummel.bogdan.dao.ZipDao
 import com.github.hummel.bogdan.factory.DaoFactory
 import net.lingala.zip4j.ZipFile
-import java.io.File
 
 class ZipDaoImpl : ZipDao {
 	private val fileDao: FileDao = DaoFactory.fileDao
@@ -17,13 +16,13 @@ class ZipDaoImpl : ZipDao {
 	}
 
 	override fun zipFolderToFile(folderPath: String, filePath: String) {
-		val folder = fileDao.getFolder(folderPath)
 		val file = fileDao.getFile(filePath)
 
-		ZipFile(file.path).compressAll(folder)
+		ZipFile(file.path).compressAll(folderPath)
 	}
 
-	private fun ZipFile.compressAll(folder: File) {
+	private fun ZipFile.compressAll(folderPath: String) {
+		val folder = fileDao.getFolder(folderPath)
 		folder.listFiles()?.forEach {
 			if (it.isDirectory) {
 				addFolder(it)

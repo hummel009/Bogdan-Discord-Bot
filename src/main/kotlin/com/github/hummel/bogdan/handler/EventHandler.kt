@@ -23,12 +23,10 @@ object EventHandler : ListenerAdapter() {
 		managerService.addBirthday(event)
 		managerService.addManagerRole(event)
 		managerService.addExcludedChannel(event)
-		managerService.addMutedChannel(event)
 
 		managerService.clearBirthdays(event)
 		managerService.clearManagerRoles(event)
 		managerService.clearExcludedChannels(event)
-		managerService.clearMutedChannels(event)
 
 		managerService.setChanceMessage(event)
 		managerService.setChanceEmoji(event)

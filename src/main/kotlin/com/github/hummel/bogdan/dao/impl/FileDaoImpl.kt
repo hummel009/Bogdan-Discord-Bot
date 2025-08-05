@@ -4,21 +4,21 @@ import com.github.hummel.bogdan.bean.BotData
 import com.github.hummel.bogdan.dao.FileDao
 import java.io.File
 
-private const val notExist: String = "File doesn't exist!"
-
 class FileDaoImpl : FileDao {
 	override fun createEmptyFile(filePath: String) {
 		val file = getFile(filePath)
-		if (!file.exists()) {
-			file.createNewFile()
+		if (file.exists()) {
+			file.delete()
 		}
+		file.createNewFile()
 	}
 
 	override fun createEmptyFolder(folderPath: String) {
 		val folder = getFolder(folderPath)
-		if (!folder.exists()) {
-			folder.mkdirs()
+		if (folder.exists()) {
+			folder.deleteRecursively()
 		}
+		folder.mkdirs()
 	}
 
 	override fun removeFile(filePath: String) {
@@ -42,7 +42,7 @@ class FileDaoImpl : FileDao {
 	override fun readFromFile(filePath: String): ByteArray {
 		val file = getFile(filePath)
 		if (!file.exists()) {
-			throw Exception(notExist)
+			return ByteArray(0)
 		}
 		return file.readBytes()
 	}
@@ -50,16 +50,8 @@ class FileDaoImpl : FileDao {
 	override fun writeToFile(filePath: String, byteArray: ByteArray) {
 		val file = getFile(filePath)
 		if (!file.exists()) {
-			throw Exception(notExist)
+			createEmptyFile(filePath)
 		}
 		file.writeBytes(byteArray)
-	}
-
-	override fun appendToFile(filePath: String, byteArray: ByteArray) {
-		val file = getFile(filePath)
-		if (!file.exists()) {
-			throw Exception(notExist)
-		}
-		file.appendBytes(byteArray)
 	}
 }

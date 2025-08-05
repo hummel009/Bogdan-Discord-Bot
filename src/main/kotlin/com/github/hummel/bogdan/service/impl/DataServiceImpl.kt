@@ -6,8 +6,10 @@ import com.github.hummel.bogdan.dao.JsonDao
 import com.github.hummel.bogdan.dao.ZipDao
 import com.github.hummel.bogdan.factory.DaoFactory
 import com.github.hummel.bogdan.service.DataService
+import com.github.hummel.bogdan.utils.decode
 import com.github.hummel.bogdan.utils.defaultName
 import com.github.hummel.bogdan.utils.defaultPreprompt
+import com.github.hummel.bogdan.utils.encode
 import net.dv8tion.jda.api.entities.Guild
 import java.time.LocalDate
 
@@ -32,7 +34,7 @@ class DataServiceImpl : DataService {
 
 	override fun wipeGuildBank(guild: Guild) {
 		val folderName = guild.id
-		val filePath = "guilds/$folderName/bank.bin"
+		val filePath = "guilds/$folderName/bank.txt"
 
 		fileDao.removeFile(filePath)
 		fileDao.createEmptyFile(filePath)
@@ -47,28 +49,37 @@ class DataServiceImpl : DataService {
 	}
 
 	override fun getMessage(guild: Guild): String? {
-		fun decodeMessage(encoded: String) = encoded.split(" ").map { it.toInt() }.map { it.toChar() }.joinToString("")
-
 		val folderName = guild.id
-		val filePath = "guilds/$folderName/bank.bin"
+		val filePath = "guilds/$folderName/bank.txt"
 
-		val messages = String(fileDao.readFromFile(filePath)).lines()
+		val bank = String(fileDao.readFromFile(filePath))
 
-		if (messages.isEmpty()) {
+		if (bank.isEmpty()) {
 			return null
 		}
 
-		return decodeMessage(messages.random())
+		val messages = bank.lines()
+
+		return messages.random().decode()
 	}
 
 	override fun saveMessage(guild: Guild, message: String) {
-		fun encodeMessage(message: String) = message.map { it.code }.joinToString(" ")
-
 		val folderName = guild.id
-		val filePath = "guilds/$folderName/bank.bin"
+		val filePath = "guilds/$folderName/bank.txt"
 
-		fileDao.appendToFile(filePath, encodeMessage(message).toByteArray())
-		fileDao.appendToFile(filePath, "\r\n".toByteArray())
+		val bank = String(fileDao.readFromFile(filePath))
+
+		val messages = bank.lines().distinct().filterNot {
+			it.isEmpty()
+		}.toMutableList()
+
+		messages.add(message.encode())
+
+		if (messages.size > 10000) {
+			messages.removeAt(0)
+		}
+
+		fileDao.writeToFile(filePath, messages.joinToString(separator = "\n").toByteArray())
 	}
 
 	override fun exportBotData(): ByteArray {
@@ -106,19 +117,10 @@ class DataServiceImpl : DataService {
 	}
 
 	private fun initAndGet(guild: Guild): GuildData {
-		val folderName = guild.id
-		val serverPath = "guilds/$folderName"
-		val bankPath = "guilds/$folderName/bank.bin"
-		val dataPath = "guilds/$folderName/data.json"
-
-		fileDao.createEmptyFolder(serverPath)
-		fileDao.createEmptyFile(dataPath)
-		fileDao.createEmptyFile(bankPath)
-
 		val yesterday = LocalDate.now().minusDays(1)
 		val lastWish = GuildData.Date(yesterday.dayOfMonth, yesterday.monthValue)
 
-		val guildData = GuildData(
+		return GuildData(
 			guildId = guild.idLong,
 			guildName = guild.name,
 			lang = "ru",
@@ -132,9 +134,5 @@ class DataServiceImpl : DataService {
 			name = defaultName,
 			preprompt = defaultPreprompt
 		)
-
-		jsonDao.writeToFile(dataPath, guildData)
-
-		return guildData
 	}
 }

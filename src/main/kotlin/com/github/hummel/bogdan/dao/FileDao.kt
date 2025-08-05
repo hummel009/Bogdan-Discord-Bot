@@ -11,5 +11,4 @@ interface FileDao {
 	fun getFolder(folderPath: String): File
 	fun readFromFile(filePath: String): ByteArray
 	fun writeToFile(filePath: String, byteArray: ByteArray)
-	fun appendToFile(filePath: String, byteArray: ByteArray)
 }
