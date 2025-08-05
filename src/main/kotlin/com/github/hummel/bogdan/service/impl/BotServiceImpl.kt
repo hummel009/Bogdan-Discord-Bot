@@ -22,21 +22,24 @@ class BotServiceImpl : BotService {
 	override fun saveMessage(event: MessageReceivedEvent) {
 		val guild = event.guild
 		val guildData = dataService.loadGuildData(guild)
+
 		val channelId = event.channel.idLong
-
-		BotData.channelHistories.putIfAbsent(channelId, mutableListOf())
-		val channelHistory = BotData.channelHistories[channelId]!!
-
-		val message = event.message.contentRaw.replace("\r", " ").replace("\n", " ").replace("  ", " ")
-		val author = event.message.author
-
-		channelHistory.add(message)
-		if (channelHistory.size >= 10) {
-			channelHistory.removeAt(0)
-		}
 
 		if (guildData.excludedChannelIds.any { it == channelId }) {
 			return
+		}
+
+		val author = event.message.author
+		val message = event.message.contentRaw.trim()
+
+		if (message.length !in 2..445) {
+			return
+		}
+
+		val channelHistory = BotData.channelHistories.getOrPut(channelId) { mutableListOf() }
+
+		if (channelHistory.size >= 10) {
+			channelHistory.removeAt(0)
 		}
 
 		if (suitableForBank(author, message, guildData.name)) {
@@ -149,9 +152,6 @@ class BotServiceImpl : BotService {
 		val contain = setOf("@", "https://", "http://", "gopher://")
 		val start = setOf("!", "?", "/", botName, botName.lowercase(), botName.uppercase())
 
-		if (message.length !in 2..400) {
-			return false
-		}
 		if (author.isBot) {
 			return false
 		}
