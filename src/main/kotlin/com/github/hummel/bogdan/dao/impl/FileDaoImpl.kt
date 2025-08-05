@@ -10,6 +10,7 @@ class FileDaoImpl : FileDao {
 		if (file.exists()) {
 			file.delete()
 		}
+		createParentDirsWithDepth(file)
 		file.createNewFile()
 	}
 
@@ -18,6 +19,7 @@ class FileDaoImpl : FileDao {
 		if (folder.exists()) {
 			folder.deleteRecursively()
 		}
+		createParentDirsWithDepth(folder)
 		folder.mkdirs()
 	}
 
@@ -53,5 +55,23 @@ class FileDaoImpl : FileDao {
 			createEmptyFile(filePath)
 		}
 		file.writeBytes(byteArray)
+	}
+
+	private fun createParentDirsWithDepth(child: File, depth: Int = 3) {
+		var current = child.parentFile
+		val dirsToCreate = mutableListOf<File>()
+
+		var count = 0
+		while (current != null && count < depth) {
+			if (!current.exists()) {
+				dirsToCreate.add(current)
+			}
+			current = current.parentFile
+			count++
+		}
+
+		for (dir in dirsToCreate.asReversed()) {
+			dir.mkdir()
+		}
 	}
 }
