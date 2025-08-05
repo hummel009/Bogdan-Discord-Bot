@@ -130,7 +130,7 @@ class BotServiceImpl : BotService {
 		val birthdayMemberIds = guildData.birthdays.filter {
 			it.date.day == todayDay && it.date.month == todayMonth
 		}.map {
-			it.id
+			it.memberId
 		}
 
 		if (birthdayMemberIds.isNotEmpty() && (guildData.lastWish.day != todayDay || guildData.lastWish.month != todayMonth)) {

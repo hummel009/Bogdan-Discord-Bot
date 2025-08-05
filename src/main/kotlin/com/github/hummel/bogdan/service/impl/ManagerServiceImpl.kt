@@ -42,11 +42,12 @@ class ManagerServiceImpl : ManagerService {
 				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
+
 				if (arguments.size == 1) {
 					try {
 						val lang = arguments[0]
 
-						if (lang != "ru" && lang != "be" && lang != "uk" && lang != "en") {
+						if (lang !in listOf("ru", "be", "uk", "en")) {
 							throw Exception()
 						}
 
@@ -83,6 +84,7 @@ class ManagerServiceImpl : ManagerService {
 				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
+
 				if (arguments.size == 3) {
 					try {
 						val memberId = arguments[0].toLong()
@@ -125,6 +127,7 @@ class ManagerServiceImpl : ManagerService {
 				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
+
 				if (arguments.isEmpty()) {
 					guildData.birthdays.clear()
 
@@ -134,7 +137,7 @@ class ManagerServiceImpl : ManagerService {
 						try {
 							val memberId = arguments[0].toLong()
 
-							if (!guildData.birthdays.removeIf { it.id == memberId }) {
+							if (!guildData.birthdays.removeIf { it.memberId == memberId }) {
 								throw Exception()
 							}
 
@@ -168,6 +171,7 @@ class ManagerServiceImpl : ManagerService {
 				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
+
 				if (arguments.size == 1) {
 					try {
 						val roleId = arguments[0].toLong()
@@ -205,6 +209,7 @@ class ManagerServiceImpl : ManagerService {
 				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
+
 				if (arguments.isEmpty()) {
 					guildData.managerRoleIds.clear()
 
@@ -248,6 +253,7 @@ class ManagerServiceImpl : ManagerService {
 				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
+
 				if (arguments.size == 1) {
 					try {
 						val channelId = arguments[0].toLong()
@@ -289,6 +295,7 @@ class ManagerServiceImpl : ManagerService {
 				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
+
 				if (arguments.isEmpty()) {
 					guildData.secretChannelIds.clear()
 
@@ -334,6 +341,7 @@ class ManagerServiceImpl : ManagerService {
 				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
+
 				if (arguments.size == 1) {
 					try {
 						val channelId = arguments[0].toLong()
@@ -375,6 +383,7 @@ class ManagerServiceImpl : ManagerService {
 				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
+
 				if (arguments.isEmpty()) {
 					guildData.mutedChannelIds.clear()
 
@@ -420,6 +429,7 @@ class ManagerServiceImpl : ManagerService {
 				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
+
 				if (arguments.size == 1) {
 					try {
 						val chance = arguments[0].toInt()
@@ -459,6 +469,7 @@ class ManagerServiceImpl : ManagerService {
 				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
+
 				if (arguments.size == 1) {
 					try {
 						val chance = arguments[0].toInt()
@@ -498,6 +509,7 @@ class ManagerServiceImpl : ManagerService {
 				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
+
 				if (arguments.size == 1) {
 					try {
 						val chance = arguments[0].toInt()

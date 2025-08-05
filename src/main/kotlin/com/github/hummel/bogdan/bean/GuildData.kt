@@ -16,5 +16,5 @@ data class GuildData(
 	var preprompt: String
 ) {
 	data class Date(var day: Int, var month: Int)
-	data class Birthday(var id: Long, var date: Date)
+	data class Birthday(var memberId: Long, var date: Date)
 }

@@ -25,7 +25,7 @@ class MemberServiceImpl : MemberService {
 			val guildData = dataService.loadGuildData(guild)
 
 			guildData.birthdays.removeIf {
-				guild.getMemberById(it.id) == null
+				guild.getMemberById(it.memberId) == null
 			}
 			guildData.managerRoleIds.removeIf {
 				guild.getRoleById(it) == null
@@ -43,6 +43,7 @@ class MemberServiceImpl : MemberService {
 				append(I18n.of("info_chance_message", guildData).format(guildData.chanceMessage), "\r\n")
 				append(I18n.of("info_chance_emoji", guildData).format(guildData.chanceEmoji), "\r\n")
 				append(I18n.of("info_chance_ai", guildData).format(guildData.chanceAI), "\r\n")
+
 				if (guildData.birthdays.isEmpty()) {
 					append("\r\n", I18n.of("no_birthdays", guildData), "\r\n")
 				} else {
@@ -50,7 +51,7 @@ class MemberServiceImpl : MemberService {
 					guildData.birthdays.sortedWith(
 						compareBy({ it.date.month }, { it.date.day })
 					).joinTo(this, "\r\n") {
-						val memberId = it.id
+						val memberId = it.memberId
 						val month = Month.of(it.date.month)
 						val day = it.date.day
 						val numericDate = "%02d.%02d".format(day, it.date.month)
@@ -60,6 +61,7 @@ class MemberServiceImpl : MemberService {
 					}
 					append("\r\n")
 				}
+
 				if (guildData.managerRoleIds.isEmpty()) {
 					append("\r\n", I18n.of("no_manager_roles", guildData), "\r\n")
 				} else {
@@ -69,6 +71,7 @@ class MemberServiceImpl : MemberService {
 					}
 					append("\r\n")
 				}
+
 				if (guildData.secretChannelIds.isEmpty()) {
 					append("\r\n", I18n.of("no_secret_channels", guildData), "\r\n")
 				} else {
@@ -78,6 +81,7 @@ class MemberServiceImpl : MemberService {
 					}
 					append("\r\n")
 				}
+
 				if (guildData.mutedChannelIds.isEmpty()) {
 					append("\r\n", I18n.of("no_muted_channels", guildData), "\r\n")
 				} else {
@@ -87,6 +91,7 @@ class MemberServiceImpl : MemberService {
 					}
 					append("\r\n")
 				}
+
 				append("\r\n", I18n.of("info_name", guildData).format(guildData.name), "\r\n")
 				append("\r\n", I18n.of("info_preprompt", guildData).format(guildData.preprompt), "\r\n")
 			}
