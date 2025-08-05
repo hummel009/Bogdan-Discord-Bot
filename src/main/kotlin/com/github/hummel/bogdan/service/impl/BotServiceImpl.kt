@@ -30,7 +30,7 @@ class BotServiceImpl : BotService {
 		}
 
 		val author = event.message.author
-		val message = event.message.contentRaw.trim()
+		val message = event.message.contentRaw
 
 		if (message.length !in 2..445) {
 			return
