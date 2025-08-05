@@ -22,7 +22,7 @@ class DataServiceImpl : DataService {
 		val folderName = guild.id
 		val filePath = "guilds/$folderName/data.json"
 
-		return jsonDao.readFromFile(filePath, GuildData::class.java) ?: initAndGet(guild)
+		return jsonDao.readFromFile(filePath, GuildData::class.java) ?: initAndGetGuildData(guild)
 	}
 
 	override fun saveGuildData(guild: Guild, guildData: GuildData) {
@@ -116,7 +116,7 @@ class DataServiceImpl : DataService {
 		fileDao.removeFolder(importFolderPath)
 	}
 
-	private fun initAndGet(guild: Guild): GuildData {
+	private fun initAndGetGuildData(guild: Guild): GuildData {
 		val yesterday = LocalDate.now().minusDays(1)
 		val lastWish = GuildData.Date(yesterday.dayOfMonth, yesterday.monthValue)
 
