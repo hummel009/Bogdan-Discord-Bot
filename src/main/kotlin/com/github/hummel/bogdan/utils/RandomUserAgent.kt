@@ -1631,7 +1631,6 @@ private val uaMap: MutableMap<String, Array<String>> = mutableMapOf(
 	)
 )
 
-@Suppress("unused")
 fun getRandomUserAgent(): String {
 	val rand = Random.nextDouble() * 100
 	var count = 0.0

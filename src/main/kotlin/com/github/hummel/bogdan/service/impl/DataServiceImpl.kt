@@ -75,7 +75,7 @@ class DataServiceImpl : DataService {
 
 		messages.add(message.encode())
 
-		if (messages.size > 10000) {
+		if (messages.size > 30000) {
 			messages.removeAt(0)
 		}
 

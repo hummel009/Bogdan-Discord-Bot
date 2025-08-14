@@ -2,7 +2,7 @@ package com.github.hummel.bogdan.service.impl
 
 import com.github.hummel.bogdan.bean.BotData
 import com.github.hummel.bogdan.factory.ServiceFactory
-import com.github.hummel.bogdan.integration.getVeniceInteractionResult
+import com.github.hummel.bogdan.integration.getGlobalSupportInteractionResult
 import com.github.hummel.bogdan.service.BotService
 import com.github.hummel.bogdan.service.DataService
 import com.github.hummel.bogdan.utils.I18n
@@ -38,6 +38,7 @@ class BotServiceImpl : BotService {
 
 		val channelHistory = BotData.channelHistories.getOrPut(channelId) { mutableListOf() }
 
+		channelHistory.add(message)
 		if (channelHistory.size >= 10) {
 			channelHistory.removeAt(0)
 		}
@@ -102,7 +103,7 @@ class BotServiceImpl : BotService {
 		val prompt = channelHistory.joinToString(
 			prefix = prepromptTemplate.build(guildData.name, guildData.preprompt), separator = "\n"
 		)
-		val (data, error) = getVeniceInteractionResult(prompt)
+		val (data, error) = getGlobalSupportInteractionResult(prompt)
 		data?.let {
 			if (it.length > 2000) {
 				val embed = EmbedBuilder().error(

@@ -8,7 +8,7 @@ import java.io.FileReader
 import java.io.FileWriter
 
 data class Config(
-	val token: String, val ownerId: String, val reinit: Boolean?
+	val discordToken: String, val ownerId: String, val gptToken: String, val reinit: Boolean
 )
 
 fun main() {
@@ -29,16 +29,19 @@ fun main() {
 }
 
 fun requestUserInput() {
-	print("Enter the Token: ")
-	val token = readln()
+	print("Enter the Discord Token: ")
+	val discordToken = readln()
 
 	print("Enter the Owner ID: ")
 	val ownerId = readln()
 
+	print("Enter the GPT Token: ")
+	val gptToken = readln()
+
 	print("Reinit? Type true/false: ")
 	val reinit = readln()
 
-	val config = Config(token, ownerId, reinit.toBoolean())
+	val config = Config(discordToken, ownerId, gptToken, reinit.toBoolean())
 	try {
 		val file = File("config.json")
 		FileWriter(file).use {
@@ -51,12 +54,12 @@ fun requestUserInput() {
 	launchWithData(config, "files")
 }
 
-@Suppress("UNUSED_PARAMETER")
 fun launchWithData(config: Config, root: String) {
-	BotData.token = config.token
+	BotData.discordToken = config.discordToken
+	BotData.gptToken = config.gptToken
 	BotData.ownerId = config.ownerId
 	BotData.root = root
 
 	val loginService = ServiceFactory.loginService
-	loginService.loginBot(config.reinit ?: false)
+	loginService.loginBot(config.reinit)
 }

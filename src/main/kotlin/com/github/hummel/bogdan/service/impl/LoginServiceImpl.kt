@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag
 
 class LoginServiceImpl : LoginService {
 	override fun loginBot(reinit: Boolean) {
-		ApiHolder.discord = JDABuilder.createDefault(BotData.token).apply {
+		ApiHolder.discord = JDABuilder.createDefault(BotData.discordToken).apply {
 			enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
 			enableCache(CacheFlag.entries)
 			setMemberCachePolicy(MemberCachePolicy.ALL)
@@ -26,7 +26,6 @@ class LoginServiceImpl : LoginService {
 		}
 	}
 
-	@Suppress("unused")
 	private fun recreateCommands() {
 		fun String.cmd(description: String, options: List<OptionData>) =
 			Commands.slash(this, description).addOptions(options)
