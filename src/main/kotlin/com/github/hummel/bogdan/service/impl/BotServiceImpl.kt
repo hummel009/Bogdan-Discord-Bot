@@ -10,6 +10,7 @@ import com.github.hummel.bogdan.utils.build
 import com.github.hummel.bogdan.utils.error
 import com.github.hummel.bogdan.utils.prepromptTemplate
 import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
@@ -72,6 +73,40 @@ class BotServiceImpl : BotService {
 	}
 
 	override fun sendRandomMessage(event: MessageReceivedEvent) {
+		fun ai(guild: Guild, channelId: Long) {
+			val guildData = dataService.loadGuildData(guild)
+
+			val channelHistory = BotData.channelHistories.getOrDefault(channelId, null) ?: return
+			val prompt = channelHistory.joinToString(
+				prefix = prepromptTemplate.build(guildData.name, guildData.preprompt), separator = "\n"
+			)
+
+			val (data, error) = getGlobalSupportInteractionResult(prompt)
+
+			data?.let {
+				if (it.length > 2000) {
+					val embed = EmbedBuilder().error(
+						event.member, guildData, I18n.of("msg_error_long", guildData)
+					)
+					event.channel.sendMessageEmbeds(embed).queue()
+				} else {
+					event.channel.sendMessage(it).queue()
+				}
+			} ?: run {
+				val embed = EmbedBuilder().error(
+					event.member, guildData, I18n.of("msg_error_http", guildData).format(error)
+				)
+				event.channel.sendMessageEmbeds(embed).queue()
+			}
+		}
+
+		fun quote(guild: Guild) {
+			val message = dataService.getMessage(guild)
+			message?.let {
+				event.channel.sendMessage(it).queue()
+			}
+		}
+
 		if (event.jda.selfUser.idLong == event.message.author.idLong) {
 			return
 		}
@@ -84,45 +119,23 @@ class BotServiceImpl : BotService {
 			return
 		}
 
-		val randomMessage = Random.nextInt(100)
-		val randomAi = Random.nextInt(100)
+		val chanceQuote = Random.nextInt(100)
+		val chanceAi = Random.nextInt(100)
 
-		val quoteRule = randomMessage < guildData.chanceMessage
-		val aiRule1 = quoteRule && randomAi < guildData.chanceAI
-		val aiRule2 = hasBotMention(event.message.contentRaw, guildData.name) && guildData.chanceAI != -1
+		val spontaneousRule = chanceQuote < guildData.chanceMessage
+		val summonRule = hasBotMention(event.message.contentRaw, guildData.name)
 
-		// DEFAULT
-		if (!aiRule1 && !aiRule2 && quoteRule) {
-			val message = dataService.getMessage(guild)
-			message?.let {
-				event.channel.sendMessage(it).queue()
+		if (summonRule) {
+			if (guildData.chanceAI != -1) {
+				ai(guild, channelId)
 			}
-			return
-		}
-
-		// AI
-		val channelHistory = BotData.channelHistories.getOrDefault(channelId, null) ?: return
-		val prompt = channelHistory.joinToString(
-			prefix = prepromptTemplate.build(guildData.name, guildData.preprompt), separator = "\n"
-		)
-		val (data, error) = getGlobalSupportInteractionResult(prompt)
-		data?.let {
-			if (it.length > 2000) {
-				val embed = EmbedBuilder().error(
-					event.member, guildData, I18n.of("msg_error_long", guildData)
-				)
-				event.channel.sendMessageEmbeds(embed).queue()
+		} else if (spontaneousRule) {
+			if (chanceAi < guildData.chanceAI) {
+				ai(guild, channelId)
 			} else {
-				event.channel.sendMessage(it).queue()
+				quote(guild)
 			}
-		} ?: run {
-			val embed = EmbedBuilder().error(
-				event.member, guildData, I18n.of("msg_error_http", guildData).format(error)
-			)
-			event.channel.sendMessageEmbeds(embed).queue()
 		}
-
-		return
 	}
 
 	override fun sendBirthdayMessage(event: MessageReceivedEvent) {
