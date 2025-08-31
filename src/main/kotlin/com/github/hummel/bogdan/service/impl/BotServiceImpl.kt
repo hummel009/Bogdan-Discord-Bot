@@ -84,12 +84,15 @@ class BotServiceImpl : BotService {
 			return
 		}
 
+		val randomMessage = Random.nextInt(100)
+		val randomAi = Random.nextInt(100)
+
 		val aiRule1 = hasBotMention(event.message.contentRaw, guildData.name) && guildData.chanceAI != -1
-		val aiRule2 = Random.nextInt(100) < guildData.chanceMessage && Random.nextInt(100) < guildData.chanceAI
+		val aiRule2 = randomAi < guildData.chanceAI
 
 		// DEFAULT
 		if (!aiRule1 && !aiRule2) {
-			if (Random.nextInt(100) < guildData.chanceMessage) {
+			if (randomMessage < guildData.chanceMessage) {
 				val message = dataService.getMessage(guild)
 				message?.let {
 					event.channel.sendMessage(it).queue()
