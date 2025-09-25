@@ -115,15 +115,15 @@ class BotServiceImpl : BotService {
 		val guildData = dataService.loadGuildData(guild)
 		val channelId = event.channel.idLong
 
-		if (guildData.excludedChannelIds.any { it == channelId }) {
-			return
-		}
-
 		val chanceQuote = Random.nextInt(100)
 		val chanceAi = Random.nextInt(100)
 
 		val summonRule = hasBotMention(event.message.contentRaw, guildData.name)
 		val spontaneousRule = chanceQuote < guildData.chanceMessage
+
+		if (guildData.excludedChannelIds.any { it == channelId } && !summonRule) {
+			return
+		}
 
 		if (summonRule) {
 			if (guildData.chanceAI != -1) {
