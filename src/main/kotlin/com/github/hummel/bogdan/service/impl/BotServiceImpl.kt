@@ -29,15 +29,15 @@ class BotServiceImpl : BotService {
 		val author = event.message.author
 		val message = event.message.contentRaw
 
-		if (message.length !in 2..445) {
-			return
-		}
-
 		val channelHistory = BotData.channelHistories.getOrPut(channelId) { mutableListOf() }
 
 		channelHistory.add(message)
 		if (channelHistory.size >= 10) {
 			channelHistory.removeAt(0)
+		}
+
+		if (message.length !in 2..445) {
+			return
 		}
 
 		if (guildData.excludedChannelIds.any { it == channelId }) {
