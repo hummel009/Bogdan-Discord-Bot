@@ -26,10 +26,6 @@ class BotServiceImpl : BotService {
 
 		val channelId = event.channel.idLong
 
-		if (guildData.excludedChannelIds.any { it == channelId }) {
-			return
-		}
-
 		val author = event.message.author
 		val message = event.message.contentRaw
 
@@ -42,6 +38,10 @@ class BotServiceImpl : BotService {
 		channelHistory.add(message)
 		if (channelHistory.size >= 10) {
 			channelHistory.removeAt(0)
+		}
+
+		if (guildData.excludedChannelIds.any { it == channelId }) {
+			return
 		}
 
 		if (suitableForBank(author, message, guildData.name)) {
