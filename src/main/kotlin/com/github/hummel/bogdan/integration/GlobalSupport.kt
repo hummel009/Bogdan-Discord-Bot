@@ -14,12 +14,12 @@ private val lock: Any = Any()
 @Suppress("unused")
 private fun main() {
 	val input = "Привет, как дела?"
-	val result = getGlobalSupportInteractionResult(input)
+	val (data, error) = getGlobalSupportInteractionResult(input)
 
-	if (result.error != null) {
-		println("Ошибка: ${result.error}")
+	if (error != null) {
+		println("Ошибка: $error")
 	} else {
-		println("Ответ: ${result.data}")
+		println("Ответ: $data")
 	}
 }
 
@@ -36,9 +36,9 @@ fun getGlobalSupportInteractionResult(
 		)
 
 		val (data, error) = getResponse(payload)
-		data ?: return InteractionResult(null, error)
+		data ?: return@getGlobalSupportInteractionResult InteractionResult(null, error)
 
-		return InteractionResult(data, null)
+		return@getGlobalSupportInteractionResult InteractionResult(data, null)
 	}
 }
 

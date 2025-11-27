@@ -70,14 +70,13 @@ class MemberServiceImpl : MemberService {
 					append("\r\n", I18n.of("has_birthdays", guildData), "\r\n")
 					guildData.birthdays.sortedWith(
 						compareBy({ it.date.month }, { it.date.day })
-					).joinTo(this, "\r\n") {
-						val memberId = it.memberId
-						val month = Month.of(it.date.month)
-						val day = it.date.day
-						val numericDate = "%02d.%02d".format(day, it.date.month)
-						val date = "${I18n.of(month.name.lowercase(), guildData).format(day)} ($numericDate)"
+					).joinTo(this, "\r\n") { (memberId, date) ->
+						val month = Month.of(date.month)
+						val day = date.day
+						val numericDate = "%02d.%02d".format(day, date.month)
+						val dateFormatted = "${I18n.of(month.name.lowercase(), guildData).format(day)} ($numericDate)"
 
-						I18n.of("birthday", guildData).format(memberId, date)
+						I18n.of("birthday", guildData).format(memberId, dateFormatted)
 					}
 					append("\r\n")
 				}

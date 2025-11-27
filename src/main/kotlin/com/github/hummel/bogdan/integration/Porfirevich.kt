@@ -13,12 +13,12 @@ private val lock: Any = Any()
 @Suppress("unused")
 private fun main() {
 	val input = "Привет, как дела?"
-	val result = getPorfirevichInteractionResult(input)
+	val (data, error) = getPorfirevichInteractionResult(input)
 
-	if (result.error != null) {
-		println("Ошибка: ${result.error}")
+	if (error != null) {
+		println("Ошибка: $error")
 	} else {
-		println("Ответ: ${result.data}")
+		println("Ответ: $data")
 	}
 }
 
@@ -33,9 +33,9 @@ fun getPorfirevichInteractionResult(
 		)
 
 		val (data, error) = getResponse(payload)
-		data ?: return InteractionResult(null, error)
+		data ?: return@getPorfirevichInteractionResult InteractionResult(null, error)
 
-		return InteractionResult(input + data, null)
+		return@getPorfirevichInteractionResult InteractionResult(input + data, null)
 	}
 }
 

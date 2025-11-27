@@ -15,12 +15,12 @@ private val lock: Any = Any()
 @Suppress("unused")
 private fun main() {
 	val input = "Привет, как дела?"
-	val result = getVeniceInteractionResult(input)
+	val (data, error) = getVeniceInteractionResult(input)
 
-	if (result.error != null) {
-		println("Ошибка: ${result.error}")
+	if (error != null) {
+		println("Ошибка: $error")
 	} else {
-		println("Ответ: ${result.data}")
+		println("Ответ: $data")
 	}
 }
 
@@ -35,9 +35,9 @@ fun getVeniceInteractionResult(
 		)
 
 		val (data, error) = getResponse(payload)
-		data ?: return InteractionResult(null, error)
+		data ?: return@getVeniceInteractionResult InteractionResult(null, error)
 
-		return InteractionResult(data, null)
+		return@getVeniceInteractionResult InteractionResult(data, null)
 	}
 }
 
@@ -82,7 +82,7 @@ private fun getResponse(
 				}
 				EntityUtils.consume(response.entity)
 
-				InteractionResult(sb.toString(), null)
+				InteractionResult("$sb", null)
 			} catch (e: Exception) {
 				InteractionResult(null, "${e.javaClass.getSimpleName()}")
 			}
