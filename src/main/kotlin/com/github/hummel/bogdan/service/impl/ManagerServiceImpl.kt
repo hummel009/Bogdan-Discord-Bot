@@ -96,7 +96,8 @@ class ManagerServiceImpl : ManagerService {
 
 						guildData.birthdays.add(GuildData.Birthday(memberId, GuildData.Date(day, month)))
 
-						val date = I18n.of(Month.of(month).name.lowercase(), guildData).format(day)
+						val numericDate = "%02d.%02d".format(day, month)
+						val date = "${I18n.of(Month.of(month).name.lowercase(), guildData).format(day)} ($numericDate)"
 
 						EmbedBuilder().success(
 							event.member, guildData, I18n.of("add_birthday", guildData).format(memberId, date)

@@ -14,7 +14,8 @@ import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
-import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import kotlin.random.Random
 
 class BotServiceImpl : BotService {
@@ -142,7 +143,8 @@ class BotServiceImpl : BotService {
 		val guild = event.guild
 		val guildData = dataService.loadGuildData(guild)
 
-		val today = LocalDate.now()
+		val mskZone = ZoneId.of("Europe/Moscow")
+		val today = ZonedDateTime.now(mskZone)
 		val todayDay = today.dayOfMonth
 		val todayMonth = today.monthValue
 

@@ -74,9 +74,9 @@ class MemberServiceImpl : MemberService {
 						val month = Month.of(date.month)
 						val day = date.day
 						val numericDate = "%02d.%02d".format(day, date.month)
-						val dateFormatted = "${I18n.of(month.name.lowercase(), guildData).format(day)} ($numericDate)"
+						val date = "${I18n.of(month.name.lowercase(), guildData).format(day)} ($numericDate)"
 
-						I18n.of("birthday", guildData).format(memberId, dateFormatted)
+						I18n.of("birthday", guildData).format(memberId, date)
 					}
 					append("\r\n")
 				}
