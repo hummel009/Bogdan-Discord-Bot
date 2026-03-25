@@ -1,13 +1,7 @@
-### Gradle ###
-/.gradle/
-/**/build/
+.gradle
+.idea
+.kotlin
+build
 
-### IntelliJ IDEA ###
-/.idea/
-
-### Kotlin ###
-/.kotlin/
-
-### Project ###
-/files/
+files
 config.json
