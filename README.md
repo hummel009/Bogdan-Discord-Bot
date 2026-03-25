@@ -8,7 +8,7 @@
 [![Technical Debt][technical_debt_badge]][technical_debt_link]
 [![Lines of Code][lines_of_code_badge]][lines_of_code_link]
 
-My discord bot for my discord servers. His name is Богдан (Bogdan).
+My discord bot for my discord servers; his name is Bogdan.
 This bot behaves himself as a human with customizable mood/style and name (AI token required).
 Other features:
 
