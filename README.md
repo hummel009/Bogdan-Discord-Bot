@@ -14,7 +14,7 @@ Other features:
 
 * Four languages of interface: english, russian, belarusian and ukrainian.
 * Manager roles for data & settings management.
-* Birthay-wish system.
+* Birthday-wish system.
 
 <!----------------------------------------------------------------------------->
 
