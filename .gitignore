@@ -3,5 +3,5 @@
 .kotlin
 build
 
-files
-config.json
+input
+output

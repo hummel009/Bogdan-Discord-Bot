@@ -13,12 +13,12 @@ data class Config(
 
 fun main() {
 	try {
-		val file = File("config.json")
+		val file = File("input/config.json")
 		if (file.exists()) {
 			FileReader(file).use {
 				val config = gson.fromJson(it, Config::class.java)
 
-				launchWithData(config, "files")
+				launchWithData(config, "output")
 			}
 		} else {
 			requestUserInput()
@@ -43,7 +43,7 @@ fun requestUserInput() {
 
 	val config = Config(discordToken, ownerId, gptToken, reinit.toBoolean())
 	try {
-		val file = File("config.json")
+		val file = File("input/config.json")
 		FileWriter(file).use {
 			gson.toJson(config, it)
 		}
@@ -51,7 +51,7 @@ fun requestUserInput() {
 		e.printStackTrace()
 	}
 
-	launchWithData(config, "files")
+	launchWithData(config, "output")
 }
 
 fun launchWithData(config: Config, root: String) {
