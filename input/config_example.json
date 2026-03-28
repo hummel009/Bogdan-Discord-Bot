@@ -1,0 +1,6 @@
+{
+	"discordToken": "DISCORD_TOKEN",
+	"gptToken": "GPT_TOKEN",
+	"ownerId": "1234567890",
+	"reinit": false
+}
