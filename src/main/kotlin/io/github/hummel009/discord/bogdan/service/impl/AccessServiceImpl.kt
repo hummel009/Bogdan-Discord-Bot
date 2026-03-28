@@ -1,8 +1,8 @@
 package io.github.hummel009.discord.bogdan.service.impl
 
-import com.github.hummel.bogdan.bean.BotData
-import com.github.hummel.bogdan.bean.GuildData
-import com.github.hummel.bogdan.service.AccessService
+import io.github.hummel009.discord.bogdan.bean.BotData
+import io.github.hummel009.discord.bogdan.bean.GuildData
+import io.github.hummel009.discord.bogdan.service.AccessService
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 

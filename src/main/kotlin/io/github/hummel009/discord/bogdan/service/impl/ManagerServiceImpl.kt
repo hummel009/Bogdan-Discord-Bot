@@ -1,11 +1,11 @@
 package io.github.hummel009.discord.bogdan.service.impl
 
-import com.github.hummel.bogdan.bean.GuildData
-import com.github.hummel.bogdan.factory.ServiceFactory
-import com.github.hummel.bogdan.service.AccessService
-import com.github.hummel.bogdan.service.DataService
-import com.github.hummel.bogdan.service.ManagerService
-import com.github.hummel.bogdan.utils.*
+import io.github.hummel009.discord.bogdan.bean.GuildData
+import io.github.hummel009.discord.bogdan.factory.ServiceFactory
+import io.github.hummel009.discord.bogdan.service.AccessService
+import io.github.hummel009.discord.bogdan.service.DataService
+import io.github.hummel009.discord.bogdan.service.ManagerService
+import io.github.hummel009.discord.bogdan.utils.*
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import java.time.Month

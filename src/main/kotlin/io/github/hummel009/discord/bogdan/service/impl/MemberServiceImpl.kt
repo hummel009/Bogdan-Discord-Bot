@@ -1,13 +1,13 @@
 package io.github.hummel009.discord.bogdan.service.impl
 
-import com.github.hummel.bogdan.bean.BotData
-import com.github.hummel.bogdan.factory.ServiceFactory
-import com.github.hummel.bogdan.integration.getPorfirevichInteractionResult
-import com.github.hummel.bogdan.service.DataService
-import com.github.hummel.bogdan.service.MemberService
-import com.github.hummel.bogdan.utils.I18n
-import com.github.hummel.bogdan.utils.error
-import com.github.hummel.bogdan.utils.success
+import io.github.hummel009.discord.bogdan.bean.BotData
+import io.github.hummel009.discord.bogdan.factory.ServiceFactory
+import io.github.hummel009.discord.bogdan.integration.getPorfirevichInteractionResult
+import io.github.hummel009.discord.bogdan.service.DataService
+import io.github.hummel009.discord.bogdan.service.MemberService
+import io.github.hummel009.discord.bogdan.utils.I18n
+import io.github.hummel009.discord.bogdan.utils.error
+import io.github.hummel009.discord.bogdan.utils.success
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import java.time.Month

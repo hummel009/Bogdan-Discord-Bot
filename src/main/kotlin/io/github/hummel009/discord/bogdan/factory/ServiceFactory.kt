@@ -1,7 +1,7 @@
 package io.github.hummel009.discord.bogdan.factory
 
-import com.github.hummel.bogdan.service.*
-import com.github.hummel.bogdan.service.impl.*
+import io.github.hummel009.discord.bogdan.service.*
+import io.github.hummel009.discord.bogdan.service.impl.*
 
 @Suppress("unused", "RedundantSuppression")
 object ServiceFactory {

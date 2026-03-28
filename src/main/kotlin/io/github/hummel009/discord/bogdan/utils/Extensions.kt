@@ -1,6 +1,6 @@
 package io.github.hummel009.discord.bogdan.utils
 
-import com.github.hummel.bogdan.bean.GuildData
+import io.github.hummel009.discord.bogdan.bean.GuildData
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.MessageEmbed

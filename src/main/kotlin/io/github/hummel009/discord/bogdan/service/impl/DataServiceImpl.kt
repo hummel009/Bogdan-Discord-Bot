@@ -1,15 +1,15 @@
 package io.github.hummel009.discord.bogdan.service.impl
 
-import com.github.hummel.bogdan.bean.GuildData
-import com.github.hummel.bogdan.dao.FileDao
-import com.github.hummel.bogdan.dao.JsonDao
-import com.github.hummel.bogdan.dao.ZipDao
-import com.github.hummel.bogdan.factory.DaoFactory
-import com.github.hummel.bogdan.service.DataService
-import com.github.hummel.bogdan.utils.decode
-import com.github.hummel.bogdan.utils.defaultName
-import com.github.hummel.bogdan.utils.defaultPreprompt
-import com.github.hummel.bogdan.utils.encode
+import io.github.hummel009.discord.bogdan.bean.GuildData
+import io.github.hummel009.discord.bogdan.dao.FileDao
+import io.github.hummel009.discord.bogdan.dao.JsonDao
+import io.github.hummel009.discord.bogdan.dao.ZipDao
+import io.github.hummel009.discord.bogdan.factory.DaoFactory
+import io.github.hummel009.discord.bogdan.service.DataService
+import io.github.hummel009.discord.bogdan.utils.decode
+import io.github.hummel009.discord.bogdan.utils.defaultName
+import io.github.hummel009.discord.bogdan.utils.defaultPreprompt
+import io.github.hummel009.discord.bogdan.utils.encode
 import net.dv8tion.jda.api.entities.Guild
 import java.time.LocalDate
 

@@ -1,10 +1,10 @@
 package io.github.hummel009.discord.bogdan.handler
 
-import com.github.hummel.bogdan.factory.ServiceFactory
-import com.github.hummel.bogdan.service.BotService
-import com.github.hummel.bogdan.service.ManagerService
-import com.github.hummel.bogdan.service.MemberService
-import com.github.hummel.bogdan.service.OwnerService
+import io.github.hummel009.discord.bogdan.factory.ServiceFactory
+import io.github.hummel009.discord.bogdan.service.BotService
+import io.github.hummel009.discord.bogdan.service.ManagerService
+import io.github.hummel009.discord.bogdan.service.MemberService
+import io.github.hummel009.discord.bogdan.service.OwnerService
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter

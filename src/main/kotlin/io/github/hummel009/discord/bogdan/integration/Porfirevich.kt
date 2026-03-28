@@ -1,7 +1,7 @@
 package io.github.hummel009.discord.bogdan.integration
 
-import com.github.hummel.bogdan.bean.InteractionResult
-import com.github.hummel.bogdan.utils.gson
+import io.github.hummel009.discord.bogdan.bean.InteractionResult
+import io.github.hummel009.discord.bogdan.utils.gson
 import org.apache.hc.client5.http.classic.methods.HttpPost
 import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.apache.hc.core5.http.ContentType

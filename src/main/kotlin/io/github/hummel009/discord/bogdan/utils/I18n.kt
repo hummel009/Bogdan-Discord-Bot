@@ -1,6 +1,6 @@
 package io.github.hummel009.discord.bogdan.utils
 
-import com.github.hummel.bogdan.bean.GuildData
+import io.github.hummel009.discord.bogdan.bean.GuildData
 import java.io.InputStreamReader
 
 object I18n {

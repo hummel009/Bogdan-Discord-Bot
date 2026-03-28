@@ -1,9 +1,9 @@
 package io.github.hummel009.discord.bogdan.service.impl
 
-import com.github.hummel.bogdan.ApiHolder
-import com.github.hummel.bogdan.bean.BotData
-import com.github.hummel.bogdan.handler.EventHandler
-import com.github.hummel.bogdan.service.LoginService
+import io.github.hummel009.discord.bogdan.ApiHolder
+import io.github.hummel009.discord.bogdan.bean.BotData
+import io.github.hummel009.discord.bogdan.handler.EventHandler
+import io.github.hummel009.discord.bogdan.service.LoginService
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.Commands

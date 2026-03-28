@@ -1,14 +1,14 @@
 package io.github.hummel009.discord.bogdan.service.impl
 
-import com.github.hummel.bogdan.bean.BotData
-import com.github.hummel.bogdan.factory.ServiceFactory
-import com.github.hummel.bogdan.integration.getGlobalSupportInteractionResult
-import com.github.hummel.bogdan.service.BotService
-import com.github.hummel.bogdan.service.DataService
-import com.github.hummel.bogdan.utils.I18n
-import com.github.hummel.bogdan.utils.build
-import com.github.hummel.bogdan.utils.error
-import com.github.hummel.bogdan.utils.prepromptTemplate
+import io.github.hummel009.discord.bogdan.bean.BotData
+import io.github.hummel009.discord.bogdan.factory.ServiceFactory
+import io.github.hummel009.discord.bogdan.integration.getGlobalSupportInteractionResult
+import io.github.hummel009.discord.bogdan.service.BotService
+import io.github.hummel009.discord.bogdan.service.DataService
+import io.github.hummel009.discord.bogdan.utils.I18n
+import io.github.hummel009.discord.bogdan.utils.build
+import io.github.hummel009.discord.bogdan.utils.error
+import io.github.hummel009.discord.bogdan.utils.prepromptTemplate
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.User
