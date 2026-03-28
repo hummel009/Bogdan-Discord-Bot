@@ -6,7 +6,7 @@ plugins {
 	id("org.jetbrains.kotlin.jvm") version "latest.release"
 }
 
-group = "com.github.hummel"
+group = "io.github.hummel009"
 version = LocalDate.now().format(DateTimeFormatter.ofPattern("yy.MM.dd"))
 
 val embed: Configuration by configurations.creating
@@ -32,7 +32,7 @@ java {
 }
 
 application {
-	mainClass = "com.github.hummel.bogdan.MainKt"
+	mainClass = "io.github.hummel009.discord.bogdan.MainKt"
 }
 
 tasks {
@@ -43,7 +43,7 @@ tasks {
 		manifest {
 			attributes(
 				mapOf(
-					"Main-Class" to "com.github.hummel.bogdan.MainKt"
+					"Main-Class" to "io.github.hummel009.discord.bogdan.MainKt"
 				)
 			)
 		}
