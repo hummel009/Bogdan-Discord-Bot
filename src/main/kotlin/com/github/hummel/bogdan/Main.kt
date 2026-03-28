@@ -8,7 +8,7 @@ import java.io.FileReader
 import java.io.FileWriter
 
 data class Config(
-	val discordToken: String, val ownerId: String, val gptToken: String, val reinit: Boolean
+	val discordToken: String, val gptToken: String, val ownerId: String, val reinit: Boolean
 )
 
 fun main() {
