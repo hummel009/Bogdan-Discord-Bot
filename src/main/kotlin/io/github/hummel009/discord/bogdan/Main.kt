@@ -16,15 +16,15 @@ fun main() {
 		val file = File("input/config.json")
 		if (file.exists()) {
 			FileReader(file).use {
-				val config = _root_ide_package_.io.github.hummel009.discord.bogdan.utils.gson.fromJson(it, _root_ide_package_.io.github.hummel009.discord.bogdan.Config::class.java)
+				val config = gson.fromJson(it, Config::class.java)
 
-				_root_ide_package_.io.github.hummel009.discord.bogdan.launchWithData(config, "output")
+				launchWithData(config, "output")
 			}
 		} else {
-			_root_ide_package_.io.github.hummel009.discord.bogdan.requestUserInput()
+			requestUserInput()
 		}
 	} catch (_: Exception) {
-		_root_ide_package_.io.github.hummel009.discord.bogdan.requestUserInput()
+		requestUserInput()
 	}
 }
 
@@ -41,7 +41,7 @@ fun requestUserInput() {
 	print("Reinit? Type true/false: ")
 	val reinit = readln()
 
-	val config = _root_ide_package_.io.github.hummel009.discord.bogdan.Config(
+	val config = Config(
 		discordToken,
 		ownerId,
 		gptToken,
@@ -50,21 +50,21 @@ fun requestUserInput() {
 	try {
 		val file = File("input/config.json")
 		FileWriter(file).use {
-			_root_ide_package_.io.github.hummel009.discord.bogdan.utils.gson.toJson(config, it)
+			gson.toJson(config, it)
 		}
 	} catch (e: Exception) {
 		e.printStackTrace()
 	}
 
-	_root_ide_package_.io.github.hummel009.discord.bogdan.launchWithData(config, "output")
+	launchWithData(config, "output")
 }
 
-fun launchWithData(config: io.github.hummel009.discord.bogdan.Config, root: String) {
-	_root_ide_package_.io.github.hummel009.discord.bogdan.bean.BotData.discordToken = config.discordToken
-	_root_ide_package_.io.github.hummel009.discord.bogdan.bean.BotData.gptToken = config.gptToken
-	_root_ide_package_.io.github.hummel009.discord.bogdan.bean.BotData.ownerId = config.ownerId
-	_root_ide_package_.io.github.hummel009.discord.bogdan.bean.BotData.root = root
+fun launchWithData(config: Config, root: String) {
+	BotData.discordToken = config.discordToken
+	BotData.gptToken = config.gptToken
+	BotData.ownerId = config.ownerId
+	BotData.root = root
 
-	val loginService = _root_ide_package_.io.github.hummel009.discord.bogdan.factory.ServiceFactory.loginService
+	val loginService = ServiceFactory.loginService
 	loginService.loginBot(config.reinit)
 }

@@ -4,7 +4,7 @@ import io.github.hummel009.discord.bogdan.bean.BotData
 import io.github.hummel009.discord.bogdan.dao.FileDao
 import java.io.File
 
-class FileDaoImpl : io.github.hummel009.discord.bogdan.dao.FileDao {
+class FileDaoImpl : FileDao {
 	override fun createEmptyFile(filePath: String) {
 		val file = getFile(filePath)
 		if (file.exists()) {
@@ -37,9 +37,9 @@ class FileDaoImpl : io.github.hummel009.discord.bogdan.dao.FileDao {
 		}
 	}
 
-	override fun getFile(filePath: String): File = File(_root_ide_package_.io.github.hummel009.discord.bogdan.bean.BotData.root, filePath)
+	override fun getFile(filePath: String): File = File(BotData.root, filePath)
 
-	override fun getFolder(folderPath: String): File = File(_root_ide_package_.io.github.hummel009.discord.bogdan.bean.BotData.root, folderPath)
+	override fun getFolder(folderPath: String): File = File(BotData.root, folderPath)
 
 	override fun readFromFile(filePath: String): ByteArray {
 		val file = getFile(filePath)

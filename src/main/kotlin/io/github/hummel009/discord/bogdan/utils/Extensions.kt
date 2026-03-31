@@ -4,7 +4,6 @@ import io.github.hummel009.discord.bogdan.bean.GuildData
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.MessageEmbed
-import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase
 import java.util.*
 
 fun EmbedBuilder.success(member: Member?, guildData: GuildData, desc: String): MessageEmbed = apply {
@@ -36,13 +35,6 @@ fun EmbedBuilder.error(member: Member?, guildData: GuildData, desc: String): Mes
 
 fun String.build(name: String, preprompt: String): String =
 	trimIndent().replace("\t", "").replace("\n", " ").format(name, name, preprompt) + "\n"
-
-
-fun HttpUriRequestBase.setHeaders(vararg headers: Pair<String, String>) {
-	headers.forEach { (name, value) ->
-		setHeader(name, value)
-	}
-}
 
 fun String.encode(): String {
 	val bytes = toByteArray(Charsets.UTF_8)
