@@ -9,16 +9,7 @@ plugins {
 group = "io.github.hummel009"
 version = LocalDate.now().format(DateTimeFormatter.ofPattern("yy.MM.dd"))
 
-val embed: Configuration by configurations.creating
-
 dependencies {
-	embed("org.jetbrains.kotlin:kotlin-stdlib:latest.release")
-
-	embed("net.lingala.zip4j:zip4j:latest.release")
-	embed("com.google.code.gson:gson:latest.release")
-	embed("org.apache.httpcomponents.client5:httpclient5:latest.release")
-	embed("net.dv8tion:JDA:latest.release")
-
 	implementation("net.lingala.zip4j:zip4j:latest.release")
 	implementation("com.google.code.gson:gson:latest.release")
 	implementation("org.apache.httpcomponents.client5:httpclient5:latest.release")
@@ -47,7 +38,7 @@ tasks {
 				)
 			)
 		}
-		from(embed.map {
+		from(configurations.runtimeClasspath.get().map {
 			if (it.isDirectory) it else zipTree(it)
 		})
 		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
