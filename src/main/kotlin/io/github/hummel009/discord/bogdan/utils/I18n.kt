@@ -10,7 +10,7 @@ class I18n private constructor(private val value: String, val lang: Lang) {
 
 		fun of(key: String, lang: Lang, vararg args: Any?): I18n {
 			val translations = cache.getOrPut(lang) {
-				val inputStream = this::class.java.classLoader.getResourceAsStream("assets/lang/${lang.file}")!!
+				val inputStream = this::class.java.classLoader.getResourceAsStream(lang.file)!!
 
 				InputStreamReader(inputStream, Charsets.UTF_8).use {
 					gson.fromJson(it, object : TypeToken<Map<String, String>>() {}.type)
@@ -33,10 +33,10 @@ class I18n private constructor(private val value: String, val lang: Lang) {
 }
 
 enum class Lang(val code: String, val file: String) {
-	ENGLISH("en", "en_us.json"),
-	RUSSIAN("ru", "ru_ru.json"),
-	BELARUSIAN("be", "be_by.json"),
-	UKRAINIAN("uk", "uk_ua.json");
+	ENGLISH("en", "assets/lang/en_us.json"),
+	RUSSIAN("ru", "assets/lang/ru_ru.json"),
+	BELARUSIAN("be", "assets/lang/be_by.json"),
+	UKRAINIAN("uk", "assets/lang/uk_ua.json");
 
 	override fun toString(): String = code
 
