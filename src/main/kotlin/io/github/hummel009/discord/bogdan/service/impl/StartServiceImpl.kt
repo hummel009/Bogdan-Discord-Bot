@@ -2,6 +2,7 @@ package io.github.hummel009.discord.bogdan.service.impl
 
 import io.github.hummel009.discord.bogdan.ApiHolder
 import io.github.hummel009.discord.bogdan.service.StartService
+import io.github.hummel009.discord.bogdan.utils.Lang
 import io.github.hummel009.discord.bogdan.utils.config
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.Commands
@@ -31,7 +32,7 @@ class StartServiceImpl : StartService {
 			withStringOption("set_chance_ai", "[-1..100]"),
 			withStringOption("set_chance_emoji", "[0..100]"),
 			withStringOption("set_chance_message", "[0..100]"),
-			withStringOption("set_language", "[ru/be/uk/en]"),
+			withStringOption("set_language", "[${Lang.entries.joinToString("/")}]"),
 			withStringOption("set_name", "[text]"),
 			withStringOption("set_preprompt", "[text]"),
 

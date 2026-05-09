@@ -7,6 +7,7 @@ import io.github.hummel009.discord.bogdan.dao.ZipDao
 import io.github.hummel009.discord.bogdan.factory.DaoFactory
 import io.github.hummel009.discord.bogdan.service.DataService
 import io.github.hummel009.discord.bogdan.utils.I18n
+import io.github.hummel009.discord.bogdan.utils.Lang
 import net.dv8tion.jda.api.entities.Guild
 import java.time.LocalDate
 import java.util.*
@@ -132,7 +133,7 @@ class DataServiceImpl : DataService {
 
 		return GuildData(
 			guildName = guild.name,
-			lang = "en",
+			lang = Lang.ENGLISH,
 			chanceMessage = 10,
 			chanceEmoji = 1,
 			chanceAI = 0,
@@ -140,8 +141,8 @@ class DataServiceImpl : DataService {
 			excludedChannelIds = mutableSetOf(),
 			birthdays = mutableSetOf(),
 			lastWish = lastWish,
-			name = I18n.of("default_name", "en").s(),
-			preprompt = I18n.of("default_preprompt", "en").s()
+			name = I18n.of("default_name", Lang.ENGLISH).s(),
+			preprompt = I18n.of("default_preprompt", Lang.ENGLISH).s()
 		)
 	}
 

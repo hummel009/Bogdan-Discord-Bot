@@ -1,8 +1,10 @@
 package io.github.hummel009.discord.bogdan.bean
 
+import io.github.hummel009.discord.bogdan.utils.Lang
+
 data class GuildData(
 	val guildName: String,
-	var lang: String,
+	var lang: Lang,
 	var chanceMessage: Int,
 	var chanceEmoji: Int,
 	var chanceAI: Int,

@@ -37,7 +37,7 @@ class MemberServiceImpl : MemberService {
 			}
 
 			val text = buildString {
-				val langName = I18n.of(guildData.lang, guildData)
+				val langName = I18n.of(guildData.lang.code, guildData)
 				append(I18n.of("info_language", guildData, langName), "\n")
 				append(I18n.of("info_chance_message", guildData, guildData.chanceMessage), "\n")
 				append(I18n.of("info_chance_emoji", guildData, guildData.chanceEmoji), "\n")

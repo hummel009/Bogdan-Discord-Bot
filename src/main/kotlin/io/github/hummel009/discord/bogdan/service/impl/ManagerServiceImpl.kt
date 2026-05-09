@@ -6,6 +6,7 @@ import io.github.hummel009.discord.bogdan.service.AccessService
 import io.github.hummel009.discord.bogdan.service.DataService
 import io.github.hummel009.discord.bogdan.service.ManagerService
 import io.github.hummel009.discord.bogdan.utils.I18n
+import io.github.hummel009.discord.bogdan.utils.Lang
 import io.github.hummel009.discord.bogdan.utils.access
 import io.github.hummel009.discord.bogdan.utils.error
 import io.github.hummel009.discord.bogdan.utils.success
@@ -48,11 +49,7 @@ class ManagerServiceImpl : ManagerService {
 
 				if (arguments.size == 1) {
 					try {
-						val lang = arguments[0]
-
-						if (lang !in listOf("ru", "be", "uk", "en")) {
-							throw Exception()
-						}
+						val lang = Lang.of(arguments[0]) ?: throw Exception()
 
 						guildData.lang = lang
 						guildData.name = I18n.of("default_name", lang).s()
@@ -61,7 +58,7 @@ class ManagerServiceImpl : ManagerService {
 						val bot = guild.getMemberById(event.jda.selfUser.idLong) ?: throw Exception()
 						bot.modifyNickname(guildData.name).queue()
 
-						val langName = I18n.of(lang, guildData)
+						val langName = I18n.of(lang.code, guildData)
 
 						EmbedBuilder().success(
 							event.member, I18n.of("set_language", guildData, langName)
