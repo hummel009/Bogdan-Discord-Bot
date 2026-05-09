@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken
 import io.github.hummel009.discord.bogdan.bean.GuildData
 import java.io.InputStreamReader
 
-class I18n(private val value: String, val lang: String) {
+class I18n private constructor(private val value: String, val lang: String) {
 	companion object {
 		private val cache: MutableMap<String, Map<String, String>> = mutableMapOf()
 
@@ -31,6 +31,8 @@ class I18n(private val value: String, val lang: String) {
 		}
 
 		fun of(key: String, guildData: GuildData, vararg args: Any?): I18n = of(key, guildData.lang, *args)
+
+		fun new(value: String, lang: String): I18n = I18n(value, lang)
 	}
 
 	fun s(): String = value
