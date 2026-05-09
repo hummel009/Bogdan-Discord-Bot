@@ -15,50 +15,44 @@ class StartServiceImpl : StartService {
 		}
 
 		val commands = listOf(
-			"info".cmd("/info", empty()),
-			"complete".cmd("/complete [text]", string()),
-			"clear_context".cmd("/clear_context", empty()),
+			withoutOptions("clear_context"),
+			withoutOptions("exit"),
+			withoutOptions("export"),
+			withoutOptions("info"),
+			withoutOptions("reset_name"),
+			withoutOptions("reset_preprompt"),
+			withoutOptions("wipe_bank"),
+			withoutOptions("wipe_data"),
 
-			"add_birthday".cmd("/add_birthday [member_id] [month_number] [day_number]", string()),
-			"add_manager_role".cmd("/add_manager_role [role_id]", string()),
-			"add_excluded_channel".cmd("/add_excluded_channel [channel_id]", string()),
+			withStringOption("add_birthday", "[member_id] [month_number] [day_number]"),
+			withStringOption("add_excluded_channel", "[channel_id]"),
+			withStringOption("add_manager_role", "[role_id]"),
+			withStringOption("complete", "[text]"),
+			withStringOption("set_chance_ai", "[-1..100]"),
+			withStringOption("set_chance_emoji", "[0..100]"),
+			withStringOption("set_chance_message", "[0..100]"),
+			withStringOption("set_language", "[ru/be/uk/en]"),
+			withStringOption("set_name", "[text]"),
+			withStringOption("set_preprompt", "[text]"),
 
-			"clear_birthdays".cmd("/clear_birthdays {member_id}", string(false)),
-			"clear_manager_roles".cmd("/clear_manager_roles {role_id}", string(false)),
-			"clear_excluded_channels".cmd("/clear_excluded_channels {channel_id}", string(false)),
+			withStringOption("clear_birthdays", "{member_id}", false),
+			withStringOption("clear_excluded_channels", "{channel_id}", false),
+			withStringOption("clear_manager_roles", "{role_id}", false),
 
-			"set_chance_message".cmd("/set_chance_message [0..100]", string()),
-			"set_chance_emoji".cmd("/set_chance_emoji [0..100]", string()),
-			"set_chance_ai".cmd("/set_chance_ai [-1..100]", string()),
-
-			"set_language".cmd("/set_language [ru/be/uk/en]", string()),
-
-			"set_name".cmd("/set_name [text]", string()),
-			"set_preprompt".cmd("/set_preprompt [text]", string()),
-			"reset_name".cmd("/reset_name", empty()),
-			"reset_preprompt".cmd("/reset_preprompt", empty()),
-
-			"wipe_bank".cmd("/wipe_bank", empty()),
-			"wipe_data".cmd("/wipe_data", empty()),
-
-			"import".cmd("/import", attachment()),
-			"export".cmd("/export", empty()),
-			"exit".cmd("/exit", empty())
+			withAttachmentOption("import")
 		)
 
 		ApiHolder.discord.updateCommands().addCommands(commands).complete()
 	}
 
-	private fun String.cmd(description: String, options: List<OptionData>): SlashCommandData =
-		Commands.slash(this, description).addOptions(options)
+	private fun withoutOptions(command: String): SlashCommandData =
+		Commands.slash(command, "/$command").addOptions(emptyList())
 
-	private fun empty(): List<OptionData> = emptyList()
+	private fun withStringOption(command: String, parameters: String, obligatory: Boolean = true): SlashCommandData =
+		Commands.slash(command, "/$command $parameters")
+			.addOptions(OptionData(OptionType.STRING, "arguments", "The list of arguments", obligatory))
 
-	private fun string(obligatory: Boolean = true): List<OptionData> = listOf(
-		OptionData(OptionType.STRING, "arguments", "The list of arguments", obligatory)
-	)
-
-	private fun attachment(): List<OptionData> = listOf(
-		OptionData(OptionType.ATTACHMENT, "arguments", "The list of arguments", true)
-	)
+	private fun withAttachmentOption(command: String): SlashCommandData =
+		Commands.slash(command, "/$command")
+			.addOptions(OptionData(OptionType.ATTACHMENT, "arguments", "The list of arguments", true))
 }

@@ -30,11 +30,14 @@ val config: Config by lazy {
 	}
 }
 
+@Deprecated("I18n")
 const val defaultName: String = "Богдан"
 
+@Deprecated("I18n")
 const val defaultPreprompt: String =
 	"У тебя хороший характер, но ты можешь фамильярничать, спорить и осуждать, даже ругаться, если не согласен. Не пиши слишком заумно и многословно."
 
+@Deprecated("I18n")
 const val prepromptTemplate: String = """
 	Ты — участник этого чата, тебя зовут %s.
 	Не пиши что-то вроде «%s на связи» или «Эй, ребята, я тут!».

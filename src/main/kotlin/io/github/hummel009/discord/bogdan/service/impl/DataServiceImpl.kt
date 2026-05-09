@@ -6,12 +6,11 @@ import io.github.hummel009.discord.bogdan.dao.JsonDao
 import io.github.hummel009.discord.bogdan.dao.ZipDao
 import io.github.hummel009.discord.bogdan.factory.DaoFactory
 import io.github.hummel009.discord.bogdan.service.DataService
-import io.github.hummel009.discord.bogdan.utils.decrypt
 import io.github.hummel009.discord.bogdan.utils.defaultName
 import io.github.hummel009.discord.bogdan.utils.defaultPreprompt
-import io.github.hummel009.discord.bogdan.utils.encrypt
 import net.dv8tion.jda.api.entities.Guild
 import java.time.LocalDate
+import java.util.*
 
 class DataServiceImpl : DataService {
 	private val fileDao: FileDao = DaoFactory.fileDao
@@ -145,5 +144,15 @@ class DataServiceImpl : DataService {
 			name = defaultName,
 			preprompt = defaultPreprompt
 		)
+	}
+
+	private fun String.encrypt(): String {
+		val bytes = toByteArray(Charsets.UTF_8)
+		return Base64.getEncoder().encodeToString(bytes).reversed()
+	}
+
+	private fun String.decrypt(): String {
+		val bytes = Base64.getDecoder().decode(reversed())
+		return bytes.toString(Charsets.UTF_8)
 	}
 }

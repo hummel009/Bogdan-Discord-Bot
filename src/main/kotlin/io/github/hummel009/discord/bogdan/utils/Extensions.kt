@@ -4,7 +4,6 @@ import io.github.hummel009.discord.bogdan.bean.GuildData
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.MessageEmbed
-import java.util.*
 
 fun EmbedBuilder.success(member: Member?, guildData: GuildData, desc: String): MessageEmbed = apply {
 	member ?: return@apply
@@ -33,15 +32,6 @@ fun EmbedBuilder.error(member: Member?, guildData: GuildData, desc: String): Mes
 	setColor(0xFF0000)
 }.build()
 
+@Deprecated("I18n")
 fun String.build(name: String, preprompt: String): String =
 	trimIndent().replace("\t", "").replace("\n", " ").format(name, name, preprompt) + "\n"
-
-fun String.encrypt(): String {
-	val bytes = toByteArray(Charsets.UTF_8)
-	return Base64.getEncoder().encodeToString(bytes).reversed()
-}
-
-fun String.decrypt(): String {
-	val bytes = Base64.getDecoder().decode(reversed())
-	return bytes.toString(Charsets.UTF_8)
-}
