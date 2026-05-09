@@ -54,20 +54,11 @@ class ManagerServiceImpl : ManagerService {
 							throw Exception()
 						}
 
-						val prevLang = guildData.lang
 						guildData.lang = lang
-
-						val defaultNameInPrevLang = I18n.of("default_name", prevLang).s()
-						if (guildData.name == defaultNameInPrevLang) {
-							guildData.name = I18n.of("default_name", lang).s()
-							val bot = guild.getMemberById(event.jda.selfUser.idLong) ?: throw Exception()
-							bot.modifyNickname(guildData.name).queue()
-						}
-
-						val defaultPrepromptInPrevLang = I18n.of("default_preprompt", prevLang).s()
-						if (guildData.preprompt == defaultPrepromptInPrevLang) {
-							guildData.preprompt = I18n.of("default_preprompt", lang).s()
-						}
+						guildData.name = I18n.of("default_name", lang).s()
+						guildData.preprompt = I18n.of("default_preprompt", lang).s()
+						val bot = guild.getMemberById(event.jda.selfUser.idLong) ?: throw Exception()
+						bot.modifyNickname(guildData.name).queue()
 
 						val langName = I18n.of(lang, guildData)
 
