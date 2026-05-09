@@ -1,6 +1,5 @@
 package io.github.hummel009.discord.bogdan
 
-import io.github.hummel009.discord.bogdan.factory.ServiceFactory
 import io.github.hummel009.discord.bogdan.utils.gson
 import io.github.hummel009.discord.bogdan.utils.input
 import java.io.File
@@ -13,7 +12,7 @@ data class Config(
 fun main() {
 	ensureConfigExists()
 
-	ApiHolder.establishConnections()
+	ApiHolder.establishDiscordConnection()
 }
 
 fun ensureConfigExists() {

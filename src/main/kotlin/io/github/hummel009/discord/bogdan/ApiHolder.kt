@@ -19,10 +19,10 @@ object ApiHolder {
 		}.build().awaitReady()
 	}
 
-	fun establishConnections() {
+	fun establishDiscordConnection() {
 		discord
 
-		val loginService = ServiceFactory.startService
-		loginService.recreateCommands()
+		val startService = ServiceFactory.startService
+		startService.recreateCommands()
 	}
 }
