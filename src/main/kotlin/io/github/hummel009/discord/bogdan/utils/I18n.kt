@@ -4,10 +4,10 @@ import com.google.gson.reflect.TypeToken
 import io.github.hummel009.discord.bogdan.bean.GuildData
 import java.io.InputStreamReader
 
-private val cache: MutableMap<String, Map<String, String>> = mutableMapOf()
-
 class I18n(private val value: String, val lang: String) {
 	companion object {
+		private val cache: MutableMap<String, Map<String, String>> = mutableMapOf()
+
 		fun of(key: String, lang: String, vararg args: Any?): I18n {
 			val translations = cache.getOrPut(lang) {
 				val langFileName = when (lang) {
