@@ -1,34 +1,18 @@
 package io.github.hummel009.discord.bogdan.service.impl
 
 import io.github.hummel009.discord.bogdan.ApiHolder
-import io.github.hummel009.discord.bogdan.handler.EventHandler
-import io.github.hummel009.discord.bogdan.service.LoginService
+import io.github.hummel009.discord.bogdan.service.StartService
 import io.github.hummel009.discord.bogdan.utils.config
-import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.OptionData
-import net.dv8tion.jda.api.requests.GatewayIntent
-import net.dv8tion.jda.api.utils.MemberCachePolicy
-import net.dv8tion.jda.api.utils.cache.CacheFlag
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
 
-class LoginServiceImpl : LoginService {
-	override fun loginBot() {
-		ApiHolder.discord = JDABuilder.createDefault(config.discordToken).apply {
-			enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
-			enableCache(CacheFlag.entries)
-			setMemberCachePolicy(MemberCachePolicy.ALL)
-			addEventListeners(EventHandler)
-		}.build().awaitReady()
-
-		if (config.reinit) {
-			recreateCommands()
+class StartServiceImpl : StartService {
+	override fun recreateCommands() {
+		if (!config.reinit) {
+			return
 		}
-	}
-
-	private fun recreateCommands() {
-		fun String.cmd(description: String, options: List<OptionData>) =
-			Commands.slash(this, description).addOptions(options)
 
 		val commands = listOf(
 			"info".cmd("/info", empty()),
@@ -61,8 +45,12 @@ class LoginServiceImpl : LoginService {
 			"export".cmd("/export", empty()),
 			"exit".cmd("/exit", empty())
 		)
+
 		ApiHolder.discord.updateCommands().addCommands(commands).complete()
 	}
+
+	private fun String.cmd(description: String, options: List<OptionData>): SlashCommandData =
+		Commands.slash(this, description).addOptions(options)
 
 	private fun empty(): List<OptionData> = emptyList()
 

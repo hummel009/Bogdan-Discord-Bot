@@ -13,8 +13,7 @@ data class Config(
 fun main() {
 	ensureConfigExists()
 
-	val loginService = ServiceFactory.loginService
-	loginService.loginBot()
+	ApiHolder.establishConnections()
 }
 
 fun ensureConfigExists() {
