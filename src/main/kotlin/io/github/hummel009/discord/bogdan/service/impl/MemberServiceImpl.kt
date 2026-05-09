@@ -38,54 +38,54 @@ class MemberServiceImpl : MemberService {
 
 			val text = buildString {
 				val langName = I18n.of(guildData.lang, guildData)
-				append(I18n.of("info_language", guildData).format(langName), "\r\n")
-				append(I18n.of("info_chance_message", guildData).format(guildData.chanceMessage), "\r\n")
-				append(I18n.of("info_chance_emoji", guildData).format(guildData.chanceEmoji), "\r\n")
-				append(I18n.of("info_chance_ai", guildData).format(guildData.chanceAI), "\r\n")
+				append(I18n.of("info_language", guildData, langName), "\n")
+				append(I18n.of("info_chance_message", guildData, guildData.chanceMessage), "\n")
+				append(I18n.of("info_chance_emoji", guildData, guildData.chanceEmoji), "\n")
+				append(I18n.of("info_chance_ai", guildData, guildData.chanceAI), "\n")
 
 				if (guildData.managerRoleIds.isEmpty()) {
-					append("\r\n", I18n.of("no_manager_roles", guildData), "\r\n")
+					append("\n", I18n.of("no_manager_roles", guildData), "\n")
 				} else {
-					append("\r\n", I18n.of("has_manager_roles", guildData), "\r\n")
-					guildData.managerRoleIds.joinTo(this, "\r\n") {
-						I18n.of("manager_role", guildData).format(it)
+					append("\n", I18n.of("has_manager_roles", guildData), "\n")
+					guildData.managerRoleIds.joinTo(this, "\n") {
+						I18n.of("manager_role", guildData, it).s()
 					}
-					append("\r\n")
+					append("\n")
 				}
 
 				if (guildData.excludedChannelIds.isEmpty()) {
-					append("\r\n", I18n.of("no_excluded_channels", guildData), "\r\n")
+					append("\n", I18n.of("no_excluded_channels", guildData), "\n")
 				} else {
-					append("\r\n", I18n.of("has_excluded_channels", guildData), "\r\n")
-					guildData.excludedChannelIds.joinTo(this, "\r\n") {
-						I18n.of("excluded_channel", guildData).format(it)
+					append("\n", I18n.of("has_excluded_channels", guildData), "\n")
+					guildData.excludedChannelIds.joinTo(this, "\n") {
+						I18n.of("excluded_channel", guildData, it).s()
 					}
-					append("\r\n")
+					append("\n")
 				}
 
 				if (guildData.birthdays.isEmpty()) {
-					append("\r\n", I18n.of("no_birthdays", guildData), "\r\n")
+					append("\n", I18n.of("no_birthdays", guildData), "\n")
 				} else {
-					append("\r\n", I18n.of("has_birthdays", guildData), "\r\n")
+					append("\n", I18n.of("has_birthdays", guildData), "\n")
 					guildData.birthdays.sortedWith(
 						compareBy({ it.date.month }, { it.date.day })
-					).joinTo(this, "\r\n") { (memberId, date) ->
+					).joinTo(this, "\n") { (memberId, date) ->
 						val month = Month.of(date.month)
 						val day = date.day
 						val numericDate = "%02d.%02d".format(day, date.month)
-						val date = "${I18n.of(month.name.lowercase(), guildData).format(day)} ($numericDate)"
+						val date = "${I18n.of(month.name.lowercase(), guildData, day)} ($numericDate)"
 
-						I18n.of("birthday", guildData).format(memberId, date)
+						I18n.of("birthday", guildData, memberId, date).s()
 					}
-					append("\r\n")
+					append("\n")
 				}
 
-				append("\r\n", I18n.of("info_name", guildData).format(guildData.name), "\r\n")
-				append("\r\n", I18n.of("info_preprompt", guildData).format(guildData.preprompt), "\r\n")
+				append("\n", I18n.of("info_name", guildData, guildData.name), "\n")
+				append("\n", I18n.of("info_preprompt", guildData, guildData.preprompt), "\n")
 			}
 			dataService.saveGuildData(guild, guildData)
 
-			val embed = EmbedBuilder().success(event.member, guildData, text)
+			val embed = EmbedBuilder().success(event.member, I18n(text, guildData.lang))
 
 			event.hook.sendMessageEmbeds(embed).queue()
 		}
@@ -109,14 +109,14 @@ class MemberServiceImpl : MemberService {
 
 				val (data, error) = getPorfirevichInteractionResult(prompt)
 				data?.let {
-					EmbedBuilder().success(event.member, guildData, it)
+					EmbedBuilder().success(event.member, I18n(it, guildData.lang))
 				} ?: run {
 					EmbedBuilder().error(
-						event.member, guildData, I18n.of("msg_error_http", guildData).format(error)
+						event.member, I18n.of("msg_error_http", guildData, error)
 					)
 				}
 			} catch (_: Exception) {
-				EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
+				EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
 			}
 
 			event.hook.sendMessageEmbeds(embed).queue()
@@ -135,7 +135,7 @@ class MemberServiceImpl : MemberService {
 
 			dataService.setContextForChannel(channelId, mutableListOf())
 
-			val embed = EmbedBuilder().success(event.member, guildData, I18n.of("clear_context", guildData))
+			val embed = EmbedBuilder().success(event.member, I18n.of("clear_context", guildData))
 
 			event.hook.sendMessageEmbeds(embed).queue()
 		}

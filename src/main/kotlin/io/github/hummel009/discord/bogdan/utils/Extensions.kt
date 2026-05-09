@@ -1,37 +1,32 @@
 package io.github.hummel009.discord.bogdan.utils
 
-import io.github.hummel009.discord.bogdan.bean.GuildData
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.MessageEmbed
 
-fun EmbedBuilder.success(member: Member?, guildData: GuildData, desc: String): MessageEmbed = apply {
+fun EmbedBuilder.success(member: Member?, translation: I18n): MessageEmbed = apply {
 	member ?: return@apply
 
 	setAuthor(member.effectiveName, null, member.effectiveAvatarUrl)
-	setTitle(I18n.of("title_success", guildData))
-	setDescription(desc)
+	setTitle(I18n.of("title_success", translation.lang).s())
+	setDescription(translation.s())
 	setColor(0x00FF00)
 }.build()
 
-fun EmbedBuilder.access(member: Member?, guildData: GuildData, desc: String): MessageEmbed = apply {
+fun EmbedBuilder.access(member: Member?, translation: I18n): MessageEmbed = apply {
 	member ?: return@apply
 
 	setAuthor(member.effectiveName, null, member.effectiveAvatarUrl)
-	setTitle(I18n.of("title_access", guildData))
-	setDescription(desc)
+	setTitle(I18n.of("title_access", translation.lang).s())
+	setDescription(translation.s())
 	setColor(0xFFFF00)
 }.build()
 
-fun EmbedBuilder.error(member: Member?, guildData: GuildData, desc: String): MessageEmbed = apply {
+fun EmbedBuilder.error(member: Member?, translation: I18n): MessageEmbed = apply {
 	member ?: return@apply
 
 	setAuthor(member.effectiveName, null, member.effectiveAvatarUrl)
-	setTitle(I18n.of("title_error", guildData))
-	setDescription(desc)
+	setTitle(I18n.of("title_error", translation.lang).s())
+	setDescription(translation.s())
 	setColor(0xFF0000)
 }.build()
-
-@Deprecated("I18n")
-fun String.build(name: String, preprompt: String): String =
-	trimIndent().replace("\t", "").replace("\n", " ").format(name, name, preprompt) + "\n"

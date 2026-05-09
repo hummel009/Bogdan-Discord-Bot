@@ -5,9 +5,7 @@ import io.github.hummel009.discord.bogdan.integration.getGlobalSupportInteractio
 import io.github.hummel009.discord.bogdan.service.BotService
 import io.github.hummel009.discord.bogdan.service.DataService
 import io.github.hummel009.discord.bogdan.utils.I18n
-import io.github.hummel009.discord.bogdan.utils.build
 import io.github.hummel009.discord.bogdan.utils.error
-import io.github.hummel009.discord.bogdan.utils.prepromptTemplate
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.User
@@ -78,7 +76,8 @@ class BotServiceImpl : BotService {
 
 			val context = dataService.getContextForChannel(channelId) ?: return
 			val prompt = context.joinToString(
-				prefix = prepromptTemplate.build(guildData.name, guildData.preprompt), separator = "\n"
+				prefix = I18n.of("preprompt_template", guildData, guildData.name, guildData.preprompt).s(),
+				separator = "\n— "
 			)
 
 			val (data, error) = getGlobalSupportInteractionResult(prompt)
@@ -86,7 +85,7 @@ class BotServiceImpl : BotService {
 			data?.let {
 				if (it.length > 2000) {
 					val embed = EmbedBuilder().error(
-						event.member, guildData, I18n.of("msg_error_long", guildData)
+						event.member, I18n.of("msg_error_long", guildData)
 					)
 					event.channel.sendMessageEmbeds(embed).queue()
 				} else {
@@ -94,7 +93,7 @@ class BotServiceImpl : BotService {
 				}
 			} ?: run {
 				val embed = EmbedBuilder().error(
-					event.member, guildData, I18n.of("msg_error_http", guildData).format(error)
+					event.member, I18n.of("msg_error_http", guildData, error)
 				)
 				event.channel.sendMessageEmbeds(embed).queue()
 			}
@@ -155,7 +154,7 @@ class BotServiceImpl : BotService {
 
 		if (birthdayMemberIds.isNotEmpty() && (guildData.lastWish.day != todayDay || guildData.lastWish.month != todayMonth)) {
 			birthdayMemberIds.forEach { memberId ->
-				event.channel.sendMessage(I18n.of("happy_birthday", guildData).format(memberId)).queue()
+				event.channel.sendMessage(I18n.of("happy_birthday", guildData, memberId).s()).queue()
 			}
 
 			guildData.lastWish.day = todayDay

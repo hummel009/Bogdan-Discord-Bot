@@ -5,7 +5,10 @@ import io.github.hummel009.discord.bogdan.factory.ServiceFactory
 import io.github.hummel009.discord.bogdan.service.AccessService
 import io.github.hummel009.discord.bogdan.service.DataService
 import io.github.hummel009.discord.bogdan.service.ManagerService
-import io.github.hummel009.discord.bogdan.utils.*
+import io.github.hummel009.discord.bogdan.utils.I18n
+import io.github.hummel009.discord.bogdan.utils.access
+import io.github.hummel009.discord.bogdan.utils.error
+import io.github.hummel009.discord.bogdan.utils.success
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import java.time.Month
@@ -39,7 +42,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
+				EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 
@@ -51,18 +54,31 @@ class ManagerServiceImpl : ManagerService {
 							throw Exception()
 						}
 
+						val prevLang = guildData.lang
 						guildData.lang = lang
+
+						val defaultNameInPrevLang = I18n.of("default_name", prevLang).s()
+						if (guildData.name == defaultNameInPrevLang) {
+							guildData.name = I18n.of("default_name", lang).s()
+							val bot = guild.getMemberById(event.jda.selfUser.idLong) ?: throw Exception()
+							bot.modifyNickname(guildData.name).queue()
+						}
+
+						val defaultPrepromptInPrevLang = I18n.of("default_preprompt", prevLang).s()
+						if (guildData.preprompt == defaultPrepromptInPrevLang) {
+							guildData.preprompt = I18n.of("default_preprompt", lang).s()
+						}
 
 						val langName = I18n.of(lang, guildData)
 
 						EmbedBuilder().success(
-							event.member, guildData, I18n.of("set_language", guildData).format(langName)
+							event.member, I18n.of("set_language", guildData, langName)
 						)
 					} catch (_: Exception) {
-						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
+						EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
 					}
 				} else {
-					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
+					EmbedBuilder().error(event.member, I18n.of("msg_error_arg", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -81,7 +97,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
+				EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 
@@ -97,16 +113,16 @@ class ManagerServiceImpl : ManagerService {
 						guildData.birthdays.add(GuildData.Birthday(memberId, GuildData.Date(day, month)))
 
 						val numericDate = "%02d.%02d".format(day, month)
-						val date = "${I18n.of(Month.of(month).name.lowercase(), guildData).format(day)} ($numericDate)"
+						val date = "${I18n.of(Month.of(month).name.lowercase(), guildData, day)} ($numericDate)"
 
 						EmbedBuilder().success(
-							event.member, guildData, I18n.of("add_birthday", guildData).format(memberId, date)
+							event.member, I18n.of("add_birthday", guildData, memberId, date)
 						)
 					} catch (_: Exception) {
-						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
+						EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
 					}
 				} else {
-					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
+					EmbedBuilder().error(event.member, I18n.of("msg_error_arg", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -125,14 +141,14 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
+				EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 
 				if (arguments.isEmpty()) {
 					guildData.birthdays.clear()
 
-					EmbedBuilder().success(event.member, guildData, I18n.of("clear_birthdays", guildData))
+					EmbedBuilder().success(event.member, I18n.of("clear_birthdays", guildData))
 				} else {
 					if (arguments.size == 1) {
 						try {
@@ -143,13 +159,13 @@ class ManagerServiceImpl : ManagerService {
 							}
 
 							EmbedBuilder().success(
-								event.member, guildData, I18n.of("clear_birthdays_single", guildData).format(memberId)
+								event.member, I18n.of("clear_birthdays_single", guildData, memberId)
 							)
 						} catch (_: Exception) {
-							EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
+							EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
 						}
 					} else {
-						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
+						EmbedBuilder().error(event.member, I18n.of("msg_error_arg", guildData))
 					}
 				}
 			}
@@ -169,7 +185,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
+				EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 
@@ -182,13 +198,13 @@ class ManagerServiceImpl : ManagerService {
 						guildData.managerRoleIds.add(roleId)
 
 						EmbedBuilder().success(
-							event.member, guildData, I18n.of("add_manager_role", guildData).format(roleId)
+							event.member, I18n.of("add_manager_role", guildData, roleId)
 						)
 					} catch (_: Exception) {
-						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
+						EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
 					}
 				} else {
-					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
+					EmbedBuilder().error(event.member, I18n.of("msg_error_arg", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -207,14 +223,14 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
+				EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 
 				if (arguments.isEmpty()) {
 					guildData.managerRoleIds.clear()
 
-					EmbedBuilder().success(event.member, guildData, I18n.of("clear_manager_roles", guildData))
+					EmbedBuilder().success(event.member, I18n.of("clear_manager_roles", guildData))
 				} else {
 					if (arguments.size == 1) {
 						try {
@@ -225,13 +241,13 @@ class ManagerServiceImpl : ManagerService {
 							}
 
 							EmbedBuilder().success(
-								event.member, guildData, I18n.of("clear_manager_roles_single", guildData).format(roleId)
+								event.member, I18n.of("clear_manager_roles_single", guildData, roleId)
 							)
 						} catch (_: Exception) {
-							EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
+							EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
 						}
 					} else {
-						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
+						EmbedBuilder().error(event.member, I18n.of("msg_error_arg", guildData))
 					}
 				}
 			}
@@ -251,7 +267,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
+				EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 
@@ -268,13 +284,13 @@ class ManagerServiceImpl : ManagerService {
 						guildData.excludedChannelIds.add(channelId)
 
 						EmbedBuilder().success(
-							event.member, guildData, I18n.of("add_excluded_channel", guildData).format(channelId)
+							event.member, I18n.of("add_excluded_channel", guildData, channelId)
 						)
 					} catch (_: Exception) {
-						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
+						EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
 					}
 				} else {
-					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
+					EmbedBuilder().error(event.member, I18n.of("msg_error_arg", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -293,14 +309,14 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
+				EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 
 				if (arguments.isEmpty()) {
 					guildData.excludedChannelIds.clear()
 
-					EmbedBuilder().success(event.member, guildData, I18n.of("clear_excluded_channels", guildData))
+					EmbedBuilder().success(event.member, I18n.of("clear_excluded_channels", guildData))
 				} else {
 					if (arguments.size == 1) {
 						try {
@@ -312,14 +328,13 @@ class ManagerServiceImpl : ManagerService {
 
 							EmbedBuilder().success(
 								event.member,
-								guildData,
-								I18n.of("clear_excluded_channels_single", guildData).format(channelId)
+								I18n.of("clear_excluded_channels_single", guildData, channelId)
 							)
 						} catch (_: Exception) {
-							EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
+							EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
 						}
 					} else {
-						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
+						EmbedBuilder().error(event.member, I18n.of("msg_error_arg", guildData))
 					}
 				}
 			}
@@ -339,7 +354,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
+				EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 
@@ -354,13 +369,13 @@ class ManagerServiceImpl : ManagerService {
 						guildData.chanceMessage = chance
 
 						EmbedBuilder().success(
-							event.member, guildData, I18n.of("set_chance_message", guildData).format(chance)
+							event.member, I18n.of("set_chance_message", guildData, chance)
 						)
 					} catch (_: Exception) {
-						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
+						EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
 					}
 				} else {
-					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
+					EmbedBuilder().error(event.member, I18n.of("msg_error_arg", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -379,7 +394,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
+				EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 
@@ -394,13 +409,13 @@ class ManagerServiceImpl : ManagerService {
 						guildData.chanceEmoji = chance
 
 						EmbedBuilder().success(
-							event.member, guildData, I18n.of("set_chance_emoji", guildData).format(chance)
+							event.member, I18n.of("set_chance_emoji", guildData, chance)
 						)
 					} catch (_: Exception) {
-						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
+						EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
 					}
 				} else {
-					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
+					EmbedBuilder().error(event.member, I18n.of("msg_error_arg", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -419,7 +434,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
+				EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
 			} else {
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
 
@@ -434,13 +449,13 @@ class ManagerServiceImpl : ManagerService {
 						guildData.chanceAI = chance
 
 						EmbedBuilder().success(
-							event.member, guildData, I18n.of("set_chance_ai", guildData).format(chance)
+							event.member, I18n.of("set_chance_ai", guildData, chance)
 						)
 					} catch (_: Exception) {
-						EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
+						EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
 					}
 				} else {
-					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_arg", guildData))
+					EmbedBuilder().error(event.member, I18n.of("msg_error_arg", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -459,7 +474,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
+				EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
 			} else {
 				try {
 					val arguments = event.getOption("arguments")?.asString ?: throw Exception()
@@ -474,9 +489,9 @@ class ManagerServiceImpl : ManagerService {
 					val bot = guild.getMemberById(event.jda.selfUser.idLong) ?: throw Exception()
 					bot.modifyNickname(name).queue()
 
-					EmbedBuilder().success(event.member, guildData, I18n.of("set_name", guildData).format(name))
+					EmbedBuilder().success(event.member, I18n.of("set_name", guildData, name))
 				} catch (_: Exception) {
-					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
+					EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -496,19 +511,19 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
+				EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
 			} else {
 				try {
-					guildData.name = defaultName
+					guildData.name = I18n.of("default_name", guildData).s()
 
 					val bot = guild.getMemberById(event.jda.selfUser.idLong) ?: throw Exception()
-					bot.modifyNickname(defaultName).queue()
+					bot.modifyNickname(guildData.name).queue()
 
 					EmbedBuilder().success(
-						event.member, guildData, I18n.of("reset_name", guildData).format(defaultName)
+						event.member, I18n.of("reset_name", guildData, guildData.name)
 					)
 				} catch (_: Exception) {
-					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
+					EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -527,7 +542,7 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
+				EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
 			} else {
 				try {
 					val arguments = event.getOption("arguments")?.asString ?: throw Exception()
@@ -540,10 +555,10 @@ class ManagerServiceImpl : ManagerService {
 					guildData.preprompt = prompt
 
 					EmbedBuilder().success(
-						event.member, guildData, I18n.of("set_preprompt", guildData).format(prompt)
+						event.member, I18n.of("set_preprompt", guildData, prompt)
 					)
 				} catch (_: Exception) {
-					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
+					EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
 				}
 			}
 			dataService.saveGuildData(guild, guildData)
@@ -563,16 +578,16 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
+				EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
 			} else {
 				try {
-					guildData.preprompt = defaultPreprompt
+					guildData.preprompt = I18n.of("default_preprompt", guildData).s()
 
 					EmbedBuilder().success(
-						event.member, guildData, I18n.of("reset_preprompt", guildData).format(defaultPreprompt)
+						event.member, I18n.of("reset_preprompt", guildData, guildData.preprompt)
 					)
 				} catch (_: Exception) {
-					EmbedBuilder().error(event.member, guildData, I18n.of("msg_error_format", guildData))
+					EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
 				}
 			}
 			event.hook.sendMessageEmbeds(embed).queue()
@@ -591,11 +606,11 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
+				EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
 			} else {
 				dataService.wipeGuildData(guild)
 
-				EmbedBuilder().success(event.member, guildData, I18n.of("wipe_data", guildData))
+				EmbedBuilder().success(event.member, I18n.of("wipe_data", guildData))
 			}
 			event.hook.sendMessageEmbeds(embed).queue()
 		}
@@ -611,11 +626,11 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			val embed = if (!accessService.fromManagerAtLeast(event, guildData)) {
-				EmbedBuilder().access(event.member, guildData, I18n.of("msg_access", guildData))
+				EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
 			} else {
 				dataService.wipeGuildBank(guild)
 
-				EmbedBuilder().success(event.member, guildData, I18n.of("wipe_bank", guildData))
+				EmbedBuilder().success(event.member, I18n.of("wipe_bank", guildData))
 			}
 			event.hook.sendMessageEmbeds(embed).queue()
 		}
