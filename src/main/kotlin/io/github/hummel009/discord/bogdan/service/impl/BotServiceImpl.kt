@@ -181,10 +181,12 @@ class BotServiceImpl : BotService {
 	}
 
 	private fun hasBotMention(message: String, botName: String): Boolean {
-		val start = setOf("$botName,", "${botName.lowercase()},", "${botName.uppercase()},")
+		val startRule = message.lowercase().startsWith("$botName,".lowercase())
+		val endRule1 = message.lowercase().endsWith(", $botName".lowercase())
+		val endRule2 = message.lowercase().endsWith(", $botName.".lowercase())
+		val endRule3 = message.lowercase().endsWith(", $botName!".lowercase())
+		val endRule4 = message.lowercase().endsWith(", $botName?".lowercase())
 
-		return start.any {
-			message.startsWith(it)
-		}
+		return startRule || endRule1 || endRule2 || endRule3 || endRule4
 	}
 }
