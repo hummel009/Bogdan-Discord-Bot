@@ -25,7 +25,7 @@ class I18n(private val value: String, val lang: String) {
 				}
 			}
 
-			val value = translations[key]?.format(args) ?: "Invalid translation key: $key"
+			val value = translations[key]?.format(*args) ?: "Invalid translation key: $key"
 
 			return I18n(value, lang)
 		}
