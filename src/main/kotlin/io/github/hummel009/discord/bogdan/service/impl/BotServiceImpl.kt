@@ -1,14 +1,16 @@
 package io.github.hummel009.discord.bogdan.service.impl
 
+import io.github.hummel009.discord.bogdan.bean.GuildData
 import io.github.hummel009.discord.bogdan.factory.ServiceFactory
 import io.github.hummel009.discord.bogdan.integration.getGlobalSupportInteractionResult
 import io.github.hummel009.discord.bogdan.service.BotService
 import io.github.hummel009.discord.bogdan.service.DataService
 import io.github.hummel009.discord.bogdan.utils.I18n
 import io.github.hummel009.discord.bogdan.utils.error
+import io.github.hummel009.discord.bogdan.utils.split
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.entities.User
+import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import java.time.ZoneId
@@ -24,26 +26,19 @@ class BotServiceImpl : BotService {
 
 		val channelId = event.channel.idLong
 
-		val author = event.message.author
-		val message = event.message.contentRaw
-
 		val context = dataService.getContextForChannel(channelId) ?: mutableListOf()
-		context.add(message)
+		context.add(event.message.contentRaw)
 		if (context.size >= 10) {
 			context.removeAt(0)
 		}
 		dataService.setContextForChannel(channelId, context)
 
-		if (message.length !in 2..445) {
-			return
-		}
-
 		if (guildData.excludedChannelIds.any { it == channelId }) {
 			return
 		}
 
-		if (suitableForBank(author, message, guildData.name)) {
-			dataService.saveMessage(guild, message)
+		if (event.message.isSuitableForBank(guildData)) {
+			dataService.saveMessage(guild, event.message.contentRaw)
 		}
 	}
 
@@ -76,20 +71,16 @@ class BotServiceImpl : BotService {
 
 			val context = dataService.getContextForChannel(channelId) ?: return
 			val prompt = context.joinToString(
-				prefix = I18n.of("preprompt_template", guildData, guildData.name, guildData.preprompt).s(),
-				separator = "\n— "
+				prefix = I18n.of(
+					"preprompt_template", guildData, guildData.name, guildData.name, guildData.preprompt
+				).s(), separator = "\n— "
 			)
 
 			val (data, error) = getGlobalSupportInteractionResult(prompt)
 
 			data?.let {
-				if (it.length > 2000) {
-					val embed = EmbedBuilder().error(
-						event.member, I18n.of("msg_error_long", guildData)
-					)
-					event.channel.sendMessageEmbeds(embed).queue()
-				} else {
-					event.channel.sendMessage(it).queue()
+				it.split().forEach { part ->
+					event.channel.sendMessage(part).queue()
 				}
 			} ?: run {
 				val embed = EmbedBuilder().error(
@@ -117,7 +108,7 @@ class BotServiceImpl : BotService {
 		val chanceQuote = Random.nextInt(100)
 		val chanceAi = Random.nextInt(100)
 
-		val summonRule = hasBotMention(event.message.contentRaw, guildData.name)
+		val summonRule = event.message.hasBotMention(guildData)
 		val spontaneousRule = chanceQuote < guildData.chanceMessage
 
 		if (guildData.excludedChannelIds.any { it == channelId } && !summonRule) {
@@ -164,26 +155,30 @@ class BotServiceImpl : BotService {
 		}
 	}
 
-	private fun suitableForBank(author: User, message: String, botName: String): Boolean {
-		val message = message.lowercase()
-
-		val contain = setOf("@", "http://", "https://", "gopher://", ".gif")
-		val start = setOf("!", "?", "/")
+	private fun Message.isSuitableForBank(guildData: GuildData): Boolean {
+		if (contentRaw.length !in 2..445) {
+			return false
+		}
 
 		if (author.isBot) {
 			return false
 		}
 
+		val message = contentRaw.lowercase()
+
+		val contain = setOf("@", "http://", "https://", "gopher://", ".gif")
+		val start = setOf("!", "?", "/")
+
 		return start.none {
 			message.startsWith(it)
 		} && contain.none {
 			message.contains(it)
-		} && !hasBotMention(message, botName)
+		} && !hasBotMention(guildData)
 	}
 
-	private fun hasBotMention(message: String, botName: String): Boolean {
-		val message = message.lowercase()
-		val botName = botName.lowercase()
+	private fun Message.hasBotMention(guildData: GuildData): Boolean {
+		val message = contentRaw.lowercase()
+		val botName = guildData.name.lowercase()
 
 		val startRule = message.startsWith("$botName,")
 		val endRule1 = message.endsWith(", $botName")
