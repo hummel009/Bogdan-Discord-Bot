@@ -57,6 +57,7 @@ class ManagerServiceImpl : ManagerService {
 						guildData.lang = lang
 						guildData.name = I18n.of("default_name", lang).s()
 						guildData.preprompt = I18n.of("default_preprompt", lang).s()
+
 						val bot = guild.getMemberById(event.jda.selfUser.idLong) ?: throw Exception()
 						bot.modifyNickname(guildData.name).queue()
 
