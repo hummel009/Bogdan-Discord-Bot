@@ -1,12 +1,12 @@
 package io.github.hummel009.discord.bogdan.utils
 
+import com.google.gson.reflect.TypeToken
 import io.github.hummel009.discord.bogdan.bean.GuildData
 import java.io.InputStreamReader
 
 object I18n {
 	private val cache: MutableMap<String, Map<String, String>> = mutableMapOf()
 
-	@Suppress("UNCHECKED_CAST")
 	fun of(key: String, guildData: GuildData): String {
 		val lang = guildData.lang
 		val translations = cache.getOrPut(lang) {
@@ -21,10 +21,10 @@ object I18n {
 			val inputStream = this::class.java.classLoader.getResourceAsStream("assets/lang/$langFileName")!!
 
 			InputStreamReader(inputStream, Charsets.UTF_8).use {
-				gson.fromJson(it, Map::class.java) as Map<String, String>
+				gson.fromJson(it, object : TypeToken<Map<String, String>>() {}.type)
 			}
 		}
 
-		return translations[key] ?: "Invalid translation key!"
+		return translations[key] ?: "Invalid translation key: $key"
 	}
 }
