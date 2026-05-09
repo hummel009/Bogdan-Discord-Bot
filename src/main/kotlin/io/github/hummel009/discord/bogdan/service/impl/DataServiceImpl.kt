@@ -6,10 +6,10 @@ import io.github.hummel009.discord.bogdan.dao.JsonDao
 import io.github.hummel009.discord.bogdan.dao.ZipDao
 import io.github.hummel009.discord.bogdan.factory.DaoFactory
 import io.github.hummel009.discord.bogdan.service.DataService
-import io.github.hummel009.discord.bogdan.utils.decode
+import io.github.hummel009.discord.bogdan.utils.decrypt
 import io.github.hummel009.discord.bogdan.utils.defaultName
 import io.github.hummel009.discord.bogdan.utils.defaultPreprompt
-import io.github.hummel009.discord.bogdan.utils.encode
+import io.github.hummel009.discord.bogdan.utils.encrypt
 import net.dv8tion.jda.api.entities.Guild
 import java.time.LocalDate
 
@@ -66,7 +66,7 @@ class DataServiceImpl : DataService {
 
 		val messages = bank.lines()
 
-		return messages.random().decode()
+		return messages.random().decrypt()
 	}
 
 	override fun saveMessage(guild: Guild, message: String) {
@@ -79,7 +79,7 @@ class DataServiceImpl : DataService {
 			it.isEmpty()
 		}.toMutableList()
 
-		messages.add(message.encode())
+		messages.add(message.encrypt())
 
 		if (messages.size > 100000) {
 			messages.removeAt(0)
