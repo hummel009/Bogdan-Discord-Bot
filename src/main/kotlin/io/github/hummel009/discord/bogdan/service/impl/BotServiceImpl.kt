@@ -166,8 +166,10 @@ class BotServiceImpl : BotService {
 	}
 
 	private fun suitableForBank(author: User, message: String, botName: String): Boolean {
-		val contain = setOf("@", "https://", "http://", "gopher://")
-		val start = setOf("!", "?", "/", botName, botName.lowercase(), botName.uppercase())
+		val message = message.lowercase()
+
+		val contain = setOf("@", "http://", "https://", "gopher://", ".gif")
+		val start = setOf("!", "?", "/")
 
 		if (author.isBot) {
 			return false
@@ -177,15 +179,18 @@ class BotServiceImpl : BotService {
 			message.startsWith(it)
 		} && contain.none {
 			message.contains(it)
-		}
+		} && !hasBotMention(message, botName)
 	}
 
 	private fun hasBotMention(message: String, botName: String): Boolean {
-		val startRule = message.lowercase().startsWith("$botName,".lowercase())
-		val endRule1 = message.lowercase().endsWith(", $botName".lowercase())
-		val endRule2 = message.lowercase().endsWith(", $botName.".lowercase())
-		val endRule3 = message.lowercase().endsWith(", $botName!".lowercase())
-		val endRule4 = message.lowercase().endsWith(", $botName?".lowercase())
+		val message = message.lowercase()
+		val botName = botName.lowercase()
+
+		val startRule = message.startsWith("$botName,")
+		val endRule1 = message.endsWith(", $botName")
+		val endRule2 = message.endsWith(", $botName.")
+		val endRule3 = message.endsWith(", $botName!")
+		val endRule4 = message.endsWith(", $botName?")
 
 		return startRule || endRule1 || endRule2 || endRule3 || endRule4
 	}
