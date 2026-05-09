@@ -1,7 +1,8 @@
 package io.github.hummel009.discord.bogdan.integration
 
-import io.github.hummel009.discord.bogdan.bean.BotData
 import io.github.hummel009.discord.bogdan.bean.InteractionResult
+import io.github.hummel009.discord.bogdan.ensureConfigExists
+import io.github.hummel009.discord.bogdan.utils.config
 import io.github.hummel009.discord.bogdan.utils.gson
 import org.apache.hc.client5.http.classic.methods.HttpPost
 import org.apache.hc.client5.http.impl.classic.HttpClients
@@ -13,8 +14,10 @@ private val lock: Any = Any()
 
 @Suppress("unused")
 private fun main() {
-	val input = "Привет, как дела?"
-	val (data, error) = getGlobalSupportInteractionResult(input)
+	ensureConfigExists()
+
+	val request = "Привет, как дела?"
+	val (data, error) = getGlobalSupportInteractionResult(request)
 
 	if (error != null) {
 		println("Ошибка: $error")
@@ -29,6 +32,7 @@ fun getGlobalSupportInteractionResult(
 	synchronized(lock) {
 		val payload = gson.toJson(
 			GlobalSupportRequest(
+				model = config.aiModel,
 				messages = listOf(
 					GlobalMessage(role = "user", content = input)
 				)
@@ -48,7 +52,7 @@ private fun getResponse(
 	val request = HttpPost("https://global.support.by/api/openai/v1/chat/completions")
 
 	request.addHeader("Content-Type", "application/json")
-	request.addHeader("Authorization", "Bearer ${BotData.gptToken}")
+	request.addHeader("Authorization", "Bearer ${config.aiToken}")
 
 	request.entity = StringEntity(payload, ContentType.APPLICATION_JSON)
 
@@ -72,7 +76,7 @@ private fun getResponse(
 }
 
 private data class GlobalSupportRequest(
-	val model: String = "gpt-4o-mini",
+	val model: String,
 	val messages: List<GlobalMessage>
 )
 

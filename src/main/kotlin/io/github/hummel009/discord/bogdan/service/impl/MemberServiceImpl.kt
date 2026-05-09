@@ -1,6 +1,5 @@
 package io.github.hummel009.discord.bogdan.service.impl
 
-import io.github.hummel009.discord.bogdan.bean.BotData
 import io.github.hummel009.discord.bogdan.factory.ServiceFactory
 import io.github.hummel009.discord.bogdan.integration.getPorfirevichInteractionResult
 import io.github.hummel009.discord.bogdan.service.DataService
@@ -134,7 +133,7 @@ class MemberServiceImpl : MemberService {
 			val guildData = dataService.loadGuildData(guild)
 			val channelId = event.channel.idLong
 
-			BotData.channelHistories[channelId] = mutableListOf()
+			dataService.setContextForChannel(channelId, mutableListOf())
 
 			val embed = EmbedBuilder().success(event.member, guildData, I18n.of("clear_context", guildData))
 

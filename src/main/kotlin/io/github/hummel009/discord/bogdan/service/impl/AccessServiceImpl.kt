@@ -1,8 +1,8 @@
 package io.github.hummel009.discord.bogdan.service.impl
 
-import io.github.hummel009.discord.bogdan.bean.BotData
 import io.github.hummel009.discord.bogdan.bean.GuildData
 import io.github.hummel009.discord.bogdan.service.AccessService
+import io.github.hummel009.discord.bogdan.utils.config
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 
@@ -15,7 +15,7 @@ class AccessServiceImpl : AccessService {
 				it == role.idLong
 			}
 		}
-		val isOwner = member.idLong == BotData.ownerId.toLong()
+		val isOwner = member.idLong == config.ownerId.toLong()
 		val isAdmin = member.hasPermission(Permission.ADMINISTRATOR)
 
 		return isManager || isAdmin || isOwner
@@ -24,7 +24,7 @@ class AccessServiceImpl : AccessService {
 	override fun fromOwnerAtLeast(event: SlashCommandInteractionEvent): Boolean {
 		val member = event.member ?: return false
 
-		val isOwner = member.idLong == BotData.ownerId.toLong()
+		val isOwner = member.idLong == config.ownerId.toLong()
 
 		return isOwner
 	}

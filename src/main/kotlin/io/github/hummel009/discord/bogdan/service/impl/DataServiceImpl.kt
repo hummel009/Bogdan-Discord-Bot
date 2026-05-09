@@ -18,6 +18,12 @@ class DataServiceImpl : DataService {
 	private val jsonDao: JsonDao = DaoFactory.jsonDao
 	private val zipDao: ZipDao = DaoFactory.zipDao
 
+	private val contextByChannelId: MutableMap<Long, MutableList<String>> = mutableMapOf(
+		0L to mutableListOf(
+			""
+		)
+	)
+
 	override fun loadGuildData(guild: Guild): GuildData {
 		val folderName = guild.id
 		val filePath = "guilds/$folderName/data.json"
@@ -75,7 +81,7 @@ class DataServiceImpl : DataService {
 
 		messages.add(message.encode())
 
-		if (messages.size > 30000) {
+		if (messages.size > 100000) {
 			messages.removeAt(0)
 		}
 
@@ -114,6 +120,12 @@ class DataServiceImpl : DataService {
 
 		fileDao.removeFile(importFilePath)
 		fileDao.removeFolder(importFolderPath)
+	}
+
+	override fun getContextForChannel(id: Long): MutableList<String>? = contextByChannelId[id]
+
+	override fun setContextForChannel(id: Long, context: MutableList<String>) {
+		contextByChannelId[id] = context
 	}
 
 	private fun initAndGetGuildData(guild: Guild): GuildData {

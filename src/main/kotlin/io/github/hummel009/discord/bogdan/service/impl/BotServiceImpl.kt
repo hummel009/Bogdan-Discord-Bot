@@ -1,6 +1,5 @@
 package io.github.hummel009.discord.bogdan.service.impl
 
-import io.github.hummel009.discord.bogdan.bean.BotData
 import io.github.hummel009.discord.bogdan.factory.ServiceFactory
 import io.github.hummel009.discord.bogdan.integration.getGlobalSupportInteractionResult
 import io.github.hummel009.discord.bogdan.service.BotService
@@ -30,12 +29,12 @@ class BotServiceImpl : BotService {
 		val author = event.message.author
 		val message = event.message.contentRaw
 
-		val channelHistory = BotData.channelHistories.getOrPut(channelId) { mutableListOf() }
-
-		channelHistory.add(message)
-		if (channelHistory.size >= 10) {
-			channelHistory.removeAt(0)
+		val context = dataService.getContextForChannel(channelId) ?: mutableListOf()
+		context.add(message)
+		if (context.size >= 10) {
+			context.removeAt(0)
 		}
+		dataService.setContextForChannel(channelId, context)
 
 		if (message.length !in 2..445) {
 			return
@@ -77,8 +76,8 @@ class BotServiceImpl : BotService {
 		fun ai(guild: Guild, channelId: Long) {
 			val guildData = dataService.loadGuildData(guild)
 
-			val channelHistory = BotData.channelHistories.getOrDefault(channelId, null) ?: return
-			val prompt = channelHistory.joinToString(
+			val context = dataService.getContextForChannel(channelId) ?: return
+			val prompt = context.joinToString(
 				prefix = prepromptTemplate.build(guildData.name, guildData.preprompt), separator = "\n"
 			)
 

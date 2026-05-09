@@ -39,18 +39,9 @@ tasks {
 			)
 		}
 
-		val embeds by configurations.creating {
-			extendsFrom(configurations.implementation.get())
-			isTransitive = false
-		}
-
-		from(embeds.map {
-			if (it.isDirectory) it else zipTree(it)
+		from(configurations.runtimeClasspath.get().map {
+			zipTree(it)
 		})
-
-		from(configurations.runtimeClasspath.get().filter {
-			it.name.contains("kotlin-stdlib")
-		}.map { zipTree(it) })
 
 		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 	}

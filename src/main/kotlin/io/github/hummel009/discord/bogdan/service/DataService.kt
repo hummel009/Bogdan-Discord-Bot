@@ -15,4 +15,7 @@ interface DataService {
 
 	fun exportBotData(): ByteArray
 	fun importBotData(byteArray: ByteArray)
+
+	fun getContextForChannel(id: Long): MutableList<String>?
+	fun setContextForChannel(id: Long, context: MutableList<String>)
 }

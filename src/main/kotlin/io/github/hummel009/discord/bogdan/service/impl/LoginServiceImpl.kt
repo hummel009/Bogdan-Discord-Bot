@@ -1,9 +1,9 @@
 package io.github.hummel009.discord.bogdan.service.impl
 
 import io.github.hummel009.discord.bogdan.ApiHolder
-import io.github.hummel009.discord.bogdan.bean.BotData
 import io.github.hummel009.discord.bogdan.handler.EventHandler
 import io.github.hummel009.discord.bogdan.service.LoginService
+import io.github.hummel009.discord.bogdan.utils.config
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.Commands
@@ -13,15 +13,15 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 
 class LoginServiceImpl : LoginService {
-	override fun loginBot(reinit: Boolean) {
-		ApiHolder.discord = JDABuilder.createDefault(BotData.discordToken).apply {
+	override fun loginBot() {
+		ApiHolder.discord = JDABuilder.createDefault(config.discordToken).apply {
 			enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
 			enableCache(CacheFlag.entries)
 			setMemberCachePolicy(MemberCachePolicy.ALL)
 			addEventListeners(EventHandler)
 		}.build().awaitReady()
 
-		if (reinit) {
+		if (config.reinit) {
 			recreateCommands()
 		}
 	}

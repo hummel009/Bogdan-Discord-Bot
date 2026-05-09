@@ -1,6 +1,7 @@
 {
-	"discordToken": "DISCORD_TOKEN",
-	"gptToken": "GPT_TOKEN",
+	"discordToken": "xyztokenxyz.xyztokenxyz.xyztokenxyz",
+	"aiToken": "xyztokenxyz.xyztokenxyz.xyztokenxyz",
+	"aiModel": "gemini-2.5-flash-lite",
 	"ownerId": "1234567890",
 	"reinit": false
 }

@@ -1,19 +1,23 @@
 package io.github.hummel009.discord.bogdan.integration
 
 import io.github.hummel009.discord.bogdan.bean.InteractionResult
+import io.github.hummel009.discord.bogdan.ensureConfigExists
 import io.github.hummel009.discord.bogdan.utils.gson
 import org.apache.hc.client5.http.classic.methods.HttpPost
 import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.apache.hc.core5.http.ContentType
 import org.apache.hc.core5.http.io.entity.EntityUtils
 import org.apache.hc.core5.http.io.entity.StringEntity
+import java.io.File
 
 private val lock: Any = Any()
 
 @Suppress("unused")
 private fun main() {
-	val input = "Привет, как дела?"
-	val (data, error) = getPorfirevichInteractionResult(input)
+	ensureConfigExists()
+
+	val request = "Привет, как дела?"
+	val (data, error) = getPorfirevichInteractionResult(request)
 
 	if (error != null) {
 		println("Ошибка: $error")
