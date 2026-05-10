@@ -9,17 +9,21 @@ class I18n private constructor(private val value: String, val lang: Lang) {
 		private val cache: MutableMap<Lang, Map<String, String>> = mutableMapOf()
 
 		fun of(key: String, lang: Lang, vararg args: Any?): I18n {
-			val translations = cache.getOrPut(lang) {
-				val inputStream = this::class.java.classLoader.getResourceAsStream(lang.file)!!
+			try {
+				val translations = cache.getOrPut(lang) {
+					val inputStream = this::class.java.classLoader.getResourceAsStream(lang.file)!!
 
-				InputStreamReader(inputStream, Charsets.UTF_8).use {
-					gson.fromJson(it, object : TypeToken<Map<String, String>>() {}.type)
+					InputStreamReader(inputStream, Charsets.UTF_8).use {
+						gson.fromJson(it, object : TypeToken<Map<String, String>>() {}.type)
+					}
 				}
+
+				val value = translations[key]?.format(*args) ?: "Invalid translation key: $key"
+
+				return I18n(value, lang)
+			} catch (e: Exception) {
+				return I18n("I18n engine error: ${e.message}", lang)
 			}
-
-			val value = translations[key]?.format(*args) ?: "Invalid translation key: $key"
-
-			return I18n(value, lang)
 		}
 
 		fun of(key: String, guildData: GuildData, vararg args: Any?): I18n = of(key, guildData.lang, *args)
