@@ -85,7 +85,7 @@ class MemberServiceImpl : MemberService {
 			}
 			dataService.saveGuildData(guild, guildData)
 
-			val embed = EmbedBuilder().success(event.member, I18n.new(text, guildData.lang))
+			val embed = EmbedBuilder().success(event.member, I18n.new(text, guildData))
 
 			event.hook.sendMessageEmbeds(embed).queue()
 		}
@@ -109,7 +109,7 @@ class MemberServiceImpl : MemberService {
 
 				val (data, error) = getPorfirevichInteractionResult(prompt)
 				data?.let {
-					EmbedBuilder().success(event.member, I18n.new(it, guildData.lang))
+					EmbedBuilder().success(event.member, I18n.new(it, guildData))
 				} ?: run {
 					EmbedBuilder().error(
 						event.member, I18n.of("msg_error_http", guildData, error)

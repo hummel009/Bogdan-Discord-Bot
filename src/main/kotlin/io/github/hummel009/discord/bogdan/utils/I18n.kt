@@ -25,6 +25,8 @@ class I18n private constructor(private val value: String, val lang: Lang) {
 		fun of(key: String, guildData: GuildData, vararg args: Any?): I18n = of(key, guildData.lang, *args)
 
 		fun new(value: String, lang: Lang): I18n = I18n(value, lang)
+
+		fun new(value: String, guildData: GuildData): I18n = I18n(value, guildData.lang)
 	}
 
 	fun s(): String = value
