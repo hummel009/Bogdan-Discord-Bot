@@ -5,11 +5,7 @@ import io.github.hummel009.discord.bogdan.factory.ServiceFactory
 import io.github.hummel009.discord.bogdan.service.AccessService
 import io.github.hummel009.discord.bogdan.service.DataService
 import io.github.hummel009.discord.bogdan.service.ManagerService
-import io.github.hummel009.discord.bogdan.utils.I18n
-import io.github.hummel009.discord.bogdan.utils.Lang
-import io.github.hummel009.discord.bogdan.utils.access
-import io.github.hummel009.discord.bogdan.utils.error
-import io.github.hummel009.discord.bogdan.utils.success
+import io.github.hummel009.discord.bogdan.utils.*
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import java.time.Month
@@ -264,11 +260,7 @@ class ManagerServiceImpl : ManagerService {
 					try {
 						val channelId = arguments[0].toLong()
 
-						guild.getTextChannelById(
-							channelId
-						) ?: guild.getThreadChannelById(
-							channelId
-						) ?: throw Exception()
+						guild.getMessageChannelById(channelId) ?: throw Exception()
 
 						guildData.excludedChannelIds.add(channelId)
 

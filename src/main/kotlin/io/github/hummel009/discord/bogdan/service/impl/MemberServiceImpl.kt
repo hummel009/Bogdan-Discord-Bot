@@ -6,6 +6,7 @@ import io.github.hummel009.discord.bogdan.service.DataService
 import io.github.hummel009.discord.bogdan.service.MemberService
 import io.github.hummel009.discord.bogdan.utils.I18n
 import io.github.hummel009.discord.bogdan.utils.error
+import io.github.hummel009.discord.bogdan.utils.getMessageChannelById
 import io.github.hummel009.discord.bogdan.utils.success
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
@@ -30,10 +31,10 @@ class MemberServiceImpl : MemberService {
 				guild.getRoleById(it) == null
 			}
 			guildData.excludedChannelIds.removeIf {
-				guild.getTextChannelById(it) == null && guild.getThreadChannelById(it) == null
+				guild.getMessageChannelById(it) == null
 			}
 			guildData.excludedChannelIds.removeIf {
-				guild.getTextChannelById(it) == null && guild.getThreadChannelById(it) == null
+				guild.getMessageChannelById(it) == null
 			}
 
 			val text = buildString {
