@@ -13,9 +13,9 @@ interface DataService {
 	fun getMessage(guild: Guild): String?
 	fun saveMessage(guild: Guild, message: String)
 
+	fun getContext(id: Long): MutableList<String>?
+	fun setContext(id: Long, context: MutableList<String>)
+
 	fun exportBotData(): ByteArray
 	fun importBotData(byteArray: ByteArray)
-
-	fun getContextForChannel(id: Long): MutableList<String>?
-	fun setContextForChannel(id: Long, context: MutableList<String>)
 }

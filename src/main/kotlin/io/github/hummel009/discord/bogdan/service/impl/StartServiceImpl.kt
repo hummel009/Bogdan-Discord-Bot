@@ -25,14 +25,14 @@ class StartServiceImpl : StartService {
 			withoutOptions("wipe_bank"),
 			withoutOptions("wipe_data"),
 
-			withStringOption("add_birthday", "[member_id] [month_number] [day_number]"),
+			withStringOption("add_birthday", "[member_id] [day_number] [month_number]"),
 			withStringOption("add_excluded_channel", "[channel_id]"),
 			withStringOption("add_manager_role", "[role_id]"),
 			withStringOption("complete", "[text]"),
 			withStringOption("set_chance_ai", "[-1..100]"),
 			withStringOption("set_chance_emoji", "[0..100]"),
 			withStringOption("set_chance_message", "[0..100]"),
-			withStringOption("set_language", "[${Lang.entries.joinToString("/")}]"),
+			withStringOption("set_language", "[${Lang.entries.joinToString("|")}]"),
 			withStringOption("set_name", "[text]"),
 			withStringOption("set_preprompt", "[text]"),
 
@@ -51,9 +51,9 @@ class StartServiceImpl : StartService {
 
 	private fun withStringOption(command: String, parameters: String, obligatory: Boolean = true): SlashCommandData =
 		Commands.slash(command, "/$command $parameters")
-			.addOptions(OptionData(OptionType.STRING, "arguments", "The list of arguments", obligatory))
+			.addOptions(OptionData(OptionType.STRING, "arguments", parameters, obligatory))
 
 	private fun withAttachmentOption(command: String): SlashCommandData =
 		Commands.slash(command, "/$command")
-			.addOptions(OptionData(OptionType.ATTACHMENT, "arguments", "The list of arguments", true))
+			.addOptions(OptionData(OptionType.ATTACHMENT, "arguments", "", true))
 }

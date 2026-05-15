@@ -6,7 +6,7 @@ interface BotService {
 	fun saveMessage(event: MessageReceivedEvent)
 
 	fun addRandomEmoji(event: MessageReceivedEvent)
-	fun sendRandomMessage(event: MessageReceivedEvent)
 
+	fun sendRandomMessage(event: MessageReceivedEvent)
 	fun sendBirthdayMessage(event: MessageReceivedEvent)
 }

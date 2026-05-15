@@ -87,6 +87,12 @@ class DataServiceImpl : DataService {
 		fileDao.writeToFile(filePath, messages.joinToString(separator = "\n").toByteArray())
 	}
 
+	override fun getContext(id: Long): MutableList<String>? = contextByChannelId[id]
+
+	override fun setContext(id: Long, context: MutableList<String>) {
+		contextByChannelId[id] = context
+	}
+
 	override fun exportBotData(): ByteArray {
 		val targetFolderPath = "guilds"
 		val exportFolderPath = "export"
@@ -119,12 +125,6 @@ class DataServiceImpl : DataService {
 
 		fileDao.removeFile(importFilePath)
 		fileDao.removeFolder(importFolderPath)
-	}
-
-	override fun getContextForChannel(id: Long): MutableList<String>? = contextByChannelId[id]
-
-	override fun setContextForChannel(id: Long, context: MutableList<String>) {
-		contextByChannelId[id] = context
 	}
 
 	private fun initAndGetGuildData(guild: Guild): GuildData {

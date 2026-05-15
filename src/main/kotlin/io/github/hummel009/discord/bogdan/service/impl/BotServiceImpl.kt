@@ -25,12 +25,12 @@ class BotServiceImpl : BotService {
 
 		val channelId = event.channel.idLong
 
-		val context = dataService.getContextForChannel(channelId) ?: mutableListOf()
+		val context = dataService.getContext(channelId) ?: mutableListOf()
 		context.add(event.message.contentRaw)
 		if (context.size >= 10) {
 			context.removeAt(0)
 		}
-		dataService.setContextForChannel(channelId, context)
+		dataService.setContext(channelId, context)
 
 		if (guildData.excludedChannelIds.any { it == channelId }) {
 			return
@@ -57,8 +57,8 @@ class BotServiceImpl : BotService {
 					"🇳", "🇦", "🇪", "🇧", "🅰️", "🇱", "🇴", "🇻", "🅾️"
 				)
 
-				emojis.forEach { emojiUnicode ->
-					event.message.addReaction(Emoji.fromUnicode(emojiUnicode)).queue()
+				emojis.forEach {
+					event.message.addReaction(Emoji.fromUnicode(it)).queue()
 				}
 			}
 		}
@@ -68,7 +68,7 @@ class BotServiceImpl : BotService {
 		fun ai(guild: Guild, channelId: Long) {
 			val guildData = dataService.loadGuildData(guild)
 
-			val context = dataService.getContextForChannel(channelId) ?: return
+			val context = dataService.getContext(channelId) ?: return
 			val prompt = context.joinToString(
 				prefix = I18n.of(
 					"preprompt_template", guildData, guildData.name, guildData.name, guildData.preprompt
@@ -77,15 +77,18 @@ class BotServiceImpl : BotService {
 
 			val (data, error) = getGlobalSupportInteractionResult(prompt)
 
-			data?.let {
-				it.split().forEach { part ->
-					event.channel.sendMessage(part).queue()
-				}
-			} ?: run {
+			if (data == null) {
 				val embed = EmbedBuilder().error(
 					event.member, I18n.of("msg_error_http", guildData, error)
 				)
+
 				event.channel.sendMessageEmbeds(embed).queue()
+
+				return
+			}
+
+			data.split().forEach { part ->
+				event.channel.sendMessage(part).queue()
 			}
 		}
 
