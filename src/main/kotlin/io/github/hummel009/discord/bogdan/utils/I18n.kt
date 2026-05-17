@@ -36,9 +36,9 @@ class I18n private constructor(private val value: String, lang: Lang) {
 		fun new(value: String, guildData: GuildData): I18n = new(value, guildData.lang)
 	}
 
-	private val titleSuccess: I18n = of("title_success", lang)
-	private val titleAccess: I18n = of("title_access", lang)
-	private val titleError: I18n = of("title_error", lang)
+	private val titleSuccess: I18n by lazy { of("title_success", lang) }
+	private val titleAccess: I18n by lazy { of("title_access", lang) }
+	private val titleError: I18n by lazy { of("title_error", lang) }
 
 	override fun toString(): String = value
 
