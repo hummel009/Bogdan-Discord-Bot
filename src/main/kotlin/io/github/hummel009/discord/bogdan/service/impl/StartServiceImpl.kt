@@ -40,12 +40,10 @@ class StartServiceImpl : StartService {
 			withStringOption("clear_excluded_channels", "{channel_id}", false),
 			withStringOption("clear_manager_roles", "{role_id}", false),
 
-			withAttachmentOption("import")
+			withAttachmentOption("import", "[attachment]")
 		)
 
 		ApiHolder.discord.updateCommands().addCommands(commands).complete()
-
-		println("Commands were recreated.")
 	}
 
 	private fun withoutOptions(command: String): SlashCommandData =
@@ -55,7 +53,7 @@ class StartServiceImpl : StartService {
 		Commands.slash(command, "/$command $parameters")
 			.addOptions(OptionData(OptionType.STRING, "arguments", parameters, obligatory))
 
-	private fun withAttachmentOption(command: String): SlashCommandData =
-		Commands.slash(command, "/$command")
-			.addOptions(OptionData(OptionType.ATTACHMENT, "arguments", "", true))
+	private fun withAttachmentOption(command: String, parameters: String): SlashCommandData =
+		Commands.slash(command, "/$command $parameters")
+			.addOptions(OptionData(OptionType.ATTACHMENT, "arguments", parameters, true))
 }
