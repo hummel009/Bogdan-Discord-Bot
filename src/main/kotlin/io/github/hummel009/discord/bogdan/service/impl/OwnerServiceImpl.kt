@@ -5,9 +5,6 @@ import io.github.hummel009.discord.bogdan.service.AccessService
 import io.github.hummel009.discord.bogdan.service.DataService
 import io.github.hummel009.discord.bogdan.service.OwnerService
 import io.github.hummel009.discord.bogdan.utils.I18n
-import io.github.hummel009.discord.bogdan.utils.error
-import io.github.hummel009.discord.bogdan.utils.success
-import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.utils.FileUpload
 import java.net.URI
@@ -36,11 +33,11 @@ class OwnerServiceImpl : OwnerService {
 
 				dataService.importBotData(byteArray)
 
-				val embed = EmbedBuilder().success(event.member, I18n.of("import", guildData))
+				val embed = I18n.of("import", guildData).asSuccess(event.member)
 
 				event.hook.sendMessageEmbeds(embed).queue()
 			} catch (_: Exception) {
-				val embed = EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
+				val embed = I18n.of("msg_error_format", guildData).asError(event.member)
 
 				event.hook.sendMessageEmbeds(embed).queue()
 			}
@@ -79,7 +76,7 @@ class OwnerServiceImpl : OwnerService {
 				return@queue
 			}
 
-			val embed = EmbedBuilder().success(event.member, I18n.of("exit", guildData))
+			val embed = I18n.of("exit", guildData).asSuccess(event.member)
 
 			event.hook.sendMessageEmbeds(embed).queue { exitProcess(0) }
 		}

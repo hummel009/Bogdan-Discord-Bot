@@ -6,8 +6,6 @@ import io.github.hummel009.discord.bogdan.integration.getGlobalSupportInteractio
 import io.github.hummel009.discord.bogdan.service.BotService
 import io.github.hummel009.discord.bogdan.service.DataService
 import io.github.hummel009.discord.bogdan.utils.I18n
-import io.github.hummel009.discord.bogdan.utils.error
-import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.emoji.Emoji
@@ -78,12 +76,8 @@ class BotServiceImpl : BotService {
 			val (data, error) = getGlobalSupportInteractionResult(prompt)
 
 			if (data == null) {
-				val embed = EmbedBuilder().error(
-					event.member, I18n.of("msg_error_http", guildData, error)
-				)
-
+				val embed = I18n.of("msg_error_http", guildData, error).asError(event.member)
 				event.channel.sendMessageEmbeds(embed).queue()
-
 				return
 			}
 

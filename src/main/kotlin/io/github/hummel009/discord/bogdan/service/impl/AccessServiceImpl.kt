@@ -3,9 +3,7 @@ package io.github.hummel009.discord.bogdan.service.impl
 import io.github.hummel009.discord.bogdan.bean.GuildData
 import io.github.hummel009.discord.bogdan.service.AccessService
 import io.github.hummel009.discord.bogdan.utils.I18n
-import io.github.hummel009.discord.bogdan.utils.access
 import io.github.hummel009.discord.bogdan.utils.config
-import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.MessageEmbed
@@ -13,7 +11,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 class AccessServiceImpl : AccessService {
 	override fun managerAccessRestricted(event: SlashCommandInteractionEvent, guildData: GuildData): MessageEmbed? {
-		val embed = EmbedBuilder().access(event.member, I18n.of("msg_access", guildData)).takeUnless {
+		val embed = I18n.of("msg_access", guildData).asAccess(event.member).takeUnless {
 			val member = event.member ?: return@takeUnless false
 
 			member.isGuildManager(guildData) || member.isGuildAdmin() || member.isGuildOwner() || member.isBotOwner()
@@ -25,7 +23,7 @@ class AccessServiceImpl : AccessService {
 	}
 
 	override fun ownerAccessRestricted(event: SlashCommandInteractionEvent, guildData: GuildData): MessageEmbed? {
-		val embed = EmbedBuilder().access(event.member, I18n.of("msg_access", guildData)).takeUnless {
+		val embed = I18n.of("msg_access", guildData).asAccess(event.member).takeUnless {
 			val member = event.member ?: return@takeUnless false
 
 			member.isBotOwner()

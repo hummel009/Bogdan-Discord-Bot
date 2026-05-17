@@ -2,9 +2,12 @@ package io.github.hummel009.discord.bogdan.utils
 
 import com.google.gson.reflect.TypeToken
 import io.github.hummel009.discord.bogdan.bean.GuildData
+import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.entities.MessageEmbed
 import java.io.InputStreamReader
 
-class I18n private constructor(private val value: String, val lang: Lang) {
+class I18n private constructor(private val value: String, lang: Lang) {
 	companion object {
 		private val cache: MutableMap<Lang, Map<String, String>> = mutableMapOf()
 
@@ -33,9 +36,34 @@ class I18n private constructor(private val value: String, val lang: Lang) {
 		fun new(value: String, guildData: GuildData): I18n = new(value, guildData.lang)
 	}
 
-	fun s(): String = value
+	private val titleSuccess: I18n = of("title_success", lang)
+	private val titleAccess: I18n = of("title_access", lang)
+	private val titleError: I18n = of("title_error", lang)
 
 	override fun toString(): String = value
+
+	fun s(): String = value
+
+	fun asSuccess(member: Member?): MessageEmbed = EmbedBuilder().apply {
+		setAuthor(member?.effectiveName, null, member?.effectiveAvatarUrl)
+		setTitle(titleSuccess.value)
+		setDescription(value)
+		setColor(0x00FF00)
+	}.build()
+
+	fun asAccess(member: Member?): MessageEmbed = EmbedBuilder().apply {
+		setAuthor(member?.effectiveName, null, member?.effectiveAvatarUrl)
+		setTitle(titleAccess.value)
+		setDescription(value)
+		setColor(0xFFFF00)
+	}.build()
+
+	fun asError(member: Member?): MessageEmbed = EmbedBuilder().apply {
+		setAuthor(member?.effectiveName, null, member?.effectiveAvatarUrl)
+		setTitle(titleError.value)
+		setDescription(value)
+		setColor(0xFF0000)
+	}.build()
 }
 
 enum class Lang(val code: String, val file: String) {

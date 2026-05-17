@@ -5,10 +5,7 @@ import io.github.hummel009.discord.bogdan.integration.getPorfirevichInteractionR
 import io.github.hummel009.discord.bogdan.service.DataService
 import io.github.hummel009.discord.bogdan.service.MemberService
 import io.github.hummel009.discord.bogdan.utils.I18n
-import io.github.hummel009.discord.bogdan.utils.error
 import io.github.hummel009.discord.bogdan.utils.getMessageChannelById
-import io.github.hummel009.discord.bogdan.utils.success
-import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import java.time.Month
@@ -88,7 +85,7 @@ class MemberServiceImpl : MemberService {
 
 			dataService.saveGuildData(guild, guildData)
 
-			val embed = EmbedBuilder().success(event.member, I18n.new(text, guildData))
+			val embed = I18n.new(text, guildData).asSuccess(event.member)
 
 			event.hook.sendMessageEmbeds(embed).queue()
 		}
@@ -106,21 +103,19 @@ class MemberServiceImpl : MemberService {
 			val embed = run(fun(): MessageEmbed {
 				val argument = event.getOption("arguments")?.asString?.trim() ?: ""
 				if (argument.isBlank()) {
-					return EmbedBuilder().error(event.member, I18n.of("msg_error_arg", guildData))
+					return I18n.of("msg_error_arg", guildData).asError(event.member)
 				}
 
 				try {
 					val (data, error) = getPorfirevichInteractionResult(argument)
 
 					if (data == null) {
-						return EmbedBuilder().error(
-							event.member, I18n.of("msg_error_http", guildData, error)
-						)
+						return I18n.of("msg_error_http", guildData, error).asError(event.member)
 					}
 
-					return EmbedBuilder().success(event.member, I18n.new(data, guildData))
+					return I18n.new(data, guildData).asSuccess(event.member)
 				} catch (_: Exception) {
-					return EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
+					return I18n.of("msg_error_format", guildData).asError(event.member)
 				}
 			})
 
@@ -140,7 +135,7 @@ class MemberServiceImpl : MemberService {
 
 			dataService.setContext(channelId, mutableListOf())
 
-			val embed = EmbedBuilder().success(event.member, I18n.of("clear_context", guildData))
+			val embed = I18n.of("clear_context", guildData).asSuccess(event.member)
 
 			event.hook.sendMessageEmbeds(embed).queue()
 		}
