@@ -8,7 +8,7 @@ class FileDaoImpl : FileDao {
 	override fun createEmptyFile(filePath: String) {
 		val file = getFile(filePath)
 		if (file.exists()) {
-			file.delete()
+			require(file.delete())
 		}
 		createParentDirsWithDepth(file)
 		file.createNewFile()
@@ -17,7 +17,7 @@ class FileDaoImpl : FileDao {
 	override fun createEmptyFolder(folderPath: String) {
 		val folder = getFolder(folderPath)
 		if (folder.exists()) {
-			folder.deleteRecursively()
+			require(folder.deleteRecursively())
 		}
 		createParentDirsWithDepth(folder)
 		folder.mkdirs()
@@ -26,14 +26,14 @@ class FileDaoImpl : FileDao {
 	override fun removeFile(filePath: String) {
 		val file = getFile(filePath)
 		if (file.exists()) {
-			file.delete()
+			require(file.delete())
 		}
 	}
 
 	override fun removeFolder(folderPath: String) {
 		val folder = getFolder(folderPath)
 		if (folder.exists()) {
-			folder.deleteRecursively()
+			require(folder.deleteRecursively())
 		}
 	}
 
@@ -71,7 +71,7 @@ class FileDaoImpl : FileDao {
 		}
 
 		for (dir in dirsToCreate.asReversed()) {
-			dir.mkdir()
+			require(dir.mkdir())
 		}
 	}
 }
