@@ -33,7 +33,7 @@ class OwnerServiceImpl : OwnerService {
 				event.hook.sendMessageEmbeds(embed).queue()
 			} else {
 				try {
-					val attachment = event.getOption("arguments")?.asAttachment ?: throw Exception()
+					val attachment = requireNotNull(event.getOption("arguments")?.asAttachment)
 					val byteArray = URI(attachment.proxyUrl).toURL().readBytes()
 
 					dataService.importBotData(byteArray)
