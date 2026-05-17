@@ -44,6 +44,8 @@ class StartServiceImpl : StartService {
 		)
 
 		ApiHolder.discord.updateCommands().addCommands(commands).complete()
+
+		println("Commands were recreated.")
 	}
 
 	private fun withoutOptions(command: String): SlashCommandData =
