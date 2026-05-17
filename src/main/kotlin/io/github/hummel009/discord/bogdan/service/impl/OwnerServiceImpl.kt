@@ -27,7 +27,6 @@ class OwnerServiceImpl : OwnerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.ownerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 
@@ -58,7 +57,6 @@ class OwnerServiceImpl : OwnerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.ownerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 
@@ -84,7 +82,6 @@ class OwnerServiceImpl : OwnerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.ownerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 

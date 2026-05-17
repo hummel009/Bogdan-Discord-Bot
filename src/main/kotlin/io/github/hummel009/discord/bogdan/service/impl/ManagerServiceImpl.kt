@@ -25,7 +25,6 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.managerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 
@@ -65,7 +64,6 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.managerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 
@@ -106,7 +104,6 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.managerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 
@@ -153,7 +150,6 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.managerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 
@@ -194,7 +190,6 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.managerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 
@@ -241,7 +236,6 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.managerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 
@@ -292,7 +286,6 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.managerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 
@@ -339,7 +332,6 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.managerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 
@@ -380,7 +372,6 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.managerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 
@@ -421,7 +412,6 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.managerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 
@@ -462,7 +452,6 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.managerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 
@@ -500,7 +489,6 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.managerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 
@@ -535,7 +523,6 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.managerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 
@@ -572,7 +559,6 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.managerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 
@@ -604,7 +590,6 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.managerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 
@@ -628,7 +613,6 @@ class ManagerServiceImpl : ManagerService {
 			val guildData = dataService.loadGuildData(guild)
 
 			accessService.managerAccessRestricted(event, guildData)?.let {
-				event.hook.sendMessageEmbeds(it).queue()
 				return@queue
 			}
 

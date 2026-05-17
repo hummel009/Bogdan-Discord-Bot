@@ -11,14 +11,25 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 
 class AccessServiceImpl : AccessService {
-	override fun managerAccessRestricted(event: SlashCommandInteractionEvent, guildData: GuildData): MessageEmbed? =
-		EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
-			.takeUnless { isManagerAccess(event, guildData) }
+	override fun managerAccessRestricted(event: SlashCommandInteractionEvent, guildData: GuildData): MessageEmbed? {
+		val embed = EmbedBuilder().access(event.member, I18n.of("msg_access", guildData)).takeUnless {
+			isManagerAccess(event, guildData)
+		}
 
+		embed?.let { event.hook.sendMessageEmbeds(embed).queue() }
 
-	override fun ownerAccessRestricted(event: SlashCommandInteractionEvent, guildData: GuildData): MessageEmbed? =
-		EmbedBuilder().access(event.member, I18n.of("msg_access", guildData))
-			.takeUnless { isOwnerAccess(event) }
+		return embed
+	}
+
+	override fun ownerAccessRestricted(event: SlashCommandInteractionEvent, guildData: GuildData): MessageEmbed? {
+		val embed = EmbedBuilder().access(event.member, I18n.of("msg_access", guildData)).takeUnless {
+			isOwnerAccess(event)
+		}
+
+		embed?.let { event.hook.sendMessageEmbeds(embed).queue() }
+
+		return embed
+	}
 
 	private fun isManagerAccess(event: SlashCommandInteractionEvent, guildData: GuildData): Boolean {
 		val member = event.member ?: return false
