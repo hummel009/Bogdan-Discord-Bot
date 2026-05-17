@@ -492,20 +492,16 @@ class ManagerServiceImpl : ManagerService {
 				return@queue
 			}
 
-			val embed = run(fun(): MessageEmbed {
-				try {
-					guildData.name = I18n.of("default_name", guildData).s()
+			val embed = run {
+				guildData.name = I18n.of("default_name", guildData).s()
 
-					val bot = guild.getMemberById(event.jda.selfUser.idLong)
-					bot?.modifyNickname(guildData.name)?.queue()
+				val bot = guild.getMemberById(event.jda.selfUser.idLong)
+				bot?.modifyNickname(guildData.name)?.queue()
 
-					return EmbedBuilder().success(
-						event.member, I18n.of("reset_name", guildData, guildData.name)
-					)
-				} catch (_: Exception) {
-					return EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
-				}
-			})
+				EmbedBuilder().success(
+					event.member, I18n.of("reset_name", guildData, guildData.name)
+				)
+			}
 
 			dataService.saveGuildData(guild, guildData)
 
@@ -562,17 +558,13 @@ class ManagerServiceImpl : ManagerService {
 				return@queue
 			}
 
-			val embed = run(fun(): MessageEmbed {
-				try {
-					guildData.preprompt = I18n.of("default_preprompt", guildData).s()
+			val embed = run {
+				guildData.preprompt = I18n.of("default_preprompt", guildData).s()
 
-					return EmbedBuilder().success(
-						event.member, I18n.of("reset_preprompt", guildData, guildData.preprompt)
-					)
-				} catch (_: Exception) {
-					return EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
-				}
-			})
+				EmbedBuilder().success(
+					event.member, I18n.of("reset_preprompt", guildData, guildData.preprompt)
+				)
+			}
 
 			event.hook.sendMessageEmbeds(embed).queue()
 
@@ -593,11 +585,11 @@ class ManagerServiceImpl : ManagerService {
 				return@queue
 			}
 
-			val embed = run(fun(): MessageEmbed {
+			val embed = run {
 				dataService.wipeGuildData(guild)
 
-				return EmbedBuilder().success(event.member, I18n.of("wipe_data", guildData))
-			})
+				EmbedBuilder().success(event.member, I18n.of("wipe_data", guildData))
+			}
 
 			event.hook.sendMessageEmbeds(embed).queue()
 		}
@@ -616,11 +608,11 @@ class ManagerServiceImpl : ManagerService {
 				return@queue
 			}
 
-			val embed = run(fun(): MessageEmbed {
+			val embed = run {
 				dataService.wipeGuildBank(guild)
 
-				return EmbedBuilder().success(event.member, I18n.of("wipe_bank", guildData))
-			})
+				EmbedBuilder().success(event.member, I18n.of("wipe_bank", guildData))
+			}
 
 			event.hook.sendMessageEmbeds(embed).queue()
 		}

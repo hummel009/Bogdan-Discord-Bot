@@ -60,15 +60,9 @@ class OwnerServiceImpl : OwnerService {
 				return@queue
 			}
 
-			try {
-				val byteArray = dataService.exportBotData()
+			val byteArray = dataService.exportBotData()
 
-				event.hook.sendFiles(FileUpload.fromData(byteArray, "bot.zip")).queue()
-			} catch (_: Exception) {
-				val embed = EmbedBuilder().error(event.member, I18n.of("msg_error_format", guildData))
-
-				event.hook.sendMessageEmbeds(embed).queue()
-			}
+			event.hook.sendFiles(FileUpload.fromData(byteArray, "bot.zip")).queue()
 		}
 	}
 
