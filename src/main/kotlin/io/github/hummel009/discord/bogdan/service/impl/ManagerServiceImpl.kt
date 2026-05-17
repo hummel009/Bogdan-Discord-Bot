@@ -109,13 +109,14 @@ class ManagerServiceImpl : ManagerService {
 				}
 
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
+				if (arguments.size !in 0..1) {
+					return EmbedBuilder().error(event.member, I18n.of("msg_error_arg", guildData))
+				}
+
 				if (arguments.isEmpty()) {
 					guildData.managerRoleIds.clear()
 
 					return EmbedBuilder().success(event.member, I18n.of("clear_manager_roles", guildData))
-				}
-				if (arguments.size != 1) {
-					return EmbedBuilder().error(event.member, I18n.of("msg_error_arg", guildData))
 				}
 
 				try {
@@ -194,13 +195,14 @@ class ManagerServiceImpl : ManagerService {
 				}
 
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
+				if (arguments.size !in 0..1) {
+					return EmbedBuilder().error(event.member, I18n.of("msg_error_arg", guildData))
+				}
+
 				if (arguments.isEmpty()) {
 					guildData.excludedChannelIds.clear()
 
 					return EmbedBuilder().success(event.member, I18n.of("clear_excluded_channels", guildData))
-				}
-				if (arguments.size != 1) {
-					return EmbedBuilder().error(event.member, I18n.of("msg_error_arg", guildData))
 				}
 
 				try {
@@ -289,13 +291,14 @@ class ManagerServiceImpl : ManagerService {
 				}
 
 				val arguments = event.getOption("arguments")?.asString?.split(" ") ?: emptyList()
+				if (arguments.size !in 0..1) {
+					return EmbedBuilder().error(event.member, I18n.of("msg_error_arg", guildData))
+				}
+
 				if (arguments.isEmpty()) {
 					guildData.birthdays.clear()
 
 					return EmbedBuilder().success(event.member, I18n.of("clear_birthdays", guildData))
-				}
-				if (arguments.size != 1) {
-					return EmbedBuilder().error(event.member, I18n.of("msg_error_arg", guildData))
 				}
 
 				try {
