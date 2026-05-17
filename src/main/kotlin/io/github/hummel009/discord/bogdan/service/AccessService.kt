@@ -6,6 +6,5 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 interface AccessService {
 	fun managerAccessRestricted(event: SlashCommandInteractionEvent, guildData: GuildData): MessageEmbed?
-
 	fun ownerAccessRestricted(event: SlashCommandInteractionEvent, guildData: GuildData): MessageEmbed?
 }
