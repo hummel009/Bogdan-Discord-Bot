@@ -7,13 +7,16 @@ import io.github.hummel009.discord.bogdan.utils.access
 import io.github.hummel009.discord.bogdan.utils.config
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 
 class AccessServiceImpl : AccessService {
 	override fun managerAccessRestricted(event: SlashCommandInteractionEvent, guildData: GuildData): MessageEmbed? {
 		val embed = EmbedBuilder().access(event.member, I18n.of("msg_access", guildData)).takeUnless {
-			isManagerAccess(event, guildData) || isOwnerAccess(event)
+			val member = event.member ?: return@takeUnless false
+
+			member.isGuildManager(guildData) || member.isGuildAdmin() || member.isGuildOwner() || member.isBotOwner()
 		}
 
 		embed?.let { event.hook.sendMessageEmbeds(it).queue() }
@@ -23,7 +26,9 @@ class AccessServiceImpl : AccessService {
 
 	override fun ownerAccessRestricted(event: SlashCommandInteractionEvent, guildData: GuildData): MessageEmbed? {
 		val embed = EmbedBuilder().access(event.member, I18n.of("msg_access", guildData)).takeUnless {
-			isOwnerAccess(event)
+			val member = event.member ?: return@takeUnless false
+
+			member.isBotOwner()
 		}
 
 		embed?.let { event.hook.sendMessageEmbeds(it).queue() }
@@ -31,24 +36,15 @@ class AccessServiceImpl : AccessService {
 		return embed
 	}
 
-	private fun isManagerAccess(event: SlashCommandInteractionEvent, guildData: GuildData): Boolean {
-		val member = event.member ?: return false
-
-		val isManager = member.roles.any { role ->
-			guildData.managerRoleIds.any {
-				it == role.idLong
-			}
+	private fun Member.isGuildManager(guildData: GuildData): Boolean = roles.any { userRole ->
+		guildData.managerRoleIds.any { managerRole ->
+			userRole.idLong == managerRole
 		}
-		val isAdmin = member.hasPermission(Permission.ADMINISTRATOR)
-
-		return isManager || isAdmin
 	}
 
-	private fun isOwnerAccess(event: SlashCommandInteractionEvent): Boolean {
-		val member = event.member ?: return false
+	private fun Member.isGuildAdmin(): Boolean = hasPermission(Permission.ADMINISTRATOR)
 
-		val isOwner = member.idLong == config.ownerId.toLong()
+	private fun Member.isGuildOwner(): Boolean = isOwner
 
-		return isOwner
-	}
+	private fun Member.isBotOwner(): Boolean = idLong == config.ownerId.toLong()
 }
