@@ -7,8 +7,8 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel
 
 fun EmbedBuilder.success(member: Member?, i18n: I18n): MessageEmbed = apply {
-	if (member != null) {
-		setAuthor(member.effectiveName, null, member.effectiveAvatarUrl)
+	member?.let {
+		setAuthor(it.effectiveName, null, it.effectiveAvatarUrl)
 	}
 	setTitle(I18n.of("title_success", i18n.lang).s())
 	setDescription(i18n.s())
@@ -16,8 +16,8 @@ fun EmbedBuilder.success(member: Member?, i18n: I18n): MessageEmbed = apply {
 }.build()
 
 fun EmbedBuilder.access(member: Member?, i18n: I18n): MessageEmbed = apply {
-	if (member != null) {
-		setAuthor(member.effectiveName, null, member.effectiveAvatarUrl)
+	member?.let {
+		setAuthor(it.effectiveName, null, it.effectiveAvatarUrl)
 	}
 	setTitle(I18n.of("title_access", i18n.lang).s())
 	setDescription(i18n.s())
@@ -25,8 +25,8 @@ fun EmbedBuilder.access(member: Member?, i18n: I18n): MessageEmbed = apply {
 }.build()
 
 fun EmbedBuilder.error(member: Member?, i18n: I18n): MessageEmbed = apply {
-	if (member != null) {
-		setAuthor(member.effectiveName, null, member.effectiveAvatarUrl)
+	member?.let {
+		setAuthor(it.effectiveName, null, it.effectiveAvatarUrl)
 	}
 	setTitle(I18n.of("title_error", i18n.lang).s())
 	setDescription(i18n.s())
