@@ -35,7 +35,7 @@ class ManagerServiceImpl : ManagerService {
 				}
 
 				try {
-					val lang = Lang.of(arguments[0]) ?: throw Exception()
+					val lang = requireNotNull(Lang.of(arguments[0]))
 					guildData.lang = lang
 
 					val langName = I18n.of(lang.code, guildData)
