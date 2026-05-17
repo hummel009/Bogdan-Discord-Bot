@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 class AccessServiceImpl : AccessService {
 	override fun managerAccessRestricted(event: SlashCommandInteractionEvent, guildData: GuildData): MessageEmbed? {
 		val embed = EmbedBuilder().access(event.member, I18n.of("msg_access", guildData)).takeUnless {
-			isManagerAccess(event, guildData)
+			isManagerAccess(event, guildData) || isOwnerAccess(event)
 		}
 
 		embed?.let { event.hook.sendMessageEmbeds(it).queue() }
@@ -39,10 +39,9 @@ class AccessServiceImpl : AccessService {
 				it == role.idLong
 			}
 		}
-		val isOwner = member.idLong == config.ownerId.toLong()
 		val isAdmin = member.hasPermission(Permission.ADMINISTRATOR)
 
-		return isManager || isAdmin || isOwner
+		return isManager || isAdmin
 	}
 
 	private fun isOwnerAccess(event: SlashCommandInteractionEvent): Boolean {
