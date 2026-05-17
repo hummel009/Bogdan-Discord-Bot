@@ -7,27 +7,21 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel
 
 fun EmbedBuilder.success(member: Member?, i18n: I18n): MessageEmbed = apply {
-	member?.let {
-		setAuthor(it.effectiveName, null, it.effectiveAvatarUrl)
-	}
+	setAuthor(member?.effectiveName, null, member?.effectiveAvatarUrl)
 	setTitle(I18n.of("title_success", i18n.lang).s())
 	setDescription(i18n.s())
 	setColor(0x00FF00)
 }.build()
 
 fun EmbedBuilder.access(member: Member?, i18n: I18n): MessageEmbed = apply {
-	member?.let {
-		setAuthor(it.effectiveName, null, it.effectiveAvatarUrl)
-	}
+	setAuthor(member?.effectiveName, null, member?.effectiveAvatarUrl)
 	setTitle(I18n.of("title_access", i18n.lang).s())
 	setDescription(i18n.s())
 	setColor(0xFFFF00)
 }.build()
 
 fun EmbedBuilder.error(member: Member?, i18n: I18n): MessageEmbed = apply {
-	member?.let {
-		setAuthor(it.effectiveName, null, it.effectiveAvatarUrl)
-	}
+	setAuthor(member?.effectiveName, null, member?.effectiveAvatarUrl)
 	setTitle(I18n.of("title_error", i18n.lang).s())
 	setDescription(i18n.s())
 	setColor(0xFF0000)
