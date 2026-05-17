@@ -16,7 +16,7 @@ class AccessServiceImpl : AccessService {
 			isManagerAccess(event, guildData)
 		}
 
-		embed?.let { event.hook.sendMessageEmbeds(embed).queue() }
+		embed?.let { event.hook.sendMessageEmbeds(it).queue() }
 
 		return embed
 	}
@@ -26,7 +26,7 @@ class AccessServiceImpl : AccessService {
 			isOwnerAccess(event)
 		}
 
-		embed?.let { event.hook.sendMessageEmbeds(embed).queue() }
+		embed?.let { event.hook.sendMessageEmbeds(it).queue() }
 
 		return embed
 	}
