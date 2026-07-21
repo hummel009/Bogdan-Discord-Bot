@@ -29,7 +29,7 @@ class OwnerServiceImpl : OwnerService {
 
 			try {
 				val attachment = requireNotNull(event.getOption("arguments")?.asAttachment)
-				val byteArray = URI(attachment.proxyUrl).toURL().readBytes()
+				val byteArray = URI(attachment.url).toURL().readBytes()
 
 				dataService.importBotData(byteArray)
 
