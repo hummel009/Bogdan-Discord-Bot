@@ -8,6 +8,7 @@ import io.github.hummel009.discord.bogdan.utils.I18n
 import io.github.hummel009.discord.bogdan.utils.getMessageChannelById
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
+import java.time.LocalDate
 import java.time.Month
 
 class MemberServiceImpl : MemberService {
@@ -65,7 +66,14 @@ class MemberServiceImpl : MemberService {
 				} else {
 					append("\n", I18n.of("has_birthdays", guildData), "\n")
 					guildData.birthdays.sortedWith(
-						compareBy({ it.date.month }, { it.date.day })
+						compareBy {
+							val today = LocalDate.now()
+							val birthdayDate = LocalDate.of(today.year, it.date.month, it.date.day)
+
+							birthdayDate.let { date ->
+								if (date <= today) date.plusYears(1) else date
+							}
+						}
 					).joinTo(this, "\n") {
 						val day = it.date.day
 						val month = it.date.month
